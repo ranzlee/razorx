@@ -1,0 +1,8 @@
+<div class="@(ActionContentClass)">
+    @(ChildContent)
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string ActionContentClass { get; set; } = null!;
+}

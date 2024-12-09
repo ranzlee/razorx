@@ -1,0 +1,42 @@
+<div class="@(ContainerClass)">
+    <label class="@(LabelContainerClass)">
+        <span class="@(LabelClass)">@(Label)</span>
+        <input id="@(Id)" 
+            type="checkbox" 
+            name="@(Property)" 
+            checked="@(Value == true ? "checked" : false)"
+            class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
+            aria-invalid="@(isInvalid ? "true" : false)"
+            aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
+            @attributes=@(AdditionalAttributes)>
+    </label>
+    @if (isInvalid) {
+        @(ValidationContainer)
+    }
+</div>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string Label { get; set; } = null!;
+    [Parameter] public string Property { get; set; } = null!;
+    [Parameter] public bool Value { get; set; }
+    [Parameter] public ValidationContext? ValidationContext { get; set; }
+    [Parameter] public RenderFragment? ValidationContainer { get; set; }
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string InvalidClass { get; set; } = null!;
+    [Parameter] public string ControlClass { get; set; } = null!;
+    [Parameter] public string LabelContainerClass { get; set; } = null!;
+    [Parameter] public string LabelClass { get; set; } = null!;
+
+    private bool isInvalid { get; set; }
+    
+    protected override void OnParametersSet() {
+        if (ValidationContext != null && ValidationContext.TryGetError(Property, out var error)) {
+            isInvalid = true;
+        }
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+}

@@ -1,0 +1,31 @@
+<RxField 
+    Id="@(Id)"
+    Property="@(Property)" 
+    Value="@(Value)" 
+    Label="@(Label)" 
+    InputType="@(InputType)"
+    ValidationContext="@(ValidationContext)"
+    ContainerClass="form-control w-full"
+    InvalidClass="input-error"
+    ControlClass="input input-bordered w-full"
+    LabelContainerClass="label"
+    LabelClass="label-text"
+    @attributes=@(AdditionalAttributes)>
+    <ValidationContainer>
+        <RxFormError 
+            Property="@(Property)" 
+            ValidationContext="@(ValidationContext)" 
+            ContainerClass="label" 
+            ErrorMessageClass="label-text text-error" />
+    </ValidationContainer>
+</RxField>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public ValidationContext ValidationContext { get; set; } = new();
+    [Parameter] public string Property { get; set; } = null!;
+    [Parameter] public object? Value { get; set; }
+    [Parameter] public string Label { get; set; } = null!;
+    [Parameter] public string InputType { get; set; } = null!;
+}

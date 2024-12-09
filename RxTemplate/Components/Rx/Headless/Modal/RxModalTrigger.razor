@@ -1,0 +1,24 @@
+<div id="@(Id)">
+    @(ChildContent)
+</div>
+<script>
+    (function() {
+        var trigger = document.getElementById("@(Id)");
+        trigger.onclick = function() {
+            document.getElementById('@(ModalId)').showModal();
+            htmx.trigger('#@(ModalId)', 'opened', { id: "@(DeferredContentRouteValue)" });
+        }
+    })();
+</script>
+
+@code {
+    [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
+    [Parameter] public string DeferredContentRouteValue { get; set; } = null!;
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+}

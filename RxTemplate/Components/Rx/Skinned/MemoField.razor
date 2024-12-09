@@ -1,0 +1,32 @@
+<RxMemoField 
+    Id="@(Id)"
+    Property="@(Property)" 
+    Value="@(Value)" 
+    Label="@(Label)" 
+    MaxLength="@(MaxLength)" 
+    ValidationContext="@(ValidationContext)"
+    ContainerClass="form-control w-full"
+    InvalidClass="textarea-error"
+    ControlClass="textarea textarea-bordered"
+    LabelContainerClass="label"
+    LabelClass="label-text"
+    CounterClass="label-text-alt"
+    @attributes=@(AdditionalAttributes)>
+    <ValidationContainer>
+        <RxFormError 
+            Property="@(Property)" 
+            ValidationContext="@(ValidationContext)" 
+            ContainerClass="label" 
+            ErrorMessageClass="label-text text-error" />
+    </ValidationContainer>
+</RxMemoField>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public ValidationContext ValidationContext { get; set; } = new();
+    [Parameter] public string Property { get; set; } = null!;
+    [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public string Label { get; set; } = null!;
+    [Parameter] public int? MaxLength { get; set; }
+}

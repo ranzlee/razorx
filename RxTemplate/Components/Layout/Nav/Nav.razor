@@ -1,0 +1,52 @@
+<div class="z-50 bg-base-100 min-h-full w-96 p-4">
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-semibold text-primary">
+            RxTemplate Menu
+        </h2>
+        <button id="close-sidebar" type="button" aria-label="close sidebar" class="btn btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-4 w-4 stroke-current">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <script>
+            (function() {
+                var menuToggle = document.getElementById("menu-toggle");
+                var closeSidebar = document.getElementById("close-sidebar");
+                var drawerState = document.getElementById("site-drawer");
+                closeSidebar.addEventListener("click", function() {
+                    drawerState.checked = false;
+                    menuToggle.focus();
+                });
+            })()
+        </script>
+    </div>
+    <ul class="menu">
+        <li>
+            <NavItem NavItemRoute="/" MatchPartial="@(false)">
+                Home
+            </NavItem>
+        </li>
+        <li>
+            <NavItem NavItemRoute="/examples" MatchPartial="@(true)">
+                Examples
+            </NavItem>
+            <ul class="bg-base-100 rounded-t-none p-2">
+                <li>
+                    <NavItem NavItemRoute="/examples/counter">
+                        The Obligatory Counter
+                    </NavItem>
+                </li>
+                <li>
+                    <NavItem NavItemRoute="/examples/form">
+                        Form Submission and Validation
+                    </NavItem>
+                </li>
+                <li>
+                    <NavItem NavItemRoute="/examples/crud">
+                        The Kitchen Sync
+                    </NavItem>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

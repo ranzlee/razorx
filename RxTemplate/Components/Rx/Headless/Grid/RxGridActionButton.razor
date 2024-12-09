@@ -1,0 +1,32 @@
+@implements IComponentModel<IGrid?>
+
+@if (Model == null) {
+    return;
+}
+
+<button 
+    id="@(Id)"
+    hx-target="@($"#{Model.Id}")"
+    hx-swap="outerHTML transition:true"
+    hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")" 
+    @attributes="@(AdditionalAttributes)">
+    @(ChildContent)
+</button>
+<script>
+    razorx.metadata.addToRequest(
+        @(Convert.ToInt32(Model.StateScope)), 
+        "@(Model.StateKey)",
+        document.getElementById("@(Id)"));
+</script>   
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public IGrid? Model { get; set; }
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }  
+}

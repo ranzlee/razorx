@@ -1,0 +1,60 @@
+<HeadContent>
+    <title>RxTemplate - Welcome</title>
+</HeadContent>
+
+<div class="flex justify-center">
+    <article class="prose prose-a:link prose-a:link-primary prose-code:bg-info prose-code:rounded prose-code:font-semibold prose-code:text-nowrap">
+        <div class="flex justify-center">
+            <h2>Welcome</h2>
+        </div>
+        <p>
+            The name RazorX represents the combination of 
+            <a target="_blank" href="https://learn.microsoft.com/en-us/aspnet/core/blazor/components/?view=aspnetcore-9.0">ASP.NET 
+            Razor Components</a> on the server with <a target="_blank" href="https://v2-0v2-0.htmx.org/">htmx</a> on the client. 
+            <a target="_blank" href="https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/overview?view=aspnetcore-9.0">ASP.NET Minimal APIs</a> 
+            provide the request-response processing between the client and server. Razor Components are only used for server-side templating,
+            and there are no dependencies on Blazor for routing or interactivity.    
+        </p>
+        <p>
+            <code>{Project}/Rx</code> contains the types and implementations for concerns
+            like routing, server-to-client event dispatch, model binding, and validation orchestration
+            for <a target="_blank" href="https://docs.fluentvalidation.net/en/latest/">FluentValidation</a>. 
+        </p>
+        <p>    
+            <code>{Project}/wwwroot/js/razorx.js</code> contains the JS integrations with htmx. 
+        </p>
+        <p>    
+            <code>{Project}/Components/Rx</code>
+            contains common use components. These components are separated into
+            headless and skinned. Headless components provide structure, functionality, and accessibility, but lack
+            visual styling. The skinned components wrap the headless components with CSS visual styling applied.
+        </p>
+        <p>    
+            <code>{Project}/wwwroot/css/razorx.css</code> contains the CSS required for component behavior that is
+            unrelated to visual appearance. 
+        </p>
+        <p>
+            <a target="_blank" href="https://tailwindcss.com/">tailwindcss</a> is the core 
+            CSS framework and design system, and <a target="_blank" href="https://daisyui.com/">daisyUI</a> is the 
+            sematic CSS library. RazorX does not directly depend on tailwindcss or daisyUI, with the exception
+            of the skinned components. To switch the daisyUI themes, update the light and dark theme 
+            names in <code>{Project}/appsettings.json/RxConfig</code>
+            and rebuild. The built-in themes can be found in <code>{Project}/Node/tailwind.config.js</code>. You may also  
+            modify existing themes or roll your own custom themes if you prefer.
+        </p>
+        <p>
+            <strong class="bg-warning text-warning-content px-2 rounded">Important:</strong> You must open a terminal in <code>{Project}/Node</code> and
+            run <code>npm run build-css</code> anytime you use new (first use) tailwindcss or daisyUI classes. This is because tailwindcss tree-shakes
+            unused classes when building the output <code>{Project}/wwwroot/css/app.css</code> file.
+        </p>
+        <p>
+            Take a look at the <a href="/examples">examples</a> to see
+            what is possible with a Hypermedia Event-Driven Application. Once you no longer need the examples
+            as reference, just delete the <code>{Project}/Router/Examples.cs</code> file and <code>{Project}/Components/Examples</code>
+            folder. 
+        </p>
+        <p>
+            Happy coding!
+        </p>
+    </article>
+</div>

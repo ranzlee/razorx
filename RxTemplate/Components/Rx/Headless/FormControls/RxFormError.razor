@@ -1,0 +1,25 @@
+<div class="@(ContainerClass)">
+    <span id="@(Id)" 
+        class="@(ErrorMessageClass)"
+        @attributes=@(AdditionalAttributes)>
+        @(errorMessage)
+    </span>
+</div>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string ErrorMessageClass { get; set; } = null!;
+    [Parameter] public string Property { get; set; } = null!;
+    [Parameter] public ValidationContext? ValidationContext { get; set; }
+    private string errorMessage { get; set; } = null!;
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+        if (ValidationContext != null && ValidationContext.TryGetError(Property, out var error)) {
+            errorMessage = error.ErrorMessage;
+        }
+    }
+}

@@ -1,0 +1,6 @@
+<RxModalDismiss ModalId="@(ModalId)" DismissActionClass="btn btn-neutral" DismissActionName="@(DismissActionName)" />
+
+@code {
+    [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
+    [Parameter] public string DismissActionName { get; set; } = null!;
+}

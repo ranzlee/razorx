@@ -1,0 +1,66 @@
+@implements IComponentModel<IGridModel<T>>
+@typeparam T
+
+@if (Model == null) {
+    return;
+}
+
+<div class="join">
+    <button id="@(NextButtonId)" 
+        type="button" 
+        name="@nameof(GridState.Page)"
+        value="previous" 
+        disabled="@(!Model.State.HasPreviousPage())"
+        aria-label="@(Model.State.HasPreviousPage() ? $"Go to page {Model.State.Page - 1}" : "No previous page")"
+        @attributes="@(AdditionalAttributes)"
+        hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
+        hx-get="@(Model.RenderFromRoute)" 
+        hx-swap="outerHTML transition:true" 
+        hx-target="#@(Model.Id)">
+      «
+    </button>
+    <button type="button" 
+        @attributes="@(AdditionalAttributes)">
+        @(ChildContent)
+    </button>
+    <button id="@(PreviousButtonId)" 
+        type="button" 
+        name="@nameof(GridState.Page)"
+        value="next" 
+        disabled="@(!Model.State.HasNextPage())"
+        aria-label="@(Model.State.HasNextPage() ? $"Go to page {Model.State.Page + 1}" : "No next page")"
+        @attributes="@(AdditionalAttributes)"
+        hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
+        hx-get="@(Model.RenderFromRoute)" 
+        hx-swap="outerHTML transition:true" 
+        hx-target="#@(Model.Id)">
+      »
+    </button>  
+</div>
+<script>
+    razorx.metadata.addToRequest(
+        @(Convert.ToInt32(Model.StateScope)), 
+        "@(Model.StateKey)",
+        document.getElementById("@(NextButtonId)"));
+    razorx.metadata.addToRequest(
+        @(Convert.ToInt32(Model.StateScope)), 
+        "@(Model.StateKey)",
+        document.getElementById("@(PreviousButtonId)"));
+</script>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!; 
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string NextButtonId { get; set; } = null!;
+    [Parameter] public string PreviousButtonId { get; set; } = null!;
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(NextButtonId)) {
+            NextButtonId = Utilities.GenerateElementId();
+        }
+        if (string.IsNullOrWhiteSpace(PreviousButtonId)) {
+            PreviousButtonId = Utilities.GenerateElementId();
+        }
+    }  
+}

@@ -1,0 +1,13 @@
+<RxSpinner 
+    Id="@(Id)"
+    PositionHorizontalClass="flex justify-center h-full" 
+    PositionVerticalClass="flex flex-col justify-center" 
+    SpinnerClass="loading loading-bars text-success" 
+    Transition="@(Transition)"
+    AlwaysVisible="@(AlwaysVisible)"/>
+
+@code {
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public TransitionType Transition { get; set; }
+    [Parameter] public bool AlwaysVisible { get; set; }
+}

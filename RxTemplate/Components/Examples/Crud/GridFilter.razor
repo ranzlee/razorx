@@ -1,0 +1,98 @@
+@implements IComponentModel<GridFilterModel>
+
+<div id="grid-filter" class="flex max-sm:flex-col sm:items-end gap-x-2 max-sm:gap-y-1">
+    @if (Model.FilterType != null) {
+        <input type="hidden" name="@(nameof(Model.FilterProperty))" value="@(Model.FilterProperty)">
+        <div class="max-w-40">
+            <Select
+                Property="@(nameof(FilterOperation))" 
+                Value="@(FilterOperation)" 
+                Label="Operation" 
+                Options="@(OperationOptions)">
+            </Select>
+        </div>
+        <div class="max-w-56">
+            @if (Model.FilterType == typeof(int)) {
+                <Field 
+                    Property="@(nameof(FilterValue))" 
+                    Value="@(FilterValue)" 
+                    Label="Value" 
+                    InputType="number">
+                </Field>
+            }
+            @if (Model.FilterType == typeof(bool)) {
+                <Select 
+                    Property="@(nameof(FilterValue))" 
+                    Value="@(FilterValue)" 
+                    Label="Value" 
+                    Options="@(YesNoOptions)">
+                </Select>
+            }
+            @if (Model.FilterType == typeof(DateOnly)) {
+                <Field 
+                    Property="@(nameof(FilterValue))" 
+                    Value="@(FilterValue)" 
+                    Label="Value" 
+                    InputType="date">
+                </Field>
+            }
+            @if (Model.FilterType == typeof(TimeOfDay)) {
+                <Select 
+                    Property="@(nameof(FilterValue))" 
+                    Value="@(FilterValue)" 
+                    Label="Value" 
+                    EnumType="typeof(TimeOfDay)">
+                </Select>
+            }
+            @if (Model.FilterType == typeof(string)) {
+                <Field 
+                    Property="@(nameof(FilterValue))" 
+                    Value="@(FilterValue)" 
+                    Label="Value" 
+                    InputType="text"
+                    maxlength="65">
+                </Field>
+            }
+        </div>
+        <div class="mt-3">
+            <RxGridActionButton 
+                Model="@(Model)"
+                hx-get="@(Model.RenderFromRoute)"
+                hx-include="#grid-filter"
+                type="button"
+                class="btn btn-primary max-w-20">
+                Apply
+            </RxGridActionButton>
+        </div>
+    }
+</div>
+
+
+@code {
+    [Parameter] public GridFilterModel Model { get; set; } = new();
+    private string FilterOperation = null!;
+    private Dictionary<string, string> OperationOptions = [];
+    private Dictionary<string, string> YesNoOptions = [];
+    private string FilterValue = null!;
+
+    protected override void OnParametersSet() {
+
+        YesNoOptions.Add("Y", "Y");
+        YesNoOptions.Add("N", "N");
+
+        OperationOptions.Add("Equals", FilterOperationType.Equals.ToString());
+        if (Model.FilterType == typeof(string)) {
+            OperationOptions.Add("Starts With", FilterOperationType.StartsWith.ToString());
+            OperationOptions.Add("Contains", FilterOperationType.Contains.ToString());
+        }
+        if (Model.FilterType == typeof(int)
+        || Model.FilterType == typeof(DateOnly)) {
+            OperationOptions.Add("Less Than", FilterOperationType.LessThan.ToString());
+            OperationOptions.Add("Greater Than", FilterOperationType.GreaterThan.ToString());
+        }
+        if (Model.FilterType == typeof(bool)
+        || Model.FilterType == typeof(TimeOfDay)) {
+            OperationOptions.Add("Not Equals", FilterOperationType.NotEquals.ToString());
+        }
+    }
+}

@@ -1,0 +1,63 @@
+@implements IComponentModel<CounterModel>
+
+<div id="counter" class="max-w-96">
+    <div class="flex justify-center">
+        <!-- Decrement Button -->
+        <button 
+            id="decrement-btn"
+            aria-label="Decrement count" 
+            hx-post="/examples/counter/update" 
+            hx-target="#counter" 
+            hx-swap="outerHTML"
+            hx-include="#@(nameof(Model.Count))">
+            <span class="text-8xl text-primary">🞀</span>
+        </button>
+        <!-- Counter Value -->
+        <div 
+            aria-errormessage="@(ValidationContext.TryGetError(nameof(Model.Count), out _) ? "count-error" : false)"
+            aria-invalid="@(ValidationContext.TryGetError(nameof(Model.Count), out _) ? "true" : "false")"
+            class="flex justify-center items-center">
+            <input 
+                id="@(nameof(Model.Count))" 
+                name="@(nameof(Model.Count))" 
+                type="hidden" 
+                value="@(Model.Count)" />
+            <input 
+                id="@(nameof(Model.IsAdd))" 
+                name="@(nameof(Model.IsAdd))" 
+                type="hidden" 
+                value="true" />
+            <div class="min-w-64 flex justify-center">
+                <div>
+                    <strong class="text-9xl font-mono @(ValidationContext.TryGetError(nameof(Model.Count), out _) ? "text-error" : "")">
+                        @Model.Count
+                    </strong>
+                </div>
+            </div>
+        </div>
+        <!-- Increment Button -->
+        <button 
+            id="increment-btn"
+            aria-label="Increment count" 
+            hx-post="/examples/counter/update" 
+            hx-target="#counter" 
+            hx-swap="outerHTML"
+            hx-include="#@(nameof(Model.Count)), #@(nameof(Model.IsAdd))">
+            <span class="text-8xl text-primary">🞂</span>
+        </button>
+    </div>
+    @if (ValidationContext.TryGetError(nameof(Model.Count), out var error))
+    {
+        <div class="flex justify-center">
+            <p id="count-error" class="text-error">
+                <strong class="text-2xl">@error.ErrorMessage</strong>
+            </p>
+        </div>
+    }
+</div>
+
+@code
+{
+    [Inject] public ValidationContext ValidationContext { get; set; } = new();
+    [Parameter] public CounterModel Model { get; set; } = new();
+}

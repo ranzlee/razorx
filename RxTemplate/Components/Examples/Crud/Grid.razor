@@ -1,0 +1,211 @@
+@implements IComponentModel<IGridModel<ItemModel>>
+
+<RxGrid 
+    Model="@(Model)"
+    class="w-full h-[500px] overflow-x-auto">
+    <SuspensionContent>
+        <Spinner Id="@(Model.SpinnerId)" />
+    </SuspensionContent>
+    <FilterContent>
+        <div class="flex flex-wrap max-sm:flex-col gap-2 my-2">
+            @foreach (var filter in Model.State.Filters) {
+                @if (filter.FilterProperty == nameof(ItemModel.Date)
+                && DateOnly.TryParse(filter.FilterValue, out var d)) {
+                    filter.FilterValue = d.ToString("MM/dd/yyyy");
+                }
+                @if ((filter.FilterProperty == nameof(ItemModel.TemperatureTaken)
+                    || filter.FilterProperty == nameof(ItemModel.IsVerified))
+                && string.IsNullOrWhiteSpace(filter.FilterValue)) {
+                    filter.FilterValue = "Not Provided";
+                }
+                <div class="badge badge-warning gap-2">
+                    <RxGridActionButton 
+                        Model="@(Model)"
+                        hx-get="@(Model.RenderFromRoute)"
+                        name="@(nameof(filter.FilterId))"
+                        value="@(filter.FilterId)"
+                        aria-label="@($"Remove filter {ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.AddSpacesToCamelCase(filter.FilterOperation)} {filter.FilterValue}")"
+                        >
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-4 w-4 stroke-current">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </div>
+                    </RxGridActionButton>
+                    @($"{ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.AddSpacesToCamelCase(filter.FilterOperation)} {filter.FilterValue}")
+                </div>
+            }
+        </div>
+    </FilterContent>
+    <TableContent>
+        <table class="table table-sm table-zebra max-md:table-xs table-pin-rows">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="flex w-full text-primary justify-center">
+                            Delete
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex w-full text-primary justify-center">
+                            Edit
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-between items-center gap-x-1">
+                            <div class="flex w-full justify-center text-primary">ID</div>
+                            <RxGridSortButton 
+                                Model="@(Model)"
+                                PropertyName="@nameof(ItemModel.Id)" 
+                                DisplayName="ID"
+                                UseNumericIndicator="@(true)" 
+                                class="btn btn-xs btn-ghost text-primary" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-between items-center gap-x-1">
+                            <div class="flex w-full justify-center text-primary">Date</div>
+                            <RxGridSortButton 
+                                Model="@(Model)"
+                                PropertyName="@nameof(ItemModel.Date)" 
+                                DisplayName="Date"
+                                UseNumericIndicator="@(true)" 
+                                class="btn btn-xs btn-ghost text-primary" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-between items-center gap-x-1">
+                            <div class="flex w-full justify-center text-primary">Temp. C</div>
+                            <RxGridSortButton 
+                                Model="@(Model)"
+                                PropertyName="@nameof(ItemModel.TemperatureC)" 
+                                DisplayName="Temp. C"
+                                UseNumericIndicator="@(true)" 
+                                class="btn btn-xs btn-ghost text-primary" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-between items-center gap-x-1">
+                            <div class="flex w-full justify-center text-primary">Temp. F</div>
+                            <RxGridSortButton 
+                                Model="@(Model)"
+                                PropertyName="@nameof(ItemModel.TemperatureF)"
+                                DisplayName="Temp. F" 
+                                UseNumericIndicator="@(true)" 
+                                class="btn btn-xs btn-ghost text-primary" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-between items-center gap-x-1">
+                            <div class="flex w-full justify-center text-primary">Summary</div>
+                            <RxGridSortButton 
+                                Model="@(Model)"
+                                PropertyName="@nameof(ItemModel.Summary)"
+                                DisplayName="Summary" 
+                                class="btn btn-xs btn-ghost text-primary" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-between items-center gap-x-1">
+                            <div class="flex w-full justify-center text-primary">Verified</div>
+                            <RxGridSortButton 
+                                Model="@(Model)"
+                                PropertyName="@nameof(ItemModel.IsVerified)"
+                                DisplayName="Verified" 
+                                class="btn btn-xs btn-ghost text-primary" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-between items-center gap-x-1">
+                            <div class="flex w-full justify-center text-primary">Observed</div>
+                            <RxGridSortButton 
+                                Model="@(Model)"
+                                PropertyName="@nameof(ItemModel.TemperatureTaken)"
+                                DisplayName="Observed" 
+                                class="btn btn-xs btn-ghost text-primary" />
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Data) {
+                    <tr>
+                        <td align="middle">
+                            <RxModalTrigger ModalId="delete-modal" DeferredContentRouteValue="@(item.Id.ToString())">
+                                <button type="button" class="btn btn-sm btn-error" aria-label="@($"Delete item with ID {item.Id}")">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                    </svg>
+                                </button>
+                            </RxModalTrigger>
+                        </td>
+                        <td align="middle">
+                            <RxModalTrigger ModalId="save-modal" DeferredContentRouteValue="@(item.Id.ToString())">
+                                <button id="@($"edit-btn-{item.Id.ToString()}")" type="button" class="btn btn-sm btn-primary" aria-label="@($"Edit item with ID {item.Id}")">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                    </svg>
+                                </button>
+                            </RxModalTrigger>
+                        </td>
+                        <td align="right">
+                            <span class="font-mono mr-5">
+                                @(item.Id)
+                            </span>
+                        </td>
+                        <td align="middle">
+                            <span class="font-mono text-nowrap">
+                                <RxUtcToLocal DateInput="@(item.Date!.Value)" />
+                            </span>
+                        </td>
+                        <td align="right">
+                            <span class="font-mono mr-5">
+                                @(item.TemperatureC)
+                            </span>
+                        </td>
+                        <td align="right">
+                            <span class="font-mono mr-5">
+                                @(item.TemperatureF)
+                            </span>
+                        </td>
+                        <td>
+                            @(item.Summary)
+                        </td>
+                        <td align="middle">
+                            @(item.IsVerified ? "Y" : "N")
+                        </td>
+                        <td>
+                            @(Utilities.AddSpacesToCamelCase(item.TemperatureTaken.ToString()))
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9">
+                        <div class="flex justify-between items-center">
+                            <div class="sm:w-1/3 flex text-primary">
+                                Total Records: @(Model.State.TotalRecords)
+                            </div>
+                            <div class="sm:w-1/3 flex justify-center">
+                                <RxGridPager
+                                    Model="@(Model)" 
+                                    class="join-item btn btn-sm">
+                                    Page @(Model.State.Page) of @(Model.State.GetTotalPages())
+                                </RxGridPager>
+                            </div>
+                            <div class="sm:w-1/3 flex justify-end">
+                                <Spinner Id="@(Model.SpinnerId)" />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </TableContent>
+</RxGrid>
+
+@code {
+    [Parameter] public IGridModel<ItemModel> Model { get; set; } = new GridModel() { IsSuspended = true };
+}

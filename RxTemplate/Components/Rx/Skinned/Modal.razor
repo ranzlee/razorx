@@ -1,0 +1,17 @@
+<RxModal 
+    Id="@(Id)" 
+    ContainerClass="modal modal-bottom sm:modal-middle"
+    ModalClass="modal-box">
+    <Title>
+        @(Title)
+    </Title>
+    <Content>
+        @(Content)
+    </Content>
+</RxModal>
+
+@code {
+    [Parameter, EditorRequired] public string Id { get; set; } = null!;
+    [Parameter] public RenderFragment? Title { get; set; }
+    [Parameter] public RenderFragment? Content { get; set; }
+}

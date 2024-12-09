@@ -1,0 +1,18 @@
+<CascadingValue Name="@(nameof(Id))" Value="@(Id)">
+    <dialog id="@(Id)" class="@(ContainerClass)">
+        <div class="@(ModalClass)">
+             @(Title)
+            <form action="" method="dialog">
+                @(Content)
+            </form>
+        </div>
+    </dialog>
+</CascadingValue>
+
+@code {
+    [Parameter, EditorRequired] public string Id { get; set; } = null!;
+    [Parameter] public RenderFragment? Title { get; set; }
+    [Parameter] public RenderFragment? Content { get; set; }
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string ModalClass { get; set; } = null!;
+}

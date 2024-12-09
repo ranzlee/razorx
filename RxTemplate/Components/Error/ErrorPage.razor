@@ -1,0 +1,23 @@
+﻿@implements IComponentModel<ErrorModel>
+
+<HeadContent>
+    <title>Error</title>
+</HeadContent>
+
+<div class="flex justify-center">
+    <article class="prose">
+        <div class="flex justify-center">
+            <h2 class="text-error">We're sorry. Something went wrong :(</h2>
+        </div>
+        <div class="not-prose">
+            <div class="mockup-code mt-5">
+                <pre data-prefix=">" class="text-warning"><code>Status Code: @(Convert.ToInt32(Model.StatusCode))</code></pre>
+                <pre data-prefix=">" class="text-warning"><code>Description: @(Utilities.AddSpacesToCamelCase(Model.StatusCode.ToString()))</code></pre>
+            </div>
+        </div>
+    </article>
+</div>
+
+@code {
+    [Parameter] public ErrorModel Model { get; set; } = new(HttpStatusCode.NotFound);
+}

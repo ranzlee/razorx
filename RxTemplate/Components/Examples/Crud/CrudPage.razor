@@ -1,0 +1,114 @@
+<HeadContent>
+    <title>Examples: The Kitchen Sync</title>
+</HeadContent>
+
+@*
+The success toast to pop after a successful delete
+*@
+<Toast Id="crud-toast" />
+
+@*
+The confirm modal for delete operations. The contents of the modal are deferred loaded once triggered.
+The trigger is a grid action component present on each row.
+*@
+<Modal Id="delete-modal">
+    <Title>
+        <div class="flex justify-between items-center">
+            <div class="text-lg font-bold">
+                <span id="delete-modal-title">&nbsp;</span>
+            </div>
+            <Spinner Id="delete-grid-item" />
+        </div>
+    </Title>
+    <Content>
+        <RxModalDeferredContent ContentId="delete-modal-form" RenderFromRoute="/examples/crud/delete-modal">
+            <div class="h-[158px]">
+                <Spinner AlwaysVisible="@(true)" />    
+            </div>
+            <ModalActions>
+                <ModalDismiss ModalId="delete-modal" DismissActionName="Cancel" />
+            </ModalActions>
+        </RxModalDeferredContent>
+    </Content>
+</Modal>
+
+<Modal Id="save-modal">
+    <Title>
+        <div class="flex justify-between items-center">
+            <div class="text-lg font-bold">
+                <span id="save-modal-title">&nbsp;</span>
+            </div>
+            <Spinner Id="save-grid-item" />
+        </div>
+    </Title>
+    <Content>
+        <RxModalDeferredContent ContentId="save-modal-form" RenderFromRoute="/examples/crud/save-modal">
+            <div class="h-[392px]">
+                <Spinner AlwaysVisible="@(true)" />    
+            </div>
+            <ModalActions>
+                <ModalDismiss ModalId="save-modal" DismissActionName="Cancel" />
+            </ModalActions>
+        </RxModalDeferredContent>
+    </Content>
+</Modal>
+
+<div id="form-page" class="flex justify-center">
+    <article class="prose">
+        <div class="flex justify-center">
+            <h2>The Kitchen Sync</h2>
+        </div>
+    </article>
+</div>
+
+<div class="flex justify-between items-end">
+    <div class="flex max-sm:flex-col sm:items-end gap-x-2 max-sm:gap-y-1">
+        @* 
+        Filtering must be implemented external to the grid. Here we allow
+        for specific properties bound to the grid to be selected. On selection change, 
+        we'll issue a request to get the form elements specific to the filter property chosen.
+        *@
+        <div class="max-w-40">
+            <Select 
+                Property="@(nameof(FilterProperty))" 
+                Value="@(FilterProperty)" 
+                Label="Filter" 
+                Options="@(Options)"
+                hx-trigger="change"
+                hx-get="/examples/crud/filter"
+                hx-target="#grid-filter"
+                hx-swap="outerHTML transition:true">
+            </Select>
+        </div>
+        <div id="grid-filter"></div>
+    </div>
+    <RxModalTrigger ModalId="save-modal" DeferredContentRouteValue="0">
+        <button id="new-btn" type="button" class="btn btn-primary" aria-label="Add a new item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+            </svg>
+        </button>
+    </RxModalTrigger>
+</div>
+
+@*
+The component that contains the RxGrid. This is a "suspended" component since it will be 
+initially lazy-loaded based on existing state for the last page, sort, and filter options used. 
+*@
+<Grid />
+
+
+@code {
+    private string FilterProperty = null!;
+    private Dictionary<string, string> Options = [];
+    protected override void OnParametersSet() {
+        Options.Add("Select...", string.Empty);
+        Options.Add("ID", nameof(ItemModel.Id));
+        Options.Add("Date", nameof(ItemModel.Date));
+        Options.Add("Temp. C", nameof(ItemModel.TemperatureC));
+        Options.Add("Temp. F", nameof(ItemModel.TemperatureF));
+        Options.Add("Summary", nameof(ItemModel.Summary));
+        Options.Add("Verified", nameof(ItemModel.IsVerified));
+        Options.Add("Observed", nameof(ItemModel.TemperatureTaken));
+    }
+}

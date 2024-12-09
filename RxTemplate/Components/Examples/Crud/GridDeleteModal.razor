@@ -1,0 +1,87 @@
+@implements IComponentModel<ItemModel?>
+
+<span id="delete-modal-title" hx-swap-oob="true">Delete Item ID: @(Model?.Id)</span>
+
+@if (Model == null) {
+    <RxModalResolvedContent ContentId="delete-modal-form">
+        <div class="h-[158px]">
+            <div class="flex justify-center h-full">
+                <div class="flex flex-col justify-center">
+                    Record not found, please refresh the grid.
+                </div>
+            </div>
+        </div>
+        <ModalActions>
+            <ModalDismiss ModalId="delete-modal" DismissActionName="Cancel" />
+        </ModalActions>
+    </RxModalResolvedContent>
+    return;
+}
+
+<RxModalResolvedContent ContentId="delete-modal-form">
+    <div class="mt-3">
+        <div class="flex">
+            <div class="w-32">Date:</div>
+            <div>
+                <RxUtcToLocal DateInput="@(Model.Date!.Value)" />
+            </div>
+        </div>
+        <div class="flex">
+            <div class="w-32">Temp. C:</div>
+            <div>
+                @(Model.TemperatureC)
+            </div>
+        </div>
+        <div class="flex">
+            <div class="w-32">Temp. F:</div>
+            <div>
+                @(Model.TemperatureF)
+            </div>
+        </div>
+        <div class="flex">
+            <div class="w-32">Summary:</div>
+            <div>
+                @(Model.Summary)
+            </div>
+        </div>
+        <div class="flex">
+            <div class="w-32">Verified:</div>
+            <div>
+                @(Model.IsVerified ? "Y" : "N")
+            </div>
+        </div>
+        <div class="flex">
+            <div class="w-32">Observed:</div>
+            <div>
+                @(Utilities.AddSpacesToCamelCase(Model.TemperatureTaken.ToString()))
+            </div>
+        </div>
+    </div>
+    <ModalActions>
+        <div>
+            <RxGridActionButton 
+                Model="@(gridModel)"
+                type="submit" 
+                hx-delete="@($"/examples/crud/{Model.Id}")"
+                hx-indicator="#delete-grid-item"
+                class="btn btn-error">
+                Delete
+            </RxGridActionButton>
+        </div>
+        <ModalDismiss ModalId="delete-modal" DismissActionName="Cancel" />
+        <script>
+            // Since we're reusing the delete-modal, clear the title on close
+            (function() {
+                document.getElementById("delete-modal").addEventListener("close", function() {
+                    var title = document.getElementById("delete-modal-title");
+                    title.innerText = "";
+                });
+            })();
+        </script>
+    </ModalActions>
+</RxModalResolvedContent>
+
+@code {
+    private GridModel gridModel = new();
+    [Parameter] public ItemModel? Model { get; set; }
+}

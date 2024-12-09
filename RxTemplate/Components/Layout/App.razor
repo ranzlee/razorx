@@ -1,0 +1,152 @@
+﻿@implements IRootComponent
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="This is the RxTemplate application.">
+  @* htmx config *@
+  <meta name="htmx-config" content='{ 
+              "timeout": 20000, 
+              "historyCacheSize": 0, 
+              "refreshOnHistoryMiss": true, 
+              "allowEval": false, 
+              "includeIndicatorStyles": false 
+          }'>
+  @* razorx core styles for headless components *@
+  <link href="/css/razorx.css?@(ScriptHelper?.GetCacheBuster())" rel="stylesheet">
+  @* tailwind - built with npm *@
+  <link href="/css/app.css?@(ScriptHelper?.GetCacheBuster())" rel="stylesheet">
+  @* eager load razorx scripts *@
+  <script src="/js/razorx.js?@(ScriptHelper?.GetCacheBuster())"></script>
+  <script>
+      razorx.debug(@(RxConfig?.DebugRxClient == true ? "true" : "false"));
+      razorx.theme.configureTheme("@(RxConfig?.LightTheme ?? "light")", "@(RxConfig?.DarkTheme ?? "dark")");
+  </script>
+  @* defer load htmx scripts *@
+  <script src="/js/htmx.min.js?@(ScriptHelper?.GetCacheBuster())" defer></script>
+  <script src="/js/json-enc.js?@(ScriptHelper?.GetCacheBuster())" defer></script>
+  <HeadOutlet />
+</head>
+
+@* hx-ext json-enc converts request form data into json *@
+<body hx-ext="json-enc">
+  <div id="aria-live-region" aria-live="polite" class="sr-only"></div>
+  <div class="drawer">
+    <input id="site-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content flex flex-col">
+      <div class="flex flex-col h-screen justify-between">
+        <div class="mb-auto">
+          
+          <!-- Header  -->
+          <header class="opacity-100 z-30 fixed top-0 left-0 right-0 h-20 bg-base-100/50 backdrop-blur-md border-b border-base-300">
+            <!-- Navbar -->
+            <div class="navbar py-2 px-5">
+              <div class="navbar-start">
+                <div class="flex-none mr-2">
+                  <button id="menu-toggle" type="button" for="site-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-6 w-6 stroke-current">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                  </button>
+                  <script>
+                    (function() {
+                      var menuToggle = document.getElementById("menu-toggle");
+                      var drawerState = document.getElementById("site-drawer");
+
+                      document.addEventListener("keydown", function(evt) {
+                          if (!drawerState.checked) {
+                            return;
+                          }
+                          if (event.key === 'Escape' || event.keyCode === 27) {
+                            drawerState.checked = false;
+                            menuToggle.focus();
+                          }
+                      });
+
+                      menuToggle.addEventListener("click", function() {
+                        drawerState.checked = true;
+                        var drawer = document.getElementById("drawer");
+                        drawer.querySelector("#close-sidebar").focus();
+                      });
+
+                    })()
+                  </script>
+                </div>
+                <div class="flex items-center gap-x-3">
+                  <a href="/" class="rounded-3xl p-3" aria-label="Home"
+                    aria-current="@(HttpContextAccessor!.HttpContext!.GetCurrentRoute() == "/" ? "page" : false)">
+                    <h1 class="text-3xl font-semibold text-primary">
+                      RxTemplate
+                    </h1>
+                  </a>
+                </div>
+              </div>
+              <div class="navbar-center flex justify-center gap-x-1 max-lg:hidden">
+                <div>
+                  <em class="text-sm font-semibold">RazorX - An ASP.NET and htmx meta-framework</em>
+                </div>
+              </div>
+              <div class="navbar-end flex gap-x-4 mr-3">
+                <nav class="navbar-center">
+                  <div class="flex items-center">
+                    <a 
+                      href="https://github.com/ranzlee/razorx" 
+                      title="RazorX on GitHub"
+                      aria-label="RazorX on GitHub">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+                      </svg>
+                    </a>
+                  </div>
+                </nav>
+                <ThemeSwitch />
+              </div>
+            </div>
+          </header>
+
+          <!-- Page content -->
+          <div class="flex">
+            <main class="w-full px-6 max-sm:px-4 mb-6 mt-16">
+              <DynamicComponent Type="@(MainContent)" Parameters="@(MainContentParameters)" />
+            </main>
+          </div>
+          
+        </div>
+
+        <!-- Footer -->
+        <div class="flex bg-neutral text-neutral-content">
+          <footer class="flex flex-col p-10 w-full">
+            <div class="flex justify-center text-sm pl-4 pb-2">
+              <em class="text-small">A Hypermedia Event-Driven Application</em>
+            </div>
+            <div class="flex justify-center text-xs pl-4 pb-2">
+              © @DateTime.Now.Year - RxTemplate
+            </div>
+          </footer>
+        </div>
+        
+      </div>
+    </div>
+    <div id="drawer" class="drawer-side z-50">
+      <label for="site-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+      <!-- Sidebar content -->
+      <Nav />
+    </div>
+  </div>
+</body>
+
+</html>
+
+@code {
+  [Inject] public IHttpContextAccessor? HttpContextAccessor { get; set; }
+  [Inject] public IScriptHelper? ScriptHelper { get; set; }
+  [Inject] public RxConfig? RxConfig { get; set;}
+  [Inject] public ILogger<App>? Logger { get; set; }
+  [Parameter] public Type MainContent { get; set; } = null!;
+  [Parameter] public Dictionary<string, object?> MainContentParameters { get; set; } = [];
+}

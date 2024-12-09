@@ -1,0 +1,15 @@
+{
+  "author": "Randy Lee",
+  "classifications": ["Web", "ASP.NET", "Razor Components", "htmx"],
+  "name": "RazorX",
+  "identity": "RazorX",
+  "groupIdentity": "RazorX",
+  "shortName": "razorx",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "RxTemplate",
+  "preferNameDirectory": true,
+  "defaultName": "NewRxApp"
+}

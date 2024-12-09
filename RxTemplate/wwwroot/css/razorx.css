@@ -1,0 +1,55 @@
+@view-transition {
+  navigation: auto;
+}
+
+dialog {
+  display: none;
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.3s ease-in-out;
+
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+dialog[open] {
+  display: grid;
+}
+
+dialog::backdrop {
+  backdrop-filter: blur(2px);
+}
+
+.hidden {
+  display: none;
+}
+
+.loading-indicator-using-opacity {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
+
+.htmx-request.loading-indicator-using-opacity {
+  opacity: 1;
+}
+
+.loading-indicator-using-display {
+  display: none;
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
+
+.htmx-request.loading-indicator-using-display {
+  display: inline;
+  opacity: 1;
+}
+
+.fade-out-1000 {
+  opacity: 0;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 1000ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}

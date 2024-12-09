@@ -1,0 +1,110 @@
+@implements IComponentModel<ItemModel?>
+
+@if (Model == null) {
+    <span id="save-modal-title" hx-swap-oob="true">Edit Item ID:</span>
+    <RxModalResolvedContent ContentId="save-modal-form">
+       <div class="h-[392px]">
+            <div class="flex justify-center h-full">
+                <div class="flex flex-col justify-center">
+                    Record not found, please refresh the grid.
+                </div>
+            </div>
+        </div>
+        <ModalActions>
+            <ModalDismiss ModalId="save-modal" DismissActionName="Cancel" />
+        </ModalActions>
+    </RxModalResolvedContent>
+    return;
+}
+
+@if (Model.Id > 0) {
+    <span id="save-modal-title" hx-swap-oob="true">Edit Item ID: @(Model.Id)</span>
+} else {
+    <span id="save-modal-title" hx-swap-oob="true">New Item</span>
+}
+
+<RxModalResolvedContent ContentId="save-modal-form">
+    <div class="flex justify-center w-full">
+        <div class="mt-3">
+            <div class="flex max-w-xs">
+                <Field 
+                    Property="@(nameof(Model.Date))" 
+                    Value="@(Model.Date)" 
+                    Label="Date" 
+                    InputType="datetime-local"  
+                    ValidationContext="@(ValidationContext)"
+                    placeholder=@($"e.g. {DateTime.Now.ToString("MM/dd/yyyy, hh:mm tt")}")>
+                </Field>
+            </div>
+            <div class="flex max-w-xs">
+                <Field 
+                    Property="@(nameof(Model.TemperatureC))" 
+                    Value="@(Model.TemperatureC)" 
+                    Label="Temp. C"
+                    InputType="number" 
+                    ValidationContext="@(ValidationContext)"
+                    placeholder="e.g. 17">
+                </Field>
+            </div>
+            <div class="flex max-w-xs">
+                <Field 
+                    Property="@(nameof(Model.Summary))" 
+                    Value="@(Model.Summary)" 
+                    Label="Summary" 
+                    InputType="text"
+                    ValidationContext="@(ValidationContext)"
+                    placeholder="e.g. Balmy">
+                </Field>
+            </div>
+            <div class="flex max-w-xs">
+                <Toggle 
+                    Property="@(nameof(Model.IsVerified))" 
+                    Value="@(Model.IsVerified)" 
+                    Label="Verified"
+                    ValidationContext="@(ValidationContext)">
+                </Toggle>
+            </div>
+            <div class="flex max-w-xs">
+                <Select 
+                    Property="@(nameof(Model.TemperatureTaken))" 
+                    Value="@(Model.TemperatureTaken.ToString())" 
+                    Label="Observed" 
+                    ValidationContext="@(ValidationContext)" 
+                    EnumType="@(typeof(TimeOfDay))">
+                </Select>
+            </div>
+        </div>
+    </div>
+    <ModalActions>
+        <div>
+            <RxGridActionButton 
+                Id="save-item"
+                Model="@(gridModel)"
+                type="submit" 
+                hx-put="@(Model.Id == 0 ? false : $"/examples/crud/{Model.Id}")"
+                hx-post="@(Model.Id == 0 ? $"/examples/crud" : false)"
+                hx-indicator="#save-grid-item"
+                hx-disabled-elt="this"
+                class="btn btn-primary">
+                Save
+            </RxGridActionButton>
+        </div>
+        <ModalDismiss ModalId="save-modal" DismissActionName="Cancel" />
+        <script>
+            // Since we're reusing the save-modal, clear the title on close
+            (function() {
+                document.getElementById("save-modal").addEventListener("close", function() {
+                    var title = document.getElementById("save-modal-title");
+                    title.innerText = "";
+                });
+            })();
+        </script>
+    </ModalActions>
+</RxModalResolvedContent>
+
+@code {
+    [Inject] public ValidationContext ValidationContext { get; set; } = new();
+    private GridModel gridModel = new();
+    [Parameter] public ItemModel? Model { get; set; }
+
+}

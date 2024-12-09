@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageVersion>1.0.0-alpha</PackageVersion>
+    <PackageId>RazorX.Template</PackageId>
+    <Title>RazorX Template</Title>
+    <Authors>Randy Lee</Authors>
+    <Description>A meta-framework for ASP.NET Minimal API, Razor Components, and htmx.</Description>
+    <PackageTags>dotnet-new;templates;razorx</PackageTags>
+    <PackageProjectUrl>https://github.com/ranzlee/razorx</PackageProjectUrl>
+    <TargetFramework>net8.0</TargetFramework>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LocalizeTemplates>false</LocalizeTemplates>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.TemplateEngine.Tasks" Version="*" PrivateAssets="all" IsImplicitlyDefined="true"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="content\**\*" Exclude="content\**\.DS_Store;content\**\bin\**;content\**\obj\**;content\**\.vscode\**;content\**\Node\node_modules\**;content\**\wwwroot\css\app.css;content\**\.gitignore;content\**\.git\**;content\**\appsettings.Development.json;content\**\*.sln;" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>

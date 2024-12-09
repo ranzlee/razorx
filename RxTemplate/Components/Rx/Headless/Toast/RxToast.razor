@@ -1,0 +1,22 @@
+<template id="@(Id)-template">
+    <div id="@(Id)"
+        role="presentation"
+        data-transition-class="@(TransitionClass)"
+        data-begin-transition-after="@(BeginTransitionAfter)"
+        data-remove-after="@(RemoveAfter)"
+        class="@(ContainerClass)"
+        >
+        <div class="@(AlertClass)"></div>
+    </div>
+</template>
+
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [EditorRequired, Parameter] public string Id { get; set; } = null!;
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string TransitionClass { get; set; } = null!;
+    [Parameter] public string AlertClass { get; set; } = null!;
+    [Parameter] public int RemoveAfter { get; set; } = 4500;
+    [Parameter] public int BeginTransitionAfter { get; set; } = 3500;
+}

@@ -1,0 +1,9 @@
+<RxToast Id="@(Id)" 
+    TransitionClass="fade-out-1000" 
+    ContainerClass="toast toast-center toast-top z-[100]"
+    AlertClass="@(IsError ? "alert alert-error" : "alert alert-success")" />
+
+@code {
+    [Parameter, EditorRequired] public string Id { get; set; } = null!;
+    [Parameter] public bool IsError { get; set; }
+}

@@ -1,0 +1,84 @@
+<label class="@(ContainerClass)">
+    <div class="@(LabelContainerClass)">
+        <span class="@(LabelClass)">@(Label)</span>
+        <span class="@(CounterClass)">
+            <span id="@(Id)-len"></span>
+            @if (MaxLength.HasValue)
+            {
+                <span>&nbsp;of&nbsp;@(MaxLength.Value)</span>
+            }
+        </span>
+    </div>
+    <textarea
+        id="@(Id)"
+        name="@(Property)"
+        value="@(Value)"
+        maxlength="@(MaxLength)"
+        aria-invalid="@(isInvalid ? "true" : false)"
+        aria-describedby="@(isInvalid ? $"{Id}-error" : false)"
+        class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
+        @attributes=@(AdditionalAttributes)>
+    </textarea>
+    @if (isInvalid) {
+        @(ValidationContainer)
+    }
+</label>
+<script>
+    (function() {
+        var memoLength = document.getElementById("@(Id)-len");
+        memoLength.innerText = 0;
+
+        var memo = document.getElementById("@(Id)");
+        
+        function resize () {
+            memo.style.height = 'auto';
+            memo.style.height = (memo.scrollHeight + @(AutosizeHeightBuffer)).toString() +'px';
+        }
+
+        function calc () {
+            resize();
+            memoLength.innerHTML = memo.value.length;
+        }
+
+        function calcAfterTick () {
+            setTimeout(calc, 0);
+        }
+
+        memo.addEventListener("change", calc);
+        memo.addEventListener("cut", calcAfterTick);
+        memo.addEventListener("paste", calcAfterTick);
+        memo.addEventListener("drop", calcAfterTick);
+        memo.addEventListener("keydown", calcAfterTick);
+        
+        calc();
+    })();
+</script>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter] public int AutosizeHeightBuffer { get; set; } = 16;
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public int? MaxLength { get; set; }
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string Property { get; set; } = "";
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public ValidationContext? ValidationContext { get; set; }
+    [Parameter] public RenderFragment? ValidationContainer { get; set; }
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string InvalidClass { get; set; } = null!;
+    [Parameter] public string ControlClass { get; set; } = null!;
+    [Parameter] public string LabelContainerClass { get; set; } = null!;
+    [Parameter] public string LabelClass { get; set; } = null!;
+    [Parameter] public string CounterClass { get; set; } = null!;
+
+    private bool isInvalid { get; set; }
+    
+    protected override void OnParametersSet() {
+        if (ValidationContext != null && ValidationContext.TryGetError(Property, out var error)) {
+            isInvalid = true;
+        }
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+}

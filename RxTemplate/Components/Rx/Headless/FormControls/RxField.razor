@@ -1,0 +1,65 @@
+<label class="@(ContainerClass)">
+    <div class="@(LabelContainerClass)">
+        <span class="@(LabelClass)">@(Label)</span>
+    </div>
+    <input Id="@(Id)"
+            name="@(Property)" 
+            value="@(Value)" 
+            type="@(InputType)" 
+            aria-invalid="@(isInvalid ? "true" : false)"
+            aria-describedby="@(isInvalid ? $"{Id}-error" : false)"
+            class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
+            autocomplete="off"
+            @attributes=@(AdditionalAttributes)>
+    @if (InputType.Trim().ToLower() == "datetime-local") {
+        <input id="@(Id)-time-zone" name="@(Property)TimeZone" type="hidden" />
+        <script>
+            (function() {
+                var input = document.getElementById("@(Id)");
+                var dt = new Date(`${input.value}:00.000Z`);
+                if (!isNaN(dt.getTime())) {
+                    input.value = `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}T${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}`;
+                }
+                var tz =  Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.getElementById("@(Id)-time-zone").value = tz;
+            })()
+        </script> 
+    }
+    @if (isInvalid) {
+        @(ValidationContainer)
+    }
+</label>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string Label { get; set; } = null!;
+    [Parameter] public string InputType { get; set; } = "text";
+    [Parameter] public string Property { get; set; } = null!;
+    [Parameter] public object? Value { get; set; }
+    [Parameter] public ValidationContext? ValidationContext { get; set; }
+    [Parameter] public RenderFragment? ValidationContainer { get; set; }
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string InvalidClass { get; set; } = null!;
+    [Parameter] public string ControlClass { get; set; } = null!;
+    [Parameter] public string LabelContainerClass { get; set; } = null!;
+    [Parameter] public string LabelClass { get; set; } = null!;
+
+    private bool isInvalid { get; set; }
+    protected override void OnParametersSet() {
+        if (InputType.Trim().ToLower() == "date") {
+            Value = (Value as DateOnly?)?.ToString("yyyy-MM-dd");
+        }
+        if (InputType.Trim().ToLower() == "datetime-local") {
+            if (DateTime.TryParse(Value?.ToString(), out var dt)) {
+                Value = dt.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+            }
+        }
+        if (ValidationContext != null && ValidationContext.TryGetError(Property, out var error)) {
+            isInvalid = true;
+        }
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+}

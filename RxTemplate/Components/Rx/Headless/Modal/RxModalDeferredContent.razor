@@ -1,0 +1,27 @@
+<template id="@(ContentId)-template">
+    @(ChildContent)
+</template>
+<div id="@(ContentId)"></div>
+<script>
+    (function() {
+        var modal = document.getElementById("@(Id)");
+        modal.addEventListener("opened", function(evt) {
+            var content = document.getElementById("@(ContentId)-template")?.content?.cloneNode(true) ?? [];
+            document.getElementById("@(ContentId)")?.prepend(content);
+            htmx.ajax('GET', `@(RenderFromRoute.Trim().TrimEnd('/'))/${evt.detail.id}`, { 
+                target: '#@(ContentId)', 
+                swap: 'outerHTML transition:true' 
+            });
+        });
+        modal.addEventListener("close", function() {
+            document.getElementById("@(ContentId)")?.replaceChildren([]);
+        });
+    })();
+</script>
+
+@code {
+    [CascadingParameter(Name = nameof(Id))] protected string Id { get; set; } = null!;
+    [Parameter, EditorRequired] public string ContentId { get; set; } = null!;
+    [Parameter, EditorRequired] public string RenderFromRoute { get; set; } = null!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

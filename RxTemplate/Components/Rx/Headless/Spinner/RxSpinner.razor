@@ -1,0 +1,32 @@
+@if (AlwaysVisible) {
+    <div id="@(Id)" class="@(PositionHorizontalClass)">
+        <div class="@(PositionVerticalClass)">
+            <span class="@(SpinnerClass)"></span>
+        </div>
+    </div>
+    return;
+}
+
+@if (Transition == TransitionType.Opacity) {
+    <div id="@(Id)" class="loading-indicator-using-opacity @(PositionHorizontalClass)">
+        <div class="@(PositionVerticalClass)">
+            <span class="@(SpinnerClass)"></span>
+        </div>
+    </div>
+    return;    
+}
+
+<div id="@(Id)" class="loading-indicator-using-display @(PositionHorizontalClass)">
+    <div class="@(PositionVerticalClass)">
+        <span class="@(SpinnerClass)"></span>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public string PositionHorizontalClass { get; set; } = null!;
+    [Parameter] public string PositionVerticalClass { get; set; } = null!;
+    [Parameter] public string SpinnerClass { get; set; } = null!;
+    [Parameter] public bool AlwaysVisible { get; set; }
+    [Parameter] public TransitionType Transition { get; set; } 
+}

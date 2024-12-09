@@ -1,0 +1,42 @@
+@implements IComponentModel<IGridModel<T>>
+@typeparam T
+
+@if (Model == null) {
+    return;
+}
+
+@if (Model.IsSuspended) {
+    <input id="@(Model.StateKey)" type="hidden" /> 
+    <div id="@(Model.Id)" 
+        hx-trigger="load" 
+        hx-get="@(Model.RenderFromRoute)" 
+        hx-swap="outerHTML transition:true" 
+        hx-target="#@(Model.Id)"
+        hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
+        @attributes="@(AdditionalAttributes)">
+        @(SuspensionContent)
+        <script>
+            razorx.metadata.addToRequest(
+                @(Convert.ToInt32(Model.StateScope)), 
+                "@(Model.StateKey)",
+                document.getElementById("@(Model.Id)"));
+        </script>
+    </div>
+    return;
+}
+
+<div id="@(Model.Id)">
+    <input id="@(Model.StateKey)" type="hidden" /> 
+    @(FilterContent)
+    <div @attributes="@(AdditionalAttributes)">
+        @(TableContent)
+    </div>
+</div>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!;
+    [Parameter] public RenderFragment? SuspensionContent { get; set; }
+    [Parameter] public RenderFragment? FilterContent { get; set; }
+    [Parameter] public RenderFragment? TableContent { get; set; }
+}
