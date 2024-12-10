@@ -17,7 +17,10 @@ public class CrudHandler : IRequestHandler {
         return response.RenderComponent<CrudPage>(logger);
     }
 
-    public static IResult GetFilter(HttpResponse response, string filterProperty, ILogger<CrudHandler> logger) {
+    public static IResult GetFilter(
+        HttpResponse response,
+        string filterProperty,
+        ILogger<CrudHandler> logger) {
         // Render the filter form for the requested item property
         var model = new GridFilterModel {
             FilterProperty = filterProperty,
@@ -73,8 +76,8 @@ public class CrudHandler : IRequestHandler {
         return response.RenderComponent<GridSaveModal, ItemModel?>(model, logger);
     }
 
-    public async static Task<IResult> SaveItem
-        (HttpRequest request,
+    public async static Task<IResult> SaveItem(
+        HttpRequest request,
         HttpResponse response,
         int? id,
         ItemModel model,
