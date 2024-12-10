@@ -38,7 +38,7 @@ file sealed class DateOnlyJsonConverter(IHttpContextAccessor httpContextAccessor
                 nameof(Read));
             return null;
         }
-        if (httpContextAccessor.HttpContext == null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
+        if (httpContextAccessor.HttpContext is null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
             logger.LogTrace("No HttpContext or is not HX-Request - {converter}.{method} called default JsonSerializer.Deserialize<{type}>() for \"{val}\".",
                 nameof(DateOnlyJsonConverter),
                 nameof(Read),
@@ -87,7 +87,7 @@ file sealed class DateTimeJsonConverter(IHttpContextAccessor httpContextAccessor
                 nameof(Read));
             return null;
         }
-        if (httpContextAccessor.HttpContext == null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
+        if (httpContextAccessor.HttpContext is null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
             logger.LogTrace("No HttpContext or is not HX-Request - {converter}.{method} called default JsonSerializer.Deserialize<{type}>() for \"{val}\".",
                 nameof(DateTimeJsonConverter),
                 nameof(Read),
@@ -136,7 +136,7 @@ file sealed class BooleanJsonConverter(IHttpContextAccessor httpContextAccessor,
                 nameof(Read));
             return false;
         }
-        if (httpContextAccessor.HttpContext == null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
+        if (httpContextAccessor.HttpContext is null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
             logger.LogTrace("No HttpContext or is not HX-Request - {converter}.{method} called default JsonSerializer.Deserialize<{type}>() for {val}.",
                 nameof(BooleanJsonConverter),
                 nameof(Read),
@@ -181,7 +181,7 @@ file sealed class IntJsonConverter(IHttpContextAccessor httpContextAccessor, ILo
                 nameof(Read));
             return null;
         }
-        if (httpContextAccessor.HttpContext == null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
+        if (httpContextAccessor.HttpContext is null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
             logger.LogTrace("No HttpContext or is not HX-Request - {converter}.{method} called default JsonSerializer.Deserialize<{type}>() for {val}.",
                 nameof(IntJsonConverter),
                 nameof(Read),
@@ -230,7 +230,7 @@ file sealed class DecimalJsonConverter(IHttpContextAccessor httpContextAccessor,
                 nameof(Read));
             return null;
         }
-        if (httpContextAccessor.HttpContext == null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
+        if (httpContextAccessor.HttpContext is null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
             logger.LogTrace("No HttpContext or is not HX-Request - {converter}.{method} called default JsonSerializer.Deserialize<{type}>() for {val}.",
                 nameof(DecimalJsonConverter),
                 nameof(Read),

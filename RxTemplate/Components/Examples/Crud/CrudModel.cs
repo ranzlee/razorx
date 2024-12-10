@@ -100,10 +100,10 @@ public record ItemModel {
 /// The Enum for the TemperatureTaken property.
 /// </summary>
 public enum TimeOfDay {
-    Select = int.MinValue,
-    Evening = 0,
-    Morning = 1,
-    Night = 2,
-    Noon = 3,
-    NotReported = 4,
+    Select,
+    Evening,
+    Morning,
+    Night,
+    Noon,
+    NotReported,
 }

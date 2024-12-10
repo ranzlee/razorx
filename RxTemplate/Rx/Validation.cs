@@ -22,7 +22,7 @@ public class Validator<TValidator, TModel>(ValidationContext validationContext, 
 : AbstractValidator<TModel>, IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         var model = context.Arguments.OfType<TModel>().SingleOrDefault();
-        if (model == null) {
+        if (model is null) {
             logger?.LogError("Request model {model} cannot be resolved for validation", typeof(TModel));
             return Results.BadRequest($"Model of type {typeof(TModel)} is not included in the request.");
         }

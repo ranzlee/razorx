@@ -20,8 +20,8 @@ public record FormModel {
 }
 
 public enum ReportingStatusType {
-    NotReported = 0,
-    InProgress = 1,
-    Submitted = 2,
-    Completed = 3
+    NotReported,
+    InProgress,
+    Submitted,
+    Completed
 }
