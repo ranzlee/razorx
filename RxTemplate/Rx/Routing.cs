@@ -90,7 +90,7 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
         }
         // Verify endpoint.
         var endpoint = context.HttpContext.GetEndpoint();
-        if (endpoint == null) {
+        if (endpoint is null) {
             logger.LogTrace("Skip pre-route processing for non-determined endpoint {method}:{request}.",
                 context.HttpContext.Request.Method,
                 context.HttpContext.Request.GetDisplayUrl());
@@ -101,7 +101,7 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
         // Check for razor component response metadata.    
         var pageRouteFor = endpoint.Metadata.GetMetadata<IPageRouteForAttribute>();
         // Full page request to a partial component
-        if (pageRouteFor == null) {
+        if (pageRouteFor is null) {
             logger.LogTrace("No PageRouteForAttribute for request {method}:{request}. Responding with 404 NOT FOUND.",
                 context.HttpContext.Request.Method,
                 context.HttpContext.Request.GetDisplayUrl());
@@ -164,11 +164,11 @@ where TComponent : IComponent, IComponentModel<ErrorModel> {
             logger.LogInformation("Error for request {method}:{request} with model {model}.",
                context.HttpContext.Request.Method,
                context.HttpContext.Request.GetDisplayUrl(),
-               model == null ? "null" : model.ToString());
+               model is null ? "null" : model.ToString());
             // Add the layout component
             context.HttpContext.Items.Add(nameof(IPageRouteForAttribute), typeof(TFallbackRootComponent));
             //short circuit and return error
-            if (model == null) {
+            if (model is null) {
                 return context.HttpContext.Response.RenderComponent<TComponent>();
             }
             logger.LogInformation("Error for request {method}:{request} - responding with status code {statusCode}.",

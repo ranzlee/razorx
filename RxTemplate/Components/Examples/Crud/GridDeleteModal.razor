@@ -2,7 +2,7 @@
 
 <span id="delete-modal-title" hx-swap-oob="true">Delete Item ID: @(Model?.Id)</span>
 
-@if (Model == null) {
+@if (Model is null) {
     <RxModalResolvedContent ContentId="delete-modal-form">
         <div class="h-[158px]">
             <div class="flex justify-center h-full">

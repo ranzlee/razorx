@@ -1,6 +1,6 @@
 @implements IComponentModel<ItemModel?>
 
-@if (Model == null) {
+@if (Model is null) {
     <span id="save-modal-title" hx-swap-oob="true">Edit Item ID:</span>
     <RxModalResolvedContent ContentId="save-modal-form">
        <div class="h-[392px]">

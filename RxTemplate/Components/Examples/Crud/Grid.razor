@@ -13,9 +13,8 @@
                 && DateOnly.TryParse(filter.FilterValue, out var d)) {
                     filter.FilterValue = d.ToString("MM/dd/yyyy");
                 }
-                @if ((filter.FilterProperty == nameof(ItemModel.TemperatureTaken)
-                    || filter.FilterProperty == nameof(ItemModel.IsVerified))
-                && string.IsNullOrWhiteSpace(filter.FilterValue)) {
+                @if (filter.FilterProperty == nameof(ItemModel.TemperatureTaken)
+                && filter.FilterValue == nameof(TimeOfDay.Select)) {
                     filter.FilterValue = "Not Provided";
                 }
                 <div class="badge badge-warning gap-2">
