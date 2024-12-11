@@ -6,7 +6,7 @@
     "build-css": "npx tailwindcss -i src/css/app.css -o ../wwwroot/css/app.css --minify"
   },
   "author": "anonymous",
-  "license": "UNLICENSED",
+  "license": "0BSD",
   "dependencies": {
     "htmx-ext-json-enc": "^2.0.1",
     "htmx.org": "^2.0.3"
