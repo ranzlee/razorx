@@ -2,9 +2,9 @@
     Id="@(Id)" 
     ContainerClass="modal modal-bottom sm:modal-middle"
     ModalClass="modal-box">
-    <Title>
-        @(Title)
-    </Title>
+    <ModalTitle>
+        @(ModalTitle)
+    </ModalTitle>
     <Content>
         @(Content)
     </Content>
@@ -12,6 +12,6 @@
 
 @code {
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
-    [Parameter] public RenderFragment? Title { get; set; }
-    [Parameter] public RenderFragment? Content { get; set; }
+    [Parameter, EditorRequired] public RenderFragment? ModalTitle { get; set; }
+    [Parameter, EditorRequired] public RenderFragment? Content { get; set; }
 }

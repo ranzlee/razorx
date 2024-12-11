@@ -1,12 +1,15 @@
 @implements IComponentModel<ItemModel?>
 
 @if (Model is null) {
-    <span id="save-modal-title" hx-swap-oob="true">Edit Item ID:</span>
+    @* 
+    OOB swap the title 
+    *@
+    <span id="save-modal-title" hx-swap-oob="true">Item Not Found</span>
     <RxModalResolvedContent ContentId="save-modal-form">
        <div class="h-[392px]">
             <div class="flex justify-center h-full">
                 <div class="flex flex-col justify-center">
-                    Record not found, please refresh the grid.
+                    Item not found, please refresh the grid.
                 </div>
             </div>
         </div>
@@ -17,6 +20,9 @@
     return;
 }
 
+@* 
+OOB swap the title 
+*@
 @if (Model.Id > 0) {
     <span id="save-modal-title" hx-swap-oob="true">Edit Item ID: @(Model.Id)</span>
 } else {
@@ -24,8 +30,9 @@
 }
 
 <RxModalResolvedContent ContentId="save-modal-form">
+    <input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)" />
     <div class="flex justify-center w-full">
-        <div class="mt-3">
+        <div class="p-5">
             <div class="flex max-w-xs">
                 <Field 
                     Property="@(nameof(Model.Date))" 
@@ -90,15 +97,6 @@
             </RxGridActionButton>
         </div>
         <ModalDismiss ModalId="save-modal" DismissActionName="Cancel" />
-        <script>
-            // Since we're reusing the save-modal, clear the title on close
-            (function() {
-                document.getElementById("save-modal").addEventListener("close", function() {
-                    var title = document.getElementById("save-modal-title");
-                    title.innerText = "";
-                });
-            })();
-        </script>
     </ModalActions>
 </RxModalResolvedContent>
 
