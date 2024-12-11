@@ -3,25 +3,28 @@
 </HeadContent>
 
 @*
-The success toast to pop after a successful delete
+The success toast to pop after a successful POST/PUT/DELETE
 *@
 <Toast Id="crud-toast" />
 
 @*
-The confirm modal for delete operations. The contents of the modal are deferred loaded once triggered.
+The confirm modal for DELETE operations. The contents of the modal are deferred loaded once triggered.
 The trigger is a grid action component present on each row.
 *@
 <Modal Id="delete-modal">
-    <Title>
-        <div class="flex justify-between items-center">
+    <ModalTitle>
+        <div class="flex justify-between items-center bg-base-300 p-5 rounded">
             <div class="text-lg font-bold">
-                <span id="delete-modal-title">&nbsp;</span>
+                <span id="delete-modal-title"></span>
             </div>
             <Spinner Id="delete-grid-item" />
         </div>
-    </Title>
+    </ModalTitle>
     <Content>
-        <RxModalDeferredContent ContentId="delete-modal-form" RenderFromRoute="/examples/crud/delete-modal">
+        <RxModalDeferredContent 
+            ContentId="delete-modal-form" 
+            ClearOobContentIdOnClose="delete-modal-title" 
+            RenderFromRoute="/examples/crud/delete-modal">
             <div class="h-[158px]">
                 <Spinner AlwaysVisible="@(true)" />    
             </div>
@@ -32,17 +35,24 @@ The trigger is a grid action component present on each row.
     </Content>
 </Modal>
 
+@*
+The new/edit modal for POST/PUT operations. The contents of the modal are deferred loaded once triggered.
+The trigger is a grid action component present on each row.
+*@
 <Modal Id="save-modal">
-    <Title>
-        <div class="flex justify-between items-center">
+    <ModalTitle>
+        <div class="flex justify-between items-center bg-base-300 p-5 rounded">
             <div class="text-lg font-bold">
-                <span id="save-modal-title">&nbsp;</span>
+                <span id="save-modal-title"></span>
             </div>
             <Spinner Id="save-grid-item" />
         </div>
-    </Title>
+    </ModalTitle>
     <Content>
-        <RxModalDeferredContent ContentId="save-modal-form" RenderFromRoute="/examples/crud/save-modal">
+        <RxModalDeferredContent 
+            ContentId="save-modal-form" 
+            ClearOobContentIdOnClose="save-modal-title" 
+            RenderFromRoute="/examples/crud/save-modal">
             <div class="h-[392px]">
                 <Spinner AlwaysVisible="@(true)" />    
             </div>

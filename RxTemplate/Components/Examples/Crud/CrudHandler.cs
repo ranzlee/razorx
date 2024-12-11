@@ -86,8 +86,15 @@ public class CrudHandler : IRequestHandler {
         ILogger<CrudHandler> logger) {
         // Simulate a DB latency
         await Task.Delay(200);
+        if (request.Method == HTTP.PUT.ToString()) {
+            // PUT sends ID as parameter, so we'll do an integrity check
+            if (model.Id != (id ?? 0)) {
+                return TypedResults.BadRequest($"Invalid ID {id ?? 0}");
+            }
+        }
         if (validationContext.Errors.Count > 0) {
             response.HxRetarget("#save-modal-form", logger);
+
             // The server must always send back a UTC date for datetime-local form fields
             model.Date = model.GetDateAsUtc(logger);
             hxTriggers
@@ -98,12 +105,11 @@ public class CrudHandler : IRequestHandler {
         }
         var triggerBuilder = hxTriggers.With(response);
         // Validation passed, so save the item
-        if (id.HasValue) {
-            // PUT sends ID as parameter
-            model.Id = id.Value;
+        if (request.Method == HTTP.PUT.ToString()) {
             triggerBuilder.AddTrigger(new HxFocusTrigger($"#edit-btn-{id}", true));
         }
         else {
+            // POST
             triggerBuilder.AddTrigger(new HxFocusTrigger($"#new-btn"));
         }
         Service.Save(model);

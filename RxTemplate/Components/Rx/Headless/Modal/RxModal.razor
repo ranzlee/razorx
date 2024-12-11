@@ -1,7 +1,7 @@
 <CascadingValue Name="@(nameof(Id))" Value="@(Id)">
     <dialog id="@(Id)" class="@(ContainerClass)">
         <div class="@(ModalClass)">
-             @(Title)
+             @(ModalTitle)
             <form action="" method="dialog">
                 @(Content)
             </form>
@@ -11,7 +11,7 @@
 
 @code {
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
-    [Parameter] public RenderFragment? Title { get; set; }
+    [Parameter, EditorRequired] public RenderFragment? ModalTitle { get; set; }
     [Parameter] public RenderFragment? Content { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string ModalClass { get; set; } = null!;

@@ -15,6 +15,12 @@
         });
         modal.addEventListener("close", function() {
             document.getElementById("@(ContentId)")?.replaceChildren([]);
+            var oobClearId = "@(ClearOobContentIdOnClose ?? "")";
+            if (oobClearId === "") {
+                return;
+            }
+            var oob = document.getElementById(oobClearId);
+            oob?.replaceChildren([]);
         });
     })();
 </script>
@@ -23,5 +29,6 @@
     [CascadingParameter(Name = nameof(Id))] protected string Id { get; set; } = null!;
     [Parameter, EditorRequired] public string ContentId { get; set; } = null!;
     [Parameter, EditorRequired] public string RenderFromRoute { get; set; } = null!;
+    [Parameter] public string ClearOobContentIdOnClose { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
 }
