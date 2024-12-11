@@ -30,7 +30,6 @@ OOB swap the title
 }
 
 <RxModalResolvedContent ContentId="save-modal-form">
-    <input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)" />
     <div class="flex justify-center w-full">
         <div class="p-5">
             <div class="flex max-w-xs">
@@ -82,6 +81,7 @@ OOB swap the title
             </div>
         </div>
     </div>
+    <input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)" />
     <ModalActions>
         <div>
             <RxGridActionButton 
