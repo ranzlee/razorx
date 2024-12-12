@@ -13,6 +13,8 @@
     aria-label="@($"Sort {DisplayName} {(Model.State.SortProperty != PropertyName || Model.State.SortedDescending ? "ascending" : "descending")}")"
     @attributes="@(AdditionalAttributes)"
     hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
+    hx-trigger="@(TriggerOnMouseDown ? "mousedown, " : "") click"
+    hx-disabled-elt="this"
     hx-get="@(Model.RenderFromRoute)" 
     hx-swap="outerHTML transition:true" 
     hx-target="#@(Model.Id)"
@@ -65,6 +67,7 @@
     [Parameter, EditorRequired] public string DisplayName { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public bool UseNumericIndicator { get; set; }
+    [Parameter] public bool TriggerOnMouseDown { get; set; }
     protected override void OnParametersSet() {
         if (string.IsNullOrWhiteSpace(Id)) {
             Id = Utilities.GenerateElementId();

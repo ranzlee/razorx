@@ -9,6 +9,8 @@
     hx-target="@($"#{Model.Id}")"
     hx-swap="outerHTML transition:true"
     hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")" 
+    hx-trigger="@(TriggerOnMouseDown ? "mousedown, " : "") click"
+    hx-disabled-elt="this"
     @attributes="@(AdditionalAttributes)">
     @(ChildContent)
 </button>
@@ -24,6 +26,7 @@
     [Parameter, EditorRequired] public IGrid? Model { get; set; }
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool TriggerOnMouseDown { get; set; }
     protected override void OnParametersSet() {
         if (string.IsNullOrWhiteSpace(Id)) {
             Id = Utilities.GenerateElementId();
