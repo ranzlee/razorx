@@ -20,7 +20,7 @@ The trigger is a grid action component present on each row.
             <Spinner Id="delete-grid-item" />
         </div>
     </ModalTitle>
-    <Content>
+    <ModalBody>
         <RxModalDeferredContent 
             ContentId="delete-modal-form" 
             ClearOobContentIdOnClose="delete-modal-title" 
@@ -32,7 +32,7 @@ The trigger is a grid action component present on each row.
                 <ModalDismiss ModalId="delete-modal" DismissActionName="Cancel" />
             </ModalActions>
         </RxModalDeferredContent>
-    </Content>
+    </ModalBody>
 </Modal>
 
 @*
@@ -48,7 +48,7 @@ The trigger is a grid action component present on each row.
             <Spinner Id="save-grid-item" />
         </div>
     </ModalTitle>
-    <Content>
+    <ModalBody>
         <RxModalDeferredContent 
             ContentId="save-modal-form" 
             ClearOobContentIdOnClose="save-modal-title" 
@@ -60,7 +60,7 @@ The trigger is a grid action component present on each row.
                 <ModalDismiss ModalId="save-modal" DismissActionName="Cancel" />
             </ModalActions>
         </RxModalDeferredContent>
-    </Content>
+    </ModalBody>
 </Modal>
 
 <div id="form-page" class="flex justify-center">

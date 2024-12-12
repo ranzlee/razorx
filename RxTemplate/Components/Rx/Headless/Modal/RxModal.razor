@@ -3,7 +3,7 @@
         <div class="@(ModalClass)">
              @(ModalTitle)
             <form action="" method="dialog">
-                @(Content)
+                @(ModalBody)
             </form>
         </div>
     </dialog>
@@ -12,7 +12,7 @@
 @code {
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
     [Parameter, EditorRequired] public RenderFragment? ModalTitle { get; set; }
-    [Parameter] public RenderFragment? Content { get; set; }
+    [Parameter] public RenderFragment? ModalBody { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string ModalClass { get; set; } = null!;
 }
