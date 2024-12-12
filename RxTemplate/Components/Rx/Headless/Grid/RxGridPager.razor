@@ -14,6 +14,8 @@
         aria-label="@(Model.State.HasPreviousPage() ? $"Go to page {Model.State.Page - 1}" : "No previous page")"
         @attributes="@(AdditionalAttributes)"
         hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
+        hx-trigger="@(TriggerOnMouseDown ? "mousedown, " : "") click"
+        hx-disabled-elt="this"
         hx-get="@(Model.RenderFromRoute)" 
         hx-swap="outerHTML transition:true" 
         hx-target="#@(Model.Id)">
@@ -31,6 +33,8 @@
         aria-label="@(Model.State.HasNextPage() ? $"Go to page {Model.State.Page + 1}" : "No next page")"
         @attributes="@(AdditionalAttributes)"
         hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
+        hx-trigger="@(TriggerOnMouseDown ? "mousedown, " : "") click"
+        hx-disabled-elt="this"
         hx-get="@(Model.RenderFromRoute)" 
         hx-swap="outerHTML transition:true" 
         hx-target="#@(Model.Id)">
@@ -54,6 +58,7 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string NextButtonId { get; set; } = null!;
     [Parameter] public string PreviousButtonId { get; set; } = null!;
+    [Parameter] public bool TriggerOnMouseDown { get; set; }
 
     protected override void OnParametersSet() {
         if (string.IsNullOrWhiteSpace(NextButtonId)) {

@@ -25,7 +25,7 @@ The trigger is a grid action component present on each row.
             ContentId="delete-modal-form" 
             ClearOobContentIdOnClose="delete-modal-title" 
             RenderFromRoute="/examples/crud/delete-modal">
-            <div class="h-[158px]">
+            <div class="h-[186px]">
                 <Spinner AlwaysVisible="@(true)" />    
             </div>
             <ModalActions>
@@ -53,7 +53,7 @@ The trigger is a grid action component present on each row.
             ContentId="save-modal-form" 
             ClearOobContentIdOnClose="save-modal-title" 
             RenderFromRoute="/examples/crud/save-modal">
-            <div class="h-[392px]">
+            <div class="h-[420px]">
                 <Spinner AlwaysVisible="@(true)" />    
             </div>
             <ModalActions>
@@ -92,7 +92,10 @@ The trigger is a grid action component present on each row.
         </div>
         <div id="grid-filter"></div>
     </div>
-    <RxModalTrigger ModalId="save-modal" DeferredContentRouteValue="0">
+    <RxModalTrigger 
+        ModalId="save-modal" 
+        TriggerOnMouseDown=@(true)
+        DeferredContentRouteValue="0">
         <button id="new-btn" type="button" class="btn btn-primary" aria-label="Add a new item">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
