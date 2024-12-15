@@ -1,7 +1,7 @@
 @implements IComponentModel<GridFilterModel>
 
 <div id="grid-filter" class="flex max-sm:flex-col sm:items-end gap-x-2 max-sm:gap-y-1">
-    @if (Model.FilterType != null) {
+    @if (Model.FilterType is not null) {
         <input type="hidden" name="@(nameof(Model.FilterProperty))" value="@(Model.FilterProperty)">
         <div class="max-w-40">
             <Select
