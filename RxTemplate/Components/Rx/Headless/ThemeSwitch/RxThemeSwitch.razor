@@ -67,7 +67,7 @@
 
         function setAria() {
             themeBtn.setAttribute("aria-label", `${theme === '' ? 'system' : theme} theme`);
-            themeBtn.setAttribute("data-tip", `Switch to ${ getNextTheme() === '' ? 'system' : getNextTheme() }`);
+            themeBtn.setAttribute("title", `Switch to ${ getNextTheme() === '' ? 'system' : getNextTheme() }`);
         }
 
         setAria();

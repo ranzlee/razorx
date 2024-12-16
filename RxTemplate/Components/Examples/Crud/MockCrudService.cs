@@ -75,7 +75,7 @@ public class MockCrudService {
         }
         // Update
         var item = Data.SingleOrDefault(x => x.Id == model.Id);
-        if (item != null) {
+        if (item is not null) {
             item.Date = model.GetDateAsUtc();
             item.IsVerified = model.IsVerified;
             item.Summary = model.Summary;
@@ -244,15 +244,15 @@ public class MockCrudService {
                 continue;
             }
             if (f.FilterOperation == FilterOperationType.Equals.ToString()) {
-                data = data.Where(x => x.Summary != null && x.Summary.Equals(f.FilterValue, StringComparison.InvariantCultureIgnoreCase));
+                data = data.Where(x => x.Summary is not null && x.Summary.Equals(f.FilterValue, StringComparison.InvariantCultureIgnoreCase));
                 continue;
             }
             if (f.FilterOperation == FilterOperationType.StartsWith.ToString()) {
-                data = data.Where(x => x.Summary != null && x.Summary.StartsWith(f.FilterValue, StringComparison.InvariantCultureIgnoreCase));
+                data = data.Where(x => x.Summary is not null && x.Summary.StartsWith(f.FilterValue, StringComparison.InvariantCultureIgnoreCase));
                 continue;
             }
             if (f.FilterOperation == FilterOperationType.Contains.ToString()) {
-                data = data.Where(x => x.Summary != null && x.Summary.Contains(f.FilterValue, StringComparison.InvariantCultureIgnoreCase));
+                data = data.Where(x => x.Summary is not null && x.Summary.Contains(f.FilterValue, StringComparison.InvariantCultureIgnoreCase));
                 continue;
             }
         }

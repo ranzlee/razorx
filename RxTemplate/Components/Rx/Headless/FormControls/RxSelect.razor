@@ -36,13 +36,13 @@
     private bool isInvalid { get; set; }
 
     protected override void OnParametersSet() {
-        if (EnumType != null) {
+        if (EnumType is not null) {
             var enumNames = Enum.GetNames(EnumType);
             foreach (var en in enumNames) {
                 Options.Add(Utilities.AddSpacesToCamelCase(en), en);
             }
         }
-        if (ValidationContext != null && ValidationContext.TryGetError(Property, out var error)) {
+        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {

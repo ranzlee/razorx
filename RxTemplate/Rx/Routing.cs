@@ -69,6 +69,12 @@ public static class RoutingExtensions {
             .AddEndpointFilter<PageRouteFor<TRootComponent>>()
             .WithMetadata(new PageRouteForAttribute<TRootComponent>());
     }
+
+    public static RouteHandlerBuilder SkipAntiforgeryValidation(this RouteHandlerBuilder routeBuilder) {
+        return routeBuilder
+            .AddEndpointFilter<SkipAntiforgeryValidation>()
+            .WithMetadata(new SkipAntiforgeryValidationAttribute());
+    }
 }
 
 public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
@@ -150,6 +156,15 @@ where TRootComponent : IRootComponent {
 /// </summary>
 /// <typeparam name="TRootComponent">The root component that is the layout for the page.</typeparam>
 public class PageRouteFor<TRootComponent>() : IEndpointFilter where TRootComponent : IRootComponent {
+    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
+        return await next(context);
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+public class SkipAntiforgeryValidationAttribute : Attribute { }
+
+public class SkipAntiforgeryValidation() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }

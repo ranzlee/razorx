@@ -55,7 +55,7 @@
                 Value = dt.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
             }
         }
-        if (ValidationContext != null && ValidationContext.TryGetError(Property, out var error)) {
+        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {

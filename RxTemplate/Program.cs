@@ -22,6 +22,9 @@ services.AddScriptHelper();
 // Add services to the container
 services.AddRazorComponents();
 
+// Add services for <AuthorizeView>
+services.AddCascadingAuthenticationState();
+
 // Add response compression
 if (!builder.Environment.IsDevelopment()) {
     services.AddResponseCompression(options => {
@@ -54,6 +57,11 @@ services.AddHxTriggers();
 services.AddScoped<ValidationContext>();
 services.AddValidatorsFromAssemblyContaining<Program>();
 
+// Add auth - this is just for example purposes. You will need to 
+// configure your own OIDC identity provider or ASP.NET Core Identity
+builder.Services.AddAuthentication().AddCookie();
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -75,6 +83,10 @@ app.UseHttpsRedirection();
 // Use static files served from wwwroot
 app.UseStaticFiles();
 
+// Use auth
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Use antiforgery middleware
 app.UseAntiforgery();
 
@@ -82,7 +94,9 @@ app.UseAntiforgery();
 app.UseAntiforgeryCookie();
 
 // Map routes
-var routeBuilder = app.MapRoot().WithExamplesRoutes();
+app.MapRoot()
+    .WithAuthRoutes()
+    .WithExamplesRoutes();
 
 // Go!
 app.Run();
