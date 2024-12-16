@@ -38,7 +38,10 @@
         <p>
             This meta-framework is not concerned with anything beyond implementing a simple and consistent 
             approach for integrating ASP.NET and htmx. Concerns like authentication, authorization, and data persistence 
-            should be implemented with the usual .NET frameworks and strategies, like cookie middleware and EntityFramework.   
+            should be implemented with the usual .NET frameworks and strategies, like ASP.NET Core Identity or another OIDC/Entra
+            Identity Provider (IDP) and EntityFramework. There is a basic authentication included in the template for the purpose 
+            of demonstrating the auth flow integration and using <code>&lt;AuthorizeView&gt;</code> for authorization-dependent 
+            rendering.   
         </p>
         <p>
             There is no JS framework or library included besides htmx. You may add 

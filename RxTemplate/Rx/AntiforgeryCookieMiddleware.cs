@@ -41,6 +41,13 @@ public sealed class AntiforgeryCookieMiddleware(RequestDelegate next) {
             await next(context);
             return;
         }
+        // Check for explicit antiforgery skip validation
+        var endpoint = context.GetEndpoint();
+        if (endpoint is not null
+        && endpoint.Metadata.GetMetadata<SkipAntiforgeryValidationAttribute>() is not null) {
+            await next(context);
+            return;
+        }
         // Validate antiforgery token for non-GET requests
         logger.LogTrace("Validating Antiforgery token for {method}:{request}.",
             context.Request.Method,

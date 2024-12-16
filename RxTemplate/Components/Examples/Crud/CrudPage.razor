@@ -2,72 +2,84 @@
     <title>Examples: The Kitchen Sync</title>
 </HeadContent>
 
-@*
-The success toast to pop after a successful POST/PUT/DELETE
-*@
-<Toast Id="crud-toast" />
+<AuthorizeView>
+    <Authorized>
+        @*
+        The success toast to pop after a successful POST/PUT/DELETE
+        *@
+        <Toast Id="crud-toast" />
 
-@*
-The confirm modal for DELETE operations. The contents of the modal are deferred loaded once triggered.
-The trigger is a grid action component present on each row.
-*@
-<Modal Id="delete-modal">
-    <ModalTitle>
-        <div class="flex justify-between items-center bg-base-300 p-5 rounded">
-            <div class="text-lg font-bold">
-                <span id="delete-modal-title"></span>
-            </div>
-            <Spinner Id="delete-grid-item" />
-        </div>
-    </ModalTitle>
-    <ModalBody>
-        <RxModalDeferredContent 
-            ContentId="delete-modal-form" 
-            ClearOobContentIdOnClose="delete-modal-title" 
-            RenderFromRoute="/examples/crud/delete-modal">
-            <div class="h-[186px]">
-                <Spinner AlwaysVisible="@(true)" />    
-            </div>
-            <ModalActions>
-                <ModalDismiss ModalId="delete-modal" DismissActionName="Cancel" />
-            </ModalActions>
-        </RxModalDeferredContent>
-    </ModalBody>
-</Modal>
+        @*
+        The confirm modal for DELETE operations. The contents of the modal are deferred loaded once triggered.
+        The trigger is a grid action component present on each row.
+        *@
+        <Modal Id="delete-modal">
+            <ModalTitle>
+                <div class="flex justify-between items-center bg-base-300 p-5 rounded">
+                    <div class="text-lg font-bold">
+                        <span id="delete-modal-title"></span>
+                    </div>
+                    <Spinner Id="delete-grid-item" />
+                </div>
+            </ModalTitle>
+            <ModalBody>
+                <RxModalDeferredContent 
+                    ContentId="delete-modal-form" 
+                    ClearOobContentIdOnClose="delete-modal-title" 
+                    RenderFromRoute="/examples/crud/delete-modal">
+                    <div class="h-[186px]">
+                        <Spinner AlwaysVisible="@(true)" />    
+                    </div>
+                    <ModalActions>
+                        <ModalDismiss ModalId="delete-modal" DismissActionName="Cancel" />
+                    </ModalActions>
+                </RxModalDeferredContent>
+            </ModalBody>
+        </Modal>
 
-@*
-The new/edit modal for POST/PUT operations. The contents of the modal are deferred loaded once triggered.
-The trigger is a grid action component present on each row.
-*@
-<Modal Id="save-modal">
-    <ModalTitle>
-        <div class="flex justify-between items-center bg-base-300 p-5 rounded">
-            <div class="text-lg font-bold">
-                <span id="save-modal-title"></span>
-            </div>
-            <Spinner Id="save-grid-item" />
-        </div>
-    </ModalTitle>
-    <ModalBody>
-        <RxModalDeferredContent 
-            ContentId="save-modal-form" 
-            ClearOobContentIdOnClose="save-modal-title" 
-            RenderFromRoute="/examples/crud/save-modal">
-            <div class="h-[420px]">
-                <Spinner AlwaysVisible="@(true)" />    
-            </div>
-            <ModalActions>
-                <ModalDismiss ModalId="save-modal" DismissActionName="Cancel" />
-            </ModalActions>
-        </RxModalDeferredContent>
-    </ModalBody>
-</Modal>
+        @*
+        The new/edit modal for POST/PUT operations. The contents of the modal are deferred loaded once triggered.
+        The trigger is a grid action component present on each row.
+        *@
+        <Modal Id="save-modal">
+            <ModalTitle>
+                <div class="flex justify-between items-center bg-base-300 p-5 rounded">
+                    <div class="text-lg font-bold">
+                        <span id="save-modal-title"></span>
+                    </div>
+                    <Spinner Id="save-grid-item" />
+                </div>
+            </ModalTitle>
+            <ModalBody>
+                <RxModalDeferredContent 
+                    ContentId="save-modal-form" 
+                    ClearOobContentIdOnClose="save-modal-title" 
+                    RenderFromRoute="/examples/crud/save-modal">
+                    <div class="h-[420px]">
+                        <Spinner AlwaysVisible="@(true)" />    
+                    </div>
+                    <ModalActions>
+                        <ModalDismiss ModalId="save-modal" DismissActionName="Cancel" />
+                    </ModalActions>
+                </RxModalDeferredContent>
+            </ModalBody>
+        </Modal>
+    </Authorized>
+</AuthorizeView>
+
 
 <div id="form-page" class="flex justify-center">
     <article class="prose">
         <div class="flex justify-center">
             <h2>The Kitchen Sync</h2>
         </div>
+        <AuthorizeView>
+            <NotAuthorized>
+                <p>
+                    Sign in to enable mutation operations.
+                </p>
+            </NotAuthorized>
+        </AuthorizeView>
     </article>
 </div>
 
@@ -92,16 +104,20 @@ The trigger is a grid action component present on each row.
         </div>
         <div id="grid-filter"></div>
     </div>
-    <RxModalTrigger 
-        ModalId="save-modal" 
-        TriggerOnMouseDown=@(true)
-        DeferredContentRouteValue="0">
-        <button id="new-btn" type="button" class="btn btn-primary" aria-label="Add a new item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-            </svg>
-        </button>
-    </RxModalTrigger>
+    <AuthorizeView>
+        <Authorized>
+            <RxModalTrigger 
+                ModalId="save-modal" 
+                TriggerOnMouseDown=@(true)
+                DeferredContentRouteValue="0">
+                <button id="new-btn" type="button" class="btn btn-primary" aria-label="Add a new item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                </button>
+            </RxModalTrigger>
+        </Authorized>
+    </AuthorizeView>
 </div>
 
 @*
