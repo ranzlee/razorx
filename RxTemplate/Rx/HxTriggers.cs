@@ -44,7 +44,7 @@ public interface IHxTriggerBuilder {
     /// </summary>
     /// <param name="trigger">IHxTrigger</param>
     /// <returns>IHxTriggerBuilder</returns>
-    IHxTriggerBuilder AddTrigger(IHxTrigger trigger);
+    IHxTriggerBuilder Add(IHxTrigger trigger);
 
     /// <summary>
     /// Builds the response headers for the triggers.
@@ -144,7 +144,7 @@ file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxT
     private readonly List<IHxTrigger> Triggers = [];
     private bool isBuilt = false;
 
-    public IHxTriggerBuilder AddTrigger(IHxTrigger trigger) {
+    public IHxTriggerBuilder Add(IHxTrigger trigger) {
         logger.LogInformation("Adding htmx response trigger for request {method}:{request}.",
                 response.HttpContext.Request.Method,
                 response.HttpContext.Request.GetDisplayUrl());

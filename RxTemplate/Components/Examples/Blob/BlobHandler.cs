@@ -29,7 +29,7 @@ public class BlobHandler : IRequestHandler {
         var m = await blobProvider.UploadAsync(stream, file.FileName, "single");
         hxTriggers
             .With(response)
-            .AddTrigger(new HxToastTrigger("#blob-toast", "BLOB added"))
+            .Add(new HxToastTrigger("#blob-toast", "BLOB added"))
             .Build();
         return response.RenderComponent<Blob, BlobModel>(m);
     }
@@ -49,7 +49,7 @@ public class BlobHandler : IRequestHandler {
         }
         hxTriggers
             .With(response)
-            .AddTrigger(new HxToastTrigger("#blob-toast", $"BLOB{(files.Count > 1 ? "s" : "")} added"))
+            .Add(new HxToastTrigger("#blob-toast", $"BLOB{(files.Count > 1 ? "s" : "")} added"))
             .Build();
         return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(m);
     }
@@ -66,8 +66,8 @@ public class BlobHandler : IRequestHandler {
         };
         hxTriggers
             .With(response)
-            .AddTrigger(new HxCloseModalTrigger("#delete-modal"))
-            .AddTrigger(new HxToastTrigger("#blob-toast", "BLOB removed"))
+            .Add(new HxCloseModalTrigger("#delete-modal"))
+            .Add(new HxToastTrigger("#blob-toast", "BLOB removed"))
             .Build();
         return response.RenderComponent<BlobPage, BlobViewModel>(m);
     }

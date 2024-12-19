@@ -21,13 +21,13 @@ public class FormHandler : IRequestHandler {
             }
             hxTriggers
                 .With(response)
-                .AddTrigger(new HxFocusTrigger("#form-submit"))
+                .Add(new HxFocusTrigger("#form-submit"))
                 .Build();
             return response.RenderComponent<Form, FormModel>(model, logger);
         }
         hxTriggers
             .With(response)
-            .AddTrigger(new HxToastTrigger("#form-toast", "Form was submitted"))
+            .Add(new HxToastTrigger("#form-toast", "Form was submitted"))
             .Build();
         return response.RenderComponent<FormPage>(logger);
     }
