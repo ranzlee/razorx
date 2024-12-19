@@ -61,15 +61,15 @@
         <div class="w-80">
            <!-- Number of Days Field -->
             <div class="max-w-xs">
-                <Field 
+                <Range
                     Property="@(nameof(Model.NumberOfDays))" 
-                    Value="@(Model.NumberOfDays)" 
+                    Value="@(Model.NumberOfDays ?? 0)" 
                     Label="Number of Days"
-                    InputType="number" 
-                    ValidationContext="@(ValidationContext)"
-                    placeholder="e.g. 3" 
-                    min="0">
-                </Field>
+                    min="0"
+                    max="25"
+                    step="1"
+                    ValidationContext="@(ValidationContext)">
+                </Range>
             </div>
         </div>
         <div class="w-80">
