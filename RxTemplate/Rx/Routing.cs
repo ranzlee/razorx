@@ -70,10 +70,10 @@ public static class RoutingExtensions {
             .WithMetadata(new PageRouteForAttribute<TRootComponent>());
     }
 
-    public static RouteHandlerBuilder SkipAntiforgeryValidation(this RouteHandlerBuilder routeBuilder) {
+    public static RouteHandlerBuilder SkipRouteFilter(this RouteHandlerBuilder routeBuilder) {
         return routeBuilder
-            .AddEndpointFilter<SkipAntiforgeryValidation>()
-            .WithMetadata(new SkipAntiforgeryValidationAttribute());
+            .AddEndpointFilter<SkipRouteFilter>()
+            .WithMetadata(new SkipRouteFilterAttribute());
     }
 }
 
@@ -86,14 +86,6 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
                 context.HttpContext.Request.GetDisplayUrl());
             return await next(context);
         }
-        // Check if the request is a not-boosted htmx request.
-        if (context.HttpContext.Request.IsHxRequest() && !context.HttpContext.Request.IsHxBoosted()) {
-            // htmx request, so call next middleware and bailout 
-            logger.LogTrace("Skip pre-route processing for htmx partial request {method}:{request}.",
-                context.HttpContext.Request.Method,
-                context.HttpContext.Request.GetDisplayUrl());
-            return await next(context);
-        }
         // Verify endpoint.
         var endpoint = context.HttpContext.GetEndpoint();
         if (endpoint is null) {
@@ -102,6 +94,19 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
                 context.HttpContext.Request.GetDisplayUrl());
             // If no endpoint return 404.
             context.HttpContext.Items.Add(nameof(ErrorModel), new ErrorModel(HttpStatusCode.NotFound));
+            return await next(context);
+        }
+        // Check for skip Rx custom route processing metadata.    
+        var skipRouteFilter = endpoint.Metadata.GetMetadata<SkipRouteFilterAttribute>();
+        if (skipRouteFilter is not null) {
+            return await next(context);
+        }
+        // Check if the request is a not-boosted htmx request.
+        if (context.HttpContext.Request.IsHxRequest() && !context.HttpContext.Request.IsHxBoosted()) {
+            // htmx request, so call next middleware and bailout 
+            logger.LogTrace("Skip pre-route processing for htmx partial request {method}:{request}.",
+                context.HttpContext.Request.Method,
+                context.HttpContext.Request.GetDisplayUrl());
             return await next(context);
         }
         // Check for razor component response metadata.    
@@ -162,9 +167,9 @@ public class PageRouteFor<TRootComponent>() : IEndpointFilter where TRootCompone
 }
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class SkipAntiforgeryValidationAttribute : Attribute { }
+public class SkipRouteFilterAttribute : Attribute { }
 
-public class SkipAntiforgeryValidation() : IEndpointFilter {
+public class SkipRouteFilter() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }

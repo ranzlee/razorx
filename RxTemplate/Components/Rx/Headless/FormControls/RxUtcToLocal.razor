@@ -11,8 +11,8 @@
 </script>
 
 @code {
+    [Parameter, EditorRequired] public DateTime DateInput { get; set; }
     [Parameter] public string Id { get; set; } = "";
-    [Parameter] public DateTime DateInput { get; set; }
     [Parameter] public string Locales { get; set; } = "en-US";
     [Parameter] public string Options { get; set; } = 
     """{ year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }""";

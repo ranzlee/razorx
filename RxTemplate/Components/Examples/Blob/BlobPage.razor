@@ -1,0 +1,42 @@
+@implements IComponentModel<BlobViewModel>
+
+<HeadContent>
+    <title>Examples: BLOBs</title>
+</HeadContent>
+
+<Toast Id="blob-toast" />
+
+<Modal Id="delete-modal">
+    <ModalTitle>
+        <div class="flex justify-between items-center bg-base-300 p-5 rounded">
+            <div class="text-lg font-bold">
+                Delete BLOB?
+            </div>
+        </div>
+    </ModalTitle>
+    <ModalBody>
+        <div class="p-5">
+            This is a destructive operation. Are you sure?
+        </div>
+        <ModalActions>
+            <RxModalHxAction
+                ModalId="delete-modal"
+                HxActionRoute="/examples/blob/" 
+                HxActionType="hx-delete"
+                hx-target="#blob-view"
+                hx-swap="outerHTML"
+                class="btn btn-error">
+                Delete
+            </RxModalHxAction>
+            <RxModalDismissAction ModalId="delete-modal" class="btn btn-neutral">
+                Cancel
+            </RxModalDismissAction>
+        </ModalActions>
+    </ModalBody>
+</Modal>
+
+<BlobView Model="@(Model)" />
+
+@code {
+    [Parameter] public BlobViewModel Model { get; set; } = new();
+}

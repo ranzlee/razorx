@@ -8,10 +8,10 @@
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string ErrorMessageClass { get; set; } = null!;
-    [Parameter] public string Property { get; set; } = null!;
     [Parameter] public ValidationContext? ValidationContext { get; set; }
     private string errorMessage { get; set; } = null!;
     protected override void OnParametersSet() {

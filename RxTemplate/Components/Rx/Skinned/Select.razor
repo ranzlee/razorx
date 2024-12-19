@@ -23,11 +23,11 @@
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public ValidationContext ValidationContext { get; set; } = new();
-    [Parameter] public string Property { get; set; } = null!;
     [Parameter] public string Value { get; set; } = null!;
-    [Parameter] public string Label { get; set; } = null!;
     [Parameter] public Type? EnumType { get; set; }
     [Parameter] public Dictionary<string, string> Options { get; set; } = [];
 }

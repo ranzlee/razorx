@@ -1,0 +1,60 @@
+@implements IComponentModel<BlobViewModel>
+
+<div id="blob-view">
+    <div class="flex justify-center">
+        <article class="prose">
+            <div class="flex justify-center">
+                <h2>BLOBs</h2>
+            </div>
+            <p>
+                <strong class="bg-warning text-warning-content px-2 rounded">Important:</strong> You must have the VS Code
+                <a href="https://marketplace.visualstudio.com/items?itemName=Azurite.azurite" target="_blank" class="link link-primary">Azurite</a> 
+                extension installed and enabled for this example. The included BLOB service is for demonstration purposes only.
+            </p>
+        </article>
+    </div>
+    <div class="flex justify-center mt-5">
+        <div class="w-[640px]">
+            @if (Model.SingleBlob == null) {
+                <FileInput 
+                    Id="example-blob" 
+                    Endpoint="/examples/blob" 
+                    Label="Pick a file" 
+                    Property="file" />
+            } else {
+                <Blob Model="@(Model.SingleBlob)" />
+            }
+        </div>
+    </div>
+    <div class="flex justify-center my-5">
+        <hr class="w-[640px]" />
+    </div>
+    <div class="flex justify-center">
+        <div class="w-[640px]">
+            @if (Model.ListBlobs.Any()) {
+                <div id="blob-list" class="flex flex-col gap-y-2">
+                    <BlobList Model="@(Model.ListBlobs)" />
+                </div>
+            } else {
+                <div id="blob-list" class="flex flex-col gap-y-2"></div>
+            }
+        </div>
+    </div>
+    <div class="flex justify-center mt-5">
+        <div class="w-[640px]">
+            <FileInput 
+                Id="example-blobs" 
+                HxTarget="#blob-list" 
+                HxSwap="beforeend"
+                Endpoint="/examples/blobs" 
+                Label="Choose files" 
+                Property="files"
+                multiple />
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public BlobViewModel Model { get; set; } = new();
+}
