@@ -70,16 +70,10 @@ public static class RoutingExtensions {
             .WithMetadata(new PageRouteForAttribute<TRootComponent>());
     }
 
-    public static RouteHandlerBuilder SkipAntiforgeryValidation(this RouteHandlerBuilder routeBuilder) {
+    public static RouteHandlerBuilder SkipRouteFilter(this RouteHandlerBuilder routeBuilder) {
         return routeBuilder
-            .AddEndpointFilter<SkipAntiforgeryValidation>()
-            .WithMetadata(new SkipAntiforgeryValidationAttribute());
-    }
-
-    public static RouteHandlerBuilder SkipRxRouteProcessing(this RouteHandlerBuilder routeBuilder) {
-        return routeBuilder
-            .AddEndpointFilter<SkipRxRouteProcessing>()
-            .WithMetadata(new SkipRxRouteProcessingAttribute());
+            .AddEndpointFilter<SkipRouteFilter>()
+            .WithMetadata(new SkipRouteFilterAttribute());
     }
 }
 
@@ -103,8 +97,8 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
             return await next(context);
         }
         // Check for skip Rx custom route processing metadata.    
-        var skipRxRouteProcessing = endpoint.Metadata.GetMetadata<SkipRxRouteProcessingAttribute>();
-        if (skipRxRouteProcessing is not null) {
+        var skipRouteFilter = endpoint.Metadata.GetMetadata<SkipRouteFilterAttribute>();
+        if (skipRouteFilter is not null) {
             return await next(context);
         }
         // Check if the request is a not-boosted htmx request.
@@ -173,18 +167,9 @@ public class PageRouteFor<TRootComponent>() : IEndpointFilter where TRootCompone
 }
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class SkipAntiforgeryValidationAttribute : Attribute { }
+public class SkipRouteFilterAttribute : Attribute { }
 
-public class SkipAntiforgeryValidation() : IEndpointFilter {
-    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
-        return await next(context);
-    }
-}
-
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class SkipRxRouteProcessingAttribute : Attribute { }
-
-public class SkipRxRouteProcessing() : IEndpointFilter {
+public class SkipRouteFilter() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }

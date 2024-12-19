@@ -1,4 +1,5 @@
 using RxTemplate.Components.Examples;
+using RxTemplate.Components.Examples.Blob;
 using RxTemplate.Components.Examples.Counter;
 using RxTemplate.Components.Examples.Crud;
 using RxTemplate.Components.Examples.Form;
@@ -62,6 +63,27 @@ public static class Examples {
         router.AddRoutePath(HTTP.POST, "/examples/crud", CrudHandler.SaveItem)
             .WithValidation<ItemValidator>()
             .AllowAnonymous();
+
+        // BLOBs
+        router.AddRoutePath(HTTP.GET, "/examples/blob", BlobHandler.Get)
+            .AllowAnonymous()
+            .PageRouteFor<App>();
+
+        // single file
+        router.AddRoutePath(HTTP.POST, "/examples/blob", BlobHandler.PostFile)
+            .AllowAnonymous();
+
+        router.AddRoutePath(HTTP.DELETE, "/examples/blob/{id}", BlobHandler.Delete)
+            .AllowAnonymous();
+
+        // multiple files 
+        router.AddRoutePath(HTTP.POST, "/examples/blobs", BlobHandler.PostFiles)
+            .AllowAnonymous();
+
+        router.AddRoutePath(HTTP.GET, "/examples/blob/{id}", BlobHandler.Download)
+            .AllowAnonymous()
+            // This is a [download] href, so we need to skip route filtering
+            .SkipRouteFilter();
 
         return router;
     }

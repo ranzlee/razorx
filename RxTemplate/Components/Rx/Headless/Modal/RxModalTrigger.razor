@@ -6,7 +6,7 @@
         var trigger = document.getElementById("@(Id)");
         var handler = function() {
             document.getElementById('@(ModalId)').showModal();
-            htmx.trigger('#@(ModalId)', 'opened', { id: "@(DeferredContentRouteValue)" });
+            htmx.trigger('#@(ModalId)', 'opened', { id: "@(RouteValue)" });
         }
         trigger.onmousedown = @(TriggerOnMouseDown ? "handler" : "null");
         trigger.onclick = handler;
@@ -15,7 +15,7 @@
 
 @code {
     [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
-    [Parameter] public string DeferredContentRouteValue { get; set; } = null!;
+    [Parameter] public string RouteValue { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public bool TriggerOnMouseDown { get; set; }

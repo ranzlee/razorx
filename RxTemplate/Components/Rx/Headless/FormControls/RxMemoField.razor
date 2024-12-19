@@ -56,11 +56,11 @@
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Label { get; set; } = "";
+    [Parameter, EditorRequired] public string Property { get; set; } = "";
     [Parameter] public int AutosizeHeightBuffer { get; set; } = 16;
     [Parameter] public string Id { get; set; } = "";
     [Parameter] public int? MaxLength { get; set; }
-    [Parameter] public string Label { get; set; } = "";
-    [Parameter] public string Property { get; set; } = "";
     [Parameter] public string Value { get; set; } = "";
     [Parameter] public ValidationContext? ValidationContext { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }

@@ -1,0 +1,37 @@
+<RxFileInput
+    ContainerClass="flex flex-col w-full gap-y-2"
+    LabelContainerClass="form-control w-full"
+    LabelClass="label label-text"
+    ControlClass="file-input file-input-bordered w-full"
+    InvalidClass="file-input-error"
+    ProgressClass="progress progress-success w-full"
+    SubmitButtonClass="btn btn-primary"
+    CancelButtonClass="btn btn-neutral"
+    Id="@(Id)"
+    Endpoint="@(Endpoint)"
+    HxTarget="@(HxTarget)"
+    HxSwap="@(HxSwap)"
+    Label="@(Label)"
+    Property="@(Property)"
+    RequestTimeoutMilliseconds="@(RequestTimeoutMilliseconds)"
+    @attributes=@(AdditionalAttributes)>
+    <ValidationContainer>
+        <RxFormError 
+            Property="@(Property)" 
+            ValidationContext="@(ValidationContext)" 
+            ContainerClass="label" 
+            ErrorMessageClass="label-text text-error" />
+    </ValidationContainer>
+</RxFileInput>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Endpoint { get; set; } = null!;
+    [Parameter, EditorRequired] public string Label { get; set; } = null!;
+    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string HxTarget { get; set; } = null!;
+    [Parameter] public string HxSwap { get; set; } = null!;
+    [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
+    [Parameter] public ValidationContext ValidationContext { get; set; } = new();
+}

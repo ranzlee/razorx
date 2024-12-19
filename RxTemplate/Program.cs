@@ -1,6 +1,9 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.ResponseCompression;
 using FluentValidation;
+using RxTemplate.Blob;
 using RxTemplate.Components.Rx;
 using RxTemplate.Router;
 using RxTemplate.Rx;
@@ -24,6 +27,7 @@ services.AddRazorComponents();
 
 // Add services for <AuthorizeView>
 services.AddCascadingAuthenticationState();
+services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 
 // Add response compression
 if (!builder.Environment.IsDevelopment()) {
@@ -62,6 +66,9 @@ services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddAuthentication().AddCookie();
 builder.Services.AddAuthorization();
 
+// BLOB storage support for file upload/download examples
+services.AddBlobProvider();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,24 +80,24 @@ if (!app.Environment.IsDevelopment()) {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 
-    // Use compression all response
+    // Use compression
     app.UseResponseCompression();
 }
 
 // Use HTTPS only
 app.UseHttpsRedirection();
 
-// Use static files served from wwwroot
+// Use static files served from wwwroot - applied early for short-circuiting the request pipeline
 app.UseStaticFiles();
 
-// Use auth
+// Use auth - must be before antiforgery
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Use antiforgery middleware
+// Use antiforgery middleware - this is the built-in ASP.NET middleware
 app.UseAntiforgery();
 
-// Use cookie for antiforgery token
+// Use cookie for antiforgery token - this is custom middleware to support using cookies to transport the antiforgery token
 app.UseAntiforgeryCookie();
 
 // Map routes

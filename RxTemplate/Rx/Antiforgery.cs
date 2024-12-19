@@ -3,7 +3,22 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace RxTemplate.Rx;
 
-public static class UseAntiforgeryCookieMiddleware {
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+public class SkipAntiforgeryValidationAttribute : Attribute { }
+
+public class SkipAntiforgeryValidation() : IEndpointFilter {
+    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
+        return await next(context);
+    }
+}
+
+public static class AntiforgeryExtensions {
+
+    public static RouteHandlerBuilder SkipAntiforgeryValidation(this RouteHandlerBuilder routeBuilder) {
+        return routeBuilder
+            .AddEndpointFilter<SkipAntiforgeryValidation>()
+            .WithMetadata(new SkipAntiforgeryValidationAttribute());
+    }
 
     /// <summary>
     /// Use the AntiforgeryCookieMiddleware to add the RequestVerificationToken to the GET response cookies 

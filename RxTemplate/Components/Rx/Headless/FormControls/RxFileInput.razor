@@ -1,0 +1,128 @@
+<div id="@(Id)" hx-ext="ignore:json-enc" class="@(ContainerClass)">
+    <AntiforgeryToken />
+    <div>
+        <label class="@(LabelContainerClass)">
+            <div class="@(LabelClass)">@(Label)</div>
+            <input 
+                id="@(Id)-input" 
+                type="file" 
+                name="@(Property)"
+                aria-invalid="@(isInvalid ? "true" : false)"
+                aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
+                class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
+                @attributes=@(AdditionalAttributes)
+                />
+            @if (isInvalid) {
+                @(ValidationContainer)
+            }
+        </label>
+    </div>
+    <div>
+        <progress id="@(Id)-progress" class="@(ProgressClass)" value="0" max="100"></progress>
+    </div>
+    <div class="flex justify-end gap-x-2">
+        <button
+            id="@(Id)-submit"
+            type="button"
+            hx-encoding="multipart/form-data"
+            hx-target="@(HxTarget)"
+            hx-swap="@(HxSwap)"
+            hx-post="@(Endpoint)"
+            hx-include="#@(Id)"
+            hx-request='{ "timeout": @(RequestTimeoutMilliseconds) }'
+            disabled
+            class="@(SubmitButtonClass)">
+            Upload
+        </button>
+        <button 
+            id="@(Id)-cancel" 
+            type="button"
+            disabled 
+            class="@(CancelButtonClass)">
+            Cancel
+        </button>
+    </div>
+    <script>
+        (function() {
+            var progress = document.getElementById("@(Id)-progress");
+            var submit = document.getElementById("@(Id)-submit");
+            var cancel = document.getElementById("@(Id)-cancel");
+            var input = document.getElementById("@(Id)-input");
+            var uploadStatus = { isUploading: false };
+            function reset() {
+                progress.setAttribute("value", 0);
+                submit.setAttribute("disabled", "");
+                cancel.setAttribute("disabled", "");
+                input.removeAttribute("disabled");
+                input.value = "";
+            }
+            submit.onclick = function () {
+                htmx.on("#@(Id)-submit", "htmx:xhr:progress", (evt) => {
+                    submit.setAttribute("disabled", "");  
+                    input.setAttribute("disabled", "");    
+                    uploadStatus.isUploading = true;
+                    if (evt.detail.total === 0) {
+                        return;
+                    }
+                    let status = (evt.detail.loaded / evt.detail.total) * 100;
+                    progress.setAttribute("value", status);
+                });
+                htmx.on("#@(Id)-submit", "htmx:afterRequest", (evt) => {
+                    reset();
+                });
+            }
+            cancel.onclick = function () {
+                if (uploadStatus.isUploading) {
+                    htmx.trigger('#@(Id)-submit', "htmx:abort", {});
+                }
+                reset();
+            }
+            input.onchange = function() {
+                if (input?.files?.length > 0) {
+                    submit.removeAttribute("disabled");
+                    cancel.removeAttribute("disabled");
+                    return;
+                }
+                submit.setAttribute("disabled", "");
+                cancel.setAttribute("disabled", "");
+            }
+        })()
+    </script>
+</div>
+
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Label { get; set; } = null!;
+    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string Endpoint { get; set; } = null!;
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string HxTarget { get; set; } = null!;
+    [Parameter] public string HxSwap { get; set; } = null!;
+    [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
+    [Parameter] public ValidationContext? ValidationContext { get; set; }
+    [Parameter] public RenderFragment? ValidationContainer { get; set; }
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string InvalidClass { get; set; } = null!;
+    [Parameter] public string ControlClass { get; set; } = null!;
+    [Parameter] public string LabelContainerClass { get; set; } = null!;
+    [Parameter] public string LabelClass { get; set; } = null!;
+    [Parameter] public string ProgressClass { get; set; } = null!;
+    [Parameter] public string SubmitButtonClass { get; set; } = null!;
+    [Parameter] public string CancelButtonClass { get; set; } = null!;
+    private bool isInvalid { get; set; }
+    protected override void OnParametersSet() {
+        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
+            isInvalid = true;
+        }
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+        if (string.IsNullOrWhiteSpace(HxTarget)) {
+            HxTarget = $"#{Id}";
+        }
+        if (string.IsNullOrWhiteSpace(HxSwap)) {
+            HxSwap = "outerHTML";
+        }
+    }
+}

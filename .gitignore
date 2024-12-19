@@ -1,3 +1,7 @@
 .vscode
 
+# Azurite
+__azurite*
+__blobstorage*
+
 .DS_Store
