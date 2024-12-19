@@ -50,7 +50,7 @@ public class CrudHandler : IRequestHandler {
         hxTriggers
             .With(response)
             // Set the focus to the modal dismiss
-            .AddTrigger(new HxFocusTrigger("#delete-modal-dismiss-action"))
+            .Add(new HxFocusTrigger("#delete-modal-dismiss-action"))
             .Build();
         // Render the modal content
         return response.RenderComponent<GridDeleteModal, ItemModel?>(model, logger);
@@ -70,7 +70,7 @@ public class CrudHandler : IRequestHandler {
         hxTriggers
             .With(response)
             // Set the focus to the modal first input
-            .AddTrigger(new HxFocusTrigger("#save-modal input"))
+            .Add(new HxFocusTrigger("#save-modal input"))
             .Build();
         // Render the modal content
         return response.RenderComponent<GridSaveModal, ItemModel?>(model, logger);
@@ -95,7 +95,7 @@ public class CrudHandler : IRequestHandler {
             model.Date = model.GetDateAsUtc(logger);
             hxTriggers
                 .With(response)
-                .AddTrigger(new HxFocusTrigger("#save-item"))
+                .Add(new HxFocusTrigger("#save-item"))
                 .Build();
             return response.RenderComponent<GridSaveModal, ItemModel?>(model, logger);
         }
@@ -103,11 +103,11 @@ public class CrudHandler : IRequestHandler {
         // Validation passed, so save the item
         if ((id ?? 0) > 0) {
             // PUT (update)
-            triggerBuilder.AddTrigger(new HxFocusTrigger($"#edit-btn-{id}", true));
+            triggerBuilder.Add(new HxFocusTrigger($"#edit-btn-{id}", true));
         }
         else {
             // POST (insert)
-            triggerBuilder.AddTrigger(new HxFocusTrigger($"#new-btn"));
+            triggerBuilder.Add(new HxFocusTrigger($"#new-btn"));
         }
         Service.Save(model);
         // POST, PUT, and PATCH send metadata state as a request header instead of a parameter like GET and DELETE
@@ -115,8 +115,8 @@ public class CrudHandler : IRequestHandler {
         var demoGridState = request.Headers["DemoGridState"].ToString();
         var state = JsonSerializer.Deserialize<GridState>(demoGridState)!;
         var gridModel = Service.GetModel(state);
-        triggerBuilder.AddTrigger(new HxCloseModalTrigger("#save-modal"));
-        triggerBuilder.AddTrigger(new HxToastTrigger("#crud-toast", $"Item ID: {model.Id} was {(id.HasValue ? "updated" : "created")}"));
+        triggerBuilder.Add(new HxCloseModalTrigger("#save-modal"));
+        triggerBuilder.Add(new HxToastTrigger("#crud-toast", $"Item ID: {model.Id} was {(id.HasValue ? "updated" : "created")}"));
         triggerBuilder.Build();
         return response.RenderComponent<Grid, IGridModel<ItemModel>>(gridModel, logger);
     }
@@ -143,13 +143,13 @@ public class CrudHandler : IRequestHandler {
         hxTriggers
             .With(response)
             // Set focus to the first delete button in the table
-            .AddTrigger(new HxFocusTrigger("table tbody tr td button"))
+            .Add(new HxFocusTrigger("table tbody tr td button"))
             // Close the modal
-            .AddTrigger(new HxCloseModalTrigger("#delete-modal"))
+            .Add(new HxCloseModalTrigger("#delete-modal"))
             // Pop a toast
-            .AddTrigger(new HxToastTrigger("#crud-toast", $"Item ID: {id} was deleted"))
+            .Add(new HxToastTrigger("#crud-toast", $"Item ID: {id} was deleted"))
             // Set the state metadata
-            .AddTrigger(new HxSetMetadataTrigger(model.StateScope, model.StateKey, JsonSerializer.Serialize(state)))
+            .Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, JsonSerializer.Serialize(state)))
             .Build();
         // Render
         return response.RenderComponent<Grid, IGridModel<ItemModel>>(model, logger);
@@ -185,13 +185,13 @@ public class CrudHandler : IRequestHandler {
         }
         var triggerBuilder = hxTriggers.With(response);
         // Trigger the persistence of the state on the client    
-        triggerBuilder.AddTrigger(new HxSetMetadataTrigger(model.StateScope, model.StateKey, JsonSerializer.Serialize(state)));
+        triggerBuilder.Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, JsonSerializer.Serialize(state)));
         // Pop toast for filter change
         if (!string.IsNullOrWhiteSpace(filterProperty)) {
-            triggerBuilder.AddTrigger(new HxToastTrigger("#crud-toast", "Filter added"));
+            triggerBuilder.Add(new HxToastTrigger("#crud-toast", "Filter added"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
-            triggerBuilder.AddTrigger(new HxToastTrigger("#crud-toast", "Filter removed"));
+            triggerBuilder.Add(new HxToastTrigger("#crud-toast", "Filter removed"));
         }
         // Grid focus management - this is optional, but provides a good experience for keyboard users
         if (!string.IsNullOrWhiteSpace(page)) {
@@ -201,19 +201,19 @@ public class CrudHandler : IRequestHandler {
                 "previous" => state.HasPreviousPage() ? "previous" : "next",
                 _ => page
             };
-            triggerBuilder.AddTrigger(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][value=\"{page}\"]"));
+            triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][value=\"{page}\"]"));
         }
         if (!string.IsNullOrWhiteSpace(sortProperty)) {
             // Trigger focus on the sort button
-            triggerBuilder.AddTrigger(new HxFocusTrigger($"[name=\"{nameof(GridState.SortProperty)}\"][value=\"{sortProperty}\"]"));
+            triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.SortProperty)}\"][value=\"{sortProperty}\"]"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
             // Trigger focus on filter removal
             if (state.Filters.Count != 0) {
-                triggerBuilder.AddTrigger(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
+                triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
             }
             else {
-                triggerBuilder.AddTrigger(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]"));
+                triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]"));
             }
         }
         //build triggers
