@@ -27,29 +27,23 @@
     (function() {
         var memoLength = document.getElementById("@(Id)-len");
         memoLength.innerText = 0;
-
         var memo = document.getElementById("@(Id)");
-        
-        function resize () {
+        var resize = function() {
             memo.style.height = 'auto';
             memo.style.height = (memo.scrollHeight + @(AutosizeHeightBuffer)).toString() +'px';
         }
-
-        function calc () {
+        var calc = function() {
             resize();
             memoLength.innerHTML = memo.value.length;
         }
-
-        function calcAfterTick () {
+        var calcAfterTick = function() {
             setTimeout(calc, 0);
         }
-
-        memo.addEventListener("change", calc);
-        memo.addEventListener("cut", calcAfterTick);
-        memo.addEventListener("paste", calcAfterTick);
-        memo.addEventListener("drop", calcAfterTick);
-        memo.addEventListener("keydown", calcAfterTick);
-        
+        memo.onchange = calc;
+        memo.oncut = calcAfterTick;
+        memo.onpaste = calcAfterTick;
+        memo.ondrop = calcAfterTick;
+        memo.onkeydown = calcAfterTick;
         calc();
     })();
 </script>

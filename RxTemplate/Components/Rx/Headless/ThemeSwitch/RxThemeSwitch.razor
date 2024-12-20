@@ -26,8 +26,7 @@
         var iconSystem = document.getElementById("theme-icon-system");
         var iconLight = document.getElementById("theme-icon-light");
         var iconDark = document.getElementById("theme-icon-dark");
-
-        function setThemeIcon() {
+        var setThemeIcon = function() {
             var lightTheme = razorx.theme.getLightTheme();
             var darkTheme = razorx.theme.getDarkTheme();
             switch(theme) {
@@ -48,10 +47,8 @@
                     break;
             }
         }
-
         setThemeIcon();
-
-        function getNextTheme () {
+        var getNextTheme = function() {
             var lightTheme = razorx.theme.getLightTheme();
             var darkTheme = razorx.theme.getDarkTheme();
             if (theme === null || theme === "") {
@@ -62,34 +59,27 @@
             }
             return "";
         }
-
         var themeBtn = document.getElementById("@(Id)");
-
-        function setAria() {
+        var setAria = function() {
             themeBtn.setAttribute("aria-label", `${theme === '' ? 'system' : theme} theme`);
             themeBtn.setAttribute("title", `Switch to ${ getNextTheme() === '' ? 'system' : getNextTheme() }`);
         }
-
         setAria();
-
-        function syncTheme () {
+        var syncTheme = function() {
             theme = localStorage.getItem("data-theme");
             razorx.theme.applyTheme();
             setThemeIcon();
             setAria();
         }
-
-        window.addEventListener("focus", syncTheme);
-
-        function changeTheme() {
+        window.onfocus = syncTheme;
+        var changeTheme = function() {
             theme = getNextTheme();
             localStorage.setItem(razorx.theme.themeKey, theme);
             razorx.theme.applyTheme();
             setThemeIcon()
             setAria();
         }
-
-        themeBtn.addEventListener("click", changeTheme);
+        themeBtn.onclick = changeTheme;
     })();
 </script>
 

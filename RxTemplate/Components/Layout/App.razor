@@ -57,7 +57,6 @@
                     (function() {
                       var menuToggle = document.getElementById("menu-toggle");
                       var drawerState = document.getElementById("site-drawer");
-
                       document.addEventListener("keydown", function(evt) {
                           if (!drawerState.checked) {
                             return;
@@ -67,13 +66,11 @@
                             menuToggle.focus();
                           }
                       });
-
-                      menuToggle.addEventListener("click", function() {
+                      menuToggle.onclick = function() {
                         drawerState.checked = true;
                         var drawer = document.getElementById("drawer");
                         drawer.querySelector("#close-sidebar").focus();
-                      });
-
+                      }
                     })()
                   </script>
                 </div>

@@ -69,18 +69,19 @@ public static class Examples {
             .AllowAnonymous()
             .PageRouteFor<App>();
 
-        // single file
+        // single file upload
         router.AddRoutePath(HTTP.POST, "/examples/blob", BlobHandler.PostFile)
             .AllowAnonymous();
 
-        router.AddRoutePath(HTTP.DELETE, "/examples/blob/{id}", BlobHandler.Delete)
-            .AllowAnonymous();
-
-        // multiple files 
+        // multiple files upload
         router.AddRoutePath(HTTP.POST, "/examples/blobs", BlobHandler.PostFiles)
             .AllowAnonymous();
 
-        router.AddRoutePath(HTTP.GET, "/examples/blob/{id}", BlobHandler.Download)
+        router.AddRoutePath(HTTP.DELETE, "/examples/blob/{path}/{id}", BlobHandler.Delete)
+            .AllowAnonymous();
+
+        // download
+        router.AddRoutePath(HTTP.GET, "/examples/blob/{path}/{id}", BlobHandler.Download)
             .AllowAnonymous()
             // This is a [download] href, so we need to skip route filtering
             .SkipRouteFilter();

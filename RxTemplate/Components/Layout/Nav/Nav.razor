@@ -13,10 +13,10 @@
                 var menuToggle = document.getElementById("menu-toggle");
                 var closeSidebar = document.getElementById("close-sidebar");
                 var drawerState = document.getElementById("site-drawer");
-                closeSidebar.addEventListener("click", function() {
+                closeSidebar.onclick = function() {
                     drawerState.checked = false;
                     menuToggle.focus();
-                });
+                }
             })()
         </script>
     </div>
@@ -42,13 +42,13 @@
                     </NavItem>
                 </li>
                 <li>
-                    <NavItem NavItemRoute="/examples/crud">
-                        The Kitchen Sync
+                    <NavItem NavItemRoute="/examples/blob">
+                        BLOBs
                     </NavItem>
                 </li>
                 <li>
-                    <NavItem NavItemRoute="/examples/blob">
-                        BLOBs
+                    <NavItem NavItemRoute="/examples/crud">
+                        The Kitchen Sync
                     </NavItem>
                 </li>
             </ul>

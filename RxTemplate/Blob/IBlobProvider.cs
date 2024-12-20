@@ -11,10 +11,10 @@ namespace RxTemplate.Blob;
 /// you choose.
 /// </summary>
 public interface IBlobProvider {
-    Task<BlobModel> UploadAsync(Stream stream, string fileName, string group);
+    Task<BlobModel> UploadAsync(Stream stream, string prefix, string fileName);
+    Task<IEnumerable<BlobModel>> ListAsync(string prefix);
     Task<BlobDownloadStreamingResult?> GetAsync(string id);
     Task<bool> DeleteAsync(string id);
-    Task<IEnumerable<BlobModel>> ListAsync(string group);
 }
 
 public static class ProviderConfig {
@@ -31,14 +31,13 @@ file sealed class BlobProvider : IBlobProvider {
         _container.CreateIfNotExists();
     }
 
-    public async Task<BlobModel> UploadAsync(Stream stream, string fileName, string group) {
+    public async Task<BlobModel> UploadAsync(Stream stream, string path, string fileName) {
         var name = Guid.NewGuid().ToString();
-        var blobName = name;
+        var blobName = string.IsNullOrWhiteSpace(path) ? name : $"{path.Replace("\\", "/").TrimEnd('/').ToLower().Trim()}/{name}";
         var length = stream.Length;
         var uploaded = DateTime.UtcNow;
         var metadata = new Dictionary<string, string>
         {
-            { "group", group },
             { "filename", fileName },
             { "filesize", length.ToString() },
             { "uploaded", uploaded.ToString(CultureInfo.InvariantCulture) }
@@ -57,6 +56,27 @@ file sealed class BlobProvider : IBlobProvider {
         };
     }
 
+    public async Task<IEnumerable<BlobModel>> ListAsync(string? path) {
+        path = path is null
+            ? ""
+            : path.Replace("\\", "/").ToLower().Trim();
+        var list = new List<BlobItem>();
+        var resultSegment = _container.GetBlobsByHierarchyAsync(BlobTraits.Metadata, BlobStates.None, null, string.IsNullOrWhiteSpace(path) ? null : path).AsPages();
+        await foreach (var blobHierarchyItemPage in resultSegment) {
+            foreach (var blobHierarchyItem in blobHierarchyItemPage.Values) {
+                if (blobHierarchyItem.IsBlob) {
+                    list.Add(blobHierarchyItem.Blob);
+                }
+            }
+        }
+        return list.Select(x => new BlobModel {
+            Id = x.Name,
+            FileName = x.Metadata["filename"],
+            FileSize = long.Parse(x.Metadata["filesize"]),
+            Uploaded = DateTime.SpecifyKind(DateTime.Parse(x.Metadata["uploaded"]), DateTimeKind.Utc)
+        }).OrderByDescending(x => x.Uploaded);
+    }
+
     public async Task<BlobDownloadStreamingResult?> GetAsync(string id) {
         var blobClient = _container.GetBlobClient(id);
         if (!await blobClient.ExistsAsync()) {
@@ -68,23 +88,5 @@ file sealed class BlobProvider : IBlobProvider {
     public async Task<bool> DeleteAsync(string id) {
         var blobClient = _container.GetBlobClient(id);
         return await blobClient.DeleteIfExistsAsync();
-    }
-
-    public async Task<IEnumerable<BlobModel>> ListAsync(string group) {
-        var list = new List<BlobItem>();
-        var resultSegment = _container.GetBlobsByHierarchyAsync(BlobTraits.Metadata, BlobStates.None).AsPages();
-        await foreach (var page in resultSegment) {
-            foreach (var item in page.Values) {
-                if (item.IsBlob && item.Blob.Metadata.Contains(new KeyValuePair<string, string>("group", group))) {
-                    list.Add(item.Blob);
-                }
-            }
-        }
-        return list.Select(x => new BlobModel {
-            Id = x.Name,
-            FileName = x.Metadata["filename"],
-            FileSize = long.Parse(x.Metadata["filesize"]),
-            Uploaded = DateTime.SpecifyKind(DateTime.Parse(x.Metadata["uploaded"]), DateTimeKind.Utc)
-        }).OrderByDescending(x => x.Uploaded);
     }
 }

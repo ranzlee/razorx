@@ -1,0 +1,16 @@
+@using RxTemplate.Blob
+@implements IComponentModel<BlobModel?>
+
+@if (Model is null) {
+    <FileInput 
+        Id="example-blob" 
+        Endpoint="/examples/blob" 
+        Label="Pick a file" 
+        Property="file" />
+} else {
+    <Blob Model="@(Model)" />
+}
+
+@code {
+    [Parameter] public BlobModel? Model { get; set; }
+}
