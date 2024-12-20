@@ -1,4 +1,4 @@
-@implements IComponentModel<BlobViewModel>
+@implements IComponentModel<BlobPageModel>
 
 <HeadContent>
     <title>Examples: BLOBs</title>
@@ -23,7 +23,6 @@
                 ModalId="delete-modal"
                 HxActionRoute="/examples/blob/" 
                 HxActionType="hx-delete"
-                hx-target="#blob-view"
                 hx-swap="outerHTML"
                 class="btn btn-error">
                 Delete
@@ -35,8 +34,51 @@
     </ModalBody>
 </Modal>
 
-<BlobView Model="@(Model)" />
+<div class="flex justify-center">
+    <article class="prose">
+        <div class="flex justify-center">
+            <h2>BLOBs</h2>
+        </div>
+        <p>
+            <strong class="bg-warning text-warning-content px-2 rounded">Important:</strong> You must have the VS Code
+            <a href="https://marketplace.visualstudio.com/items?itemName=Azurite.azurite" target="_blank" class="link link-primary">Azurite</a> 
+            extension installed and enabled for this example. Azurite will store the uploaded BLOBs within the current
+            directory VS Code is open to. This will interfere with <code>dotnet watch</code> hot reload. It is recommended
+            to set an absolute path for Azurite in the extension settings.
+        </p>
+        <p>
+            The included BLOB service is for demonstration purposes only. It does depend on <code>Azure.Storage.Blobs</code> and
+            may be adapted for production use, but the current implementation is only for providing file management operation examples with
+            the meta-framework.
+        </p>
+    </article>
+</div>
+<div class="flex justify-center mt-5">
+    <div class="w-[640px]">
+        <SingleBlob Model="@(Model.SingleBlob)" />
+    </div>
+</div>
+<div class="flex justify-center my-5">
+    <hr class="w-[640px]" />
+</div>
+<div class="flex justify-center">
+    <div class="w-[640px]">
+        <BlobList Model="@(Model.ListBlobs)" />
+    </div>
+</div>
+<div class="flex justify-center mt-5">
+    <div class="w-[640px]">
+        <FileInput 
+            Id="example-blobs" 
+            HxTarget="#blob-list" 
+            HxSwap="beforeend"
+            Endpoint="/examples/blobs" 
+            Label="Choose files" 
+            Property="files"
+            multiple />
+    </div>
+</div>
 
 @code {
-    [Parameter] public BlobViewModel Model { get; set; } = new();
+    [Parameter] public BlobPageModel Model { get; set; } = new();
 }

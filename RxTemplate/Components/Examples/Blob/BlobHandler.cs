@@ -10,11 +10,11 @@ public class BlobHandler : IRequestHandler {
         HttpResponse response,
         IBlobProvider blobProvider,
         ILogger<BlobHandler> logger) {
-        var m = new BlobViewModel {
+        var m = new BlobPageModel {
             SingleBlob = (await blobProvider.ListAsync("single")).FirstOrDefault(),
             ListBlobs = [.. (await blobProvider.ListAsync("multi"))]
         };
-        return response.RenderComponent<BlobPage, BlobViewModel>(m, logger);
+        return response.RenderComponent<BlobPage, BlobPageModel>(m, logger);
     }
 
     [DisableRequestTimeout]
@@ -26,7 +26,7 @@ public class BlobHandler : IRequestHandler {
         IFormFile file,
         IHxTriggers hxTriggers) {
         await using var stream = file.OpenReadStream();
-        var m = await blobProvider.UploadAsync(stream, file.FileName, "single");
+        var m = await blobProvider.UploadAsync(stream, "single", file.FileName);
         hxTriggers
             .With(response)
             .Add(new HxToastTrigger("#blob-toast", "BLOB added"))
@@ -45,7 +45,7 @@ public class BlobHandler : IRequestHandler {
         var m = new List<BlobModel>();
         foreach (var file in files) {
             await using var stream = file.OpenReadStream();
-            m.Add(await blobProvider.UploadAsync(stream, file.FileName, "multi"));
+            m.Add(await blobProvider.UploadAsync(stream, "multi", file.FileName));
         }
         hxTriggers
             .With(response)
@@ -56,28 +56,32 @@ public class BlobHandler : IRequestHandler {
 
     public static async Task<IResult> Delete(
         HttpResponse response,
+        string path,
         string id,
         IBlobProvider blobProvider,
         IHxTriggers hxTriggers) {
-        await blobProvider.DeleteAsync(id);
-        var m = new BlobViewModel {
-            SingleBlob = (await blobProvider.ListAsync("single")).FirstOrDefault(),
-            ListBlobs = [.. (await blobProvider.ListAsync("multi"))]
-        };
+        await blobProvider.DeleteAsync($"{path}/{id}");
         hxTriggers
             .With(response)
             .Add(new HxCloseModalTrigger("#delete-modal"))
             .Add(new HxToastTrigger("#blob-toast", "BLOB removed"))
             .Build();
-        return response.RenderComponent<BlobPage, BlobViewModel>(m);
+        if (path == "single") {
+            response.HxRetarget("#example-blob");
+            return response.RenderComponent<SingleBlob>();
+        }
+        var l = await blobProvider.ListAsync("multi");
+        response.HxRetarget("#blob-list");
+        return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(l);
     }
 
     public static async Task<IResult> Download(
         HttpResponse response,
+        string path,
         string id,
         IBlobProvider blobProvider) {
-        var blobResult = await blobProvider.GetAsync(id);
-        if (blobResult == null) {
+        var blobResult = await blobProvider.GetAsync($"{path}/{id}");
+        if (blobResult is null) {
             return TypedResults.NotFound();
         }
         response.ContentLength = blobResult.Details.ContentLength;
