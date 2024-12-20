@@ -1,0 +1,60 @@
+<fieldset id="@(Id)" class="@(ContainerClass)">
+    <legend class="@(LegendClass)">@(Legend)</legend>
+    <div class="@(GroupClass)">
+        @foreach (var option in Options) {
+            <label class="@(LabelContainerClass)">
+                <span class="@($"{LabelClass} {(isInvalid ? InvalidLabelClass : "")}")">@(option.Key)</span>
+                &nbsp;&nbsp;
+                <input
+                    type="radio" 
+                    name="@(Property)"
+                    value="@(option.Value)" 
+                    checked="@(option.Value == Value)"
+                    class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
+                    @attributes=@(AdditionalAttributes)
+                    />
+            </label>
+        }
+    </div>
+    @if (isInvalid) {
+        @(ValidationContainer)
+    }
+</fieldset>
+
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Legend { get; set; } = null!;
+    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public Dictionary<string, string> Options { get; set; } = [];
+    [Parameter] public Type? EnumType { get; set; }
+    [Parameter] public ValidationContext? ValidationContext { get; set; }
+    [Parameter] public RenderFragment? ValidationContainer { get; set; }
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string InvalidClass { get; set; } = null!;
+    [Parameter] public string ControlClass { get; set; } = null!;
+    [Parameter] public string LegendClass { get; set; } = null!;
+    [Parameter] public string LabelContainerClass { get; set; } = null!;
+    [Parameter] public string LabelClass { get; set; } = null!;
+    [Parameter] public string InvalidLabelClass { get; set; } = null!;
+    [Parameter] public string GroupClass { get; set; } = null!;
+
+    private bool isInvalid { get; set; }
+
+    protected override void OnParametersSet() {
+        if (EnumType is not null) {
+            var enumNames = Enum.GetNames(EnumType);
+            foreach (var en in enumNames) {
+                Options.Add(Utilities.AddSpacesToCamelCase(en), en);
+            }
+        }
+        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
+            isInvalid = true;
+        }
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+}

@@ -39,6 +39,7 @@ module.exports = {
     "label-text-alt",
     "loading",
     "loading-bars",
+    "max-sm:flex-col",
     "modal",
     "modal-action",
     "modal-bottom",

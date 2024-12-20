@@ -56,6 +56,11 @@ public class FormValidator : Validator<FormValidator, FormModel> {
             .When(x => x.IsPublished == true)
             .WithMessage("Must be completed when published");
 
+        RuleFor(x => x.Subscription)
+            .NotEqual(SubscriptionType.NoRenewal)
+            .When(x => x.Cost >= 30)
+            .WithMessage("Renewal subscription required when cost >= 30");
+
         RuleFor(x => x.Notes)
             .NotEmpty()
             .When(x => x.ReportingStatus == ReportingStatusType.Completed)
