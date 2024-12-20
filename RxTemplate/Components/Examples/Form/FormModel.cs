@@ -11,6 +11,7 @@ public record FormModel {
     public bool IsPublished { get; set; }
     public int? NumberOfDays { get; set; }
     public decimal? Cost { get; set; }
+    public SubscriptionType Subscription { get; set; }
     public ReportingStatusType ReportingStatus { get; set; }
     public string? Notes { get; set; }
 
@@ -24,4 +25,10 @@ public enum ReportingStatusType {
     InProgress,
     Submitted,
     Completed
+}
+
+public enum SubscriptionType {
+    NoRenewal,
+    MonthlyRenewal,
+    AnnualRenewal
 }

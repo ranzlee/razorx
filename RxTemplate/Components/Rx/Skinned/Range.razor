@@ -1,0 +1,30 @@
+<RxRange 
+    Id="@(Id)"
+    Property="@(Property)" 
+    Value="@(Value)" 
+    Label="@(Label)" 
+    ValidationContext="@(ValidationContext)"
+    ContainerClass="form-control w-full"
+    InvalidClass="range-error"
+    ControlClass="range w-full"
+    LabelContainerClass="label"
+    LabelClass="label-text"
+    ValueClass="label-text font-semibold"
+    @attributes=@(AdditionalAttributes)>
+    <ValidationContainer>
+        <RxFormError 
+            Property="@(Property)" 
+            ValidationContext="@(ValidationContext)" 
+            ContainerClass="label" 
+            ErrorMessageClass="label-text text-error" />
+    </ValidationContainer>
+</RxRange>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string Label { get; set; } = null!;
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public ValidationContext ValidationContext { get; set; } = new();
+    [Parameter] public int Value { get; set; }
+}

@@ -1,0 +1,41 @@
+<RxRadioSet 
+    Id="@(Id)"
+    Property="@(Property)" 
+    Value="@(Value)" 
+    Legend="@(Label)" 
+    ValidationContext="@(ValidationContext)" 
+    EnumType="@(EnumType)"
+    Options="@(Options)"
+    InvalidClass="radio-error"
+    ControlClass="radio"
+    LegendClass="label label-text"
+    ContainerClass="w-full"
+    LabelContainerClass="label cursor-pointer"
+    LabelClass="label-text"
+    InvalidLabelClass="text-error"
+    GroupClass="@($"flex justify-between {(Direction == DirectionType.Vertical ? "flex-col" : "max-sm:flex-col")}")"
+    @attributes=@(AdditionalAttributes)>
+    <ValidationContainer>
+        <RxFormError 
+            Property="@(Property)" 
+            ValidationContext="@(ValidationContext)" 
+            ContainerClass="label" 
+            ErrorMessageClass="label-text text-error" />
+    </ValidationContainer>
+</RxRadioSet>
+
+@code {
+    public enum DirectionType {
+        Vertical,
+        Horizontal
+    }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string Label { get; set; } = null!;
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public ValidationContext ValidationContext { get; set; } = new();
+    [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public Type? EnumType { get; set; }
+    [Parameter] public Dictionary<string, string> Options { get; set; } = [];
+    [Parameter] public DirectionType Direction { get; set; }
+}

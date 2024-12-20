@@ -1,131 +1,144 @@
 @implements IComponentModel<FormModel>
 
 <form id="input-form" action="" hx-post="/examples/form/submit" hx-target="#form-page" hx-swap="outerHTML" novalidate>
-    <div class="flex max-md:flex-col gap-x-4">
-        <div class="w-80">
-            <!-- Name Field -->
-            <div class="max-w-xs">
-                <Field 
-                    Property="@(nameof(Model.Name))" 
-                    Value="@(Model.Name)" 
-                    Label="Name" 
-                    InputType="text"
-                    ValidationContext="@(ValidationContext)"
-                    placeholder="e.g. John Doe">
-                </Field>
+    <div class="flex flex-col w-full gap-y-3">
+        <div class="flex max-md:flex-col gap-x-4">
+            <div class="w-80">
+                <!-- Name Field -->
+                <div class="max-w-xs">
+                    <Field 
+                        Property="@(nameof(Model.Name))" 
+                        Value="@(Model.Name)" 
+                        Label="Name" 
+                        InputType="text"
+                        ValidationContext="@(ValidationContext)"
+                        placeholder="e.g. John Doe">
+                    </Field>
+                </div>
+            </div>
+            <div class="w-80">
+                <!-- Email Field -->
+                <div class="max-w-xs">
+                    <Field 
+                        Property="@(nameof(Model.Email))" 
+                        Value="@(Model.Email)" 
+                        Label="Email" 
+                        InputType="email"
+                        ValidationContext="@(ValidationContext)"
+                        placeholder="e.g. john.doe@email.com">
+                    </Field>
+                </div>
             </div>
         </div>
-        <div class="w-80">
-            <!-- Email Field -->
-            <div class="max-w-xs">
-                <Field 
-                    Property="@(nameof(Model.Email))" 
-                    Value="@(Model.Email)" 
-                    Label="Email" 
-                    InputType="email"
+        <div class="flex max-md:flex-col gap-x-4">
+            <div class="w-80">
+                <!-- Birth Date Field -->
+                <div class="max-w-xs">
+                    <Field 
+                        Property="@(nameof(Model.BirthDate))" 
+                        Value="@(Model.BirthDate)" 
+                        Label="Birth Date" 
+                        InputType="date"
+                        ValidationContext="@(ValidationContext)"
+                        placeholder="e.g. 01/01/1970">
+                    </Field>
+                </div>
+            </div>
+            <div class="w-80">
+            <!-- Appointment Time Field -->
+                <div class="max-w-xs">
+                    <Field 
+                        Property="@(nameof(Model.AppointmentTime))" 
+                        Value="@(Model.AppointmentTime)" 
+                        Label="Appointment Time"
+                        InputType="datetime-local" 
+                        ValidationContext="@(ValidationContext)"
+                        placeholder="e.g. 01/01/2026, 03:00 PM">
+                    </Field>
+                </div>
+            </div>
+        </div>
+        <div class="flex max-md:flex-col gap-x-4">
+            <div class="w-80">
+            <!-- Number of Days Field -->
+                <div class="max-w-xs">
+                    <Range
+                        Property="@(nameof(Model.NumberOfDays))" 
+                        Value="@(Model.NumberOfDays ?? 0)" 
+                        Label="Number of Days"
+                        min="0"
+                        max="10"
+                        step="1"
+                        ValidationContext="@(ValidationContext)">
+                    </Range>
+                </div>
+            </div>
+            <div class="w-80">
+            <!-- Cost Field -->
+                <div class="max-w-xs">
+                    <Field 
+                        Property="@(nameof(Model.Cost))" 
+                        Value="@(Model.Cost)" 
+                        Label="Cost" 
+                        InputType="number"
+                        ValidationContext="@(ValidationContext)"
+                        placeholder="e.g. 60.00" 
+                        min="0" 
+                        step="10">
+                    </Field>
+                </div>
+            </div>
+        </div>
+        <div class="flex max-md:flex-col gap-x-4 md:items-center">
+            <RadioSet 
+                Property="@(nameof(Model.Subscription))" 
+                Value="@(Model.Subscription.ToString())" 
+                Label="Subscription Type" 
+                Direction="@(RadioSet.DirectionType.Horizontal)"
+                ValidationContext="@(ValidationContext)" 
+                EnumType="@(typeof(SubscriptionType))">
+            </RadioSet>
+        </div>
+        <div class="flex max-md:flex-col gap-x-4 md:items-center">
+            <div class="w-80">
+            <!-- Reporting Status Select -->
+                <div class="max-w-xs">
+                    <Select 
+                        Property="@(nameof(Model.ReportingStatus))" 
+                        Value="@(Model.ReportingStatus.ToString())" 
+                        Label="Reporting Status" 
+                        ValidationContext="@(ValidationContext)" 
+                        EnumType="@(typeof(ReportingStatusType))">
+                    </Select>
+                </div>
+            </div>
+            <div class="w-80">
+            <!--  Is Published Toggle -->
+                <div class="max-w-xs pt-2">
+                    <Checkbox 
+                        Property="@(nameof(Model.IsPublished))" 
+                        Value="@(Model.IsPublished)" 
+                        Label="Is Published"
+                        ValidationContext="@(ValidationContext)">
+                    </Checkbox>
+                </div>
+            </div>
+        </div>
+        <div class="flex max-w-[650px]">
+            <!-- Notes Memo Field -->
+            <div class="w-full">
+            <MemoField 
+                    Property="@(nameof(Model.Notes))" 
+                    Value="@(Model.Notes)" 
+                    Label="Notes" 
+                    MaxLength="1000" 
                     ValidationContext="@(ValidationContext)"
-                    placeholder="e.g. john.doe@email.com">
-                </Field>
+                    placeholder="Enter notes">
+                </MemoField>
             </div>
         </div>
     </div>
-    <div class="flex max-md:flex-col gap-x-4">
-        <div class="w-80">
-            <!-- Birth Date Field -->
-            <div class="max-w-xs">
-                <Field 
-                    Property="@(nameof(Model.BirthDate))" 
-                    Value="@(Model.BirthDate)" 
-                    Label="Birth Date" 
-                    InputType="date"
-                    ValidationContext="@(ValidationContext)"
-                    placeholder="e.g. 01/01/1970">
-                </Field>
-            </div>
-        </div>
-        <div class="w-80">
-           <!-- Appointment Time Field -->
-            <div class="max-w-xs">
-                <Field 
-                    Property="@(nameof(Model.AppointmentTime))" 
-                    Value="@(Model.AppointmentTime)" 
-                    Label="Appointment Time"
-                    InputType="datetime-local" 
-                    ValidationContext="@(ValidationContext)"
-                    placeholder="e.g. 01/01/2026, 03:00 PM">
-                </Field>
-            </div>
-        </div>
-    </div>
-    <div class="flex max-md:flex-col gap-x-4">
-        <div class="w-80">
-           <!-- Number of Days Field -->
-            <div class="max-w-xs">
-                <Field 
-                    Property="@(nameof(Model.NumberOfDays))" 
-                    Value="@(Model.NumberOfDays)" 
-                    Label="Number of Days"
-                    InputType="number" 
-                    ValidationContext="@(ValidationContext)"
-                    placeholder="e.g. 3" 
-                    min="0">
-                </Field>
-            </div>
-        </div>
-        <div class="w-80">
-           <!-- Cost Field -->
-            <div class="max-w-xs">
-                <Field 
-                    Property="@(nameof(Model.Cost))" 
-                    Value="@(Model.Cost)" 
-                    Label="Cost" 
-                    InputType="number"
-                    ValidationContext="@(ValidationContext)"
-                    placeholder="e.g. 60.00" 
-                    min="0" 
-                    step="10">
-                </Field>
-            </div>
-        </div>
-    </div>
-    <div class="flex max-md:flex-col gap-x-4 md:items-center">
-        <div class="w-80">
-           <!-- Reporting Status Select -->
-            <div class="max-w-xs">
-                <Select 
-                    Property="@(nameof(Model.ReportingStatus))" 
-                    Value="@(Model.ReportingStatus.ToString())" 
-                    Label="Reporting Status" 
-                    ValidationContext="@(ValidationContext)" 
-                    EnumType="@(typeof(ReportingStatusType))">
-                </Select>
-            </div>
-        </div>
-        <div class="w-80">
-           <!--  Is Published Toggle -->
-            <div class="max-w-xs pt-2">
-                <Checkbox 
-                    Property="@(nameof(Model.IsPublished))" 
-                    Value="@(Model.IsPublished)" 
-                    Label="Is Published"
-                    ValidationContext="@(ValidationContext)">
-                </Checkbox>
-            </div>
-        </div>
-    </div>
-    <div class="flex max-w-[650px]">
-         <!-- Notes Memo Field -->
-        <div class="w-full">
-           <MemoField 
-                Property="@(nameof(Model.Notes))" 
-                Value="@(Model.Notes)" 
-                Label="Notes" 
-                MaxLength="1000" 
-                ValidationContext="@(ValidationContext)"
-                placeholder="Enter notes">
-            </MemoField>
-        </div>
-    </div>
+    
     <div class="mt-3">
         <!-- Submit Button -->
         <button id="form-submit" type="submit" class="btn btn-primary">

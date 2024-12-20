@@ -1,0 +1,54 @@
+<label class="@(ContainerClass)">
+    <div class="@(LabelContainerClass)">
+        <span class="@(LabelClass)">@(Label)</span>
+        <span id="@(Id)-value" class="@(ValueClass)">@(Value)</span>
+    </div>
+    <input 
+        Id="@(Id)" 
+        name="@(Property)" 
+        type="range"
+        value="@(Value)"
+        aria-invalid="@(isInvalid ? "true" : false)"
+        aria-describedby="@(isInvalid ? $"{Id}-error" : false)"
+        class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")" 
+        @attributes=@(AdditionalAttributes)
+        />
+    <script>
+        (function() {
+            var range = document.getElementById("@(Id)");
+            var rangeValue = document.getElementById("@(Id)-value");
+            range.oninput = function() {
+                rangeValue.innerText = range.value;
+            }
+        })()
+    </script>
+    @if (isInvalid) {
+        @(ValidationContainer)
+    }
+</label>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Label { get; set; } = null!;
+    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public int Value { get; set; }
+    [Parameter] public ValidationContext? ValidationContext { get; set; }
+    [Parameter] public RenderFragment? ValidationContainer { get; set; }
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string InvalidClass { get; set; } = null!;
+    [Parameter] public string ControlClass { get; set; } = null!;
+    [Parameter] public string LabelContainerClass { get; set; } = null!;
+    [Parameter] public string LabelClass { get; set; } = null!;
+    [Parameter] public string ValueClass { get; set; } = null!;
+
+    private bool isInvalid { get; set; }
+    protected override void OnParametersSet() {
+        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
+            isInvalid = true;
+        }
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+}
