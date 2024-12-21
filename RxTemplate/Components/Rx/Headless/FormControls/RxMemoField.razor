@@ -28,6 +28,7 @@
         var memoLength = document.getElementById("@(Id)-len");
         memoLength.innerText = 0;
         var memo = document.getElementById("@(Id)");
+        memo.style.resize = "none";
         var resize = function() {
             memo.style.height = 'auto';
             memo.style.height = (memo.scrollHeight + @(AutosizeHeightBuffer)).toString() +'px';
