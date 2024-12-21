@@ -8,11 +8,10 @@
     SubmitButtonClass="btn btn-primary"
     CancelButtonClass="btn btn-neutral"
     Id="@(Id)"
-    Endpoint="@(Endpoint)"
-    HxTarget="@(HxTarget)"
-    HxSwap="@(HxSwap)"
     Label="@(Label)"
     Property="@(Property)"
+    AllowMultiple="@(AllowMultiple)"
+    Accept="@(Accept)"
     RequestTimeoutMilliseconds="@(RequestTimeoutMilliseconds)"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
@@ -26,12 +25,11 @@
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
-    [Parameter, EditorRequired] public string Endpoint { get; set; } = null!;
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter] public string Id { get; set; } = "";
-    [Parameter] public string HxTarget { get; set; } = null!;
-    [Parameter] public string HxSwap { get; set; } = null!;
+    [Parameter] public bool AllowMultiple { get; set; }
+    [Parameter] public string Accept { get; set; } = "";
     [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
     [Parameter] public ValidationContext ValidationContext { get; set; } = new();
 }

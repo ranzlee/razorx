@@ -70,12 +70,12 @@
     <div class="w-[640px]">
         <FileInput 
             Id="example-blobs" 
-            HxTarget="#blob-list" 
-            HxSwap="beforeend"
-            Endpoint="/examples/blobs" 
             Label="Choose files" 
             Property="files"
-            multiple />
+            AllowMultiple="@(true)"
+            hx-target="#blob-list"
+            hx-swap="beforeend"
+            hx-post="/examples/blobs"/>
     </div>
 </div>
 

@@ -4,9 +4,11 @@
 @if (Model is null) {
     <FileInput 
         Id="example-blob" 
-        Endpoint="/examples/blob" 
         Label="Pick a file" 
-        Property="file" />
+        Property="file" 
+        hx-target="#example-blob"
+        hx-swap="outerHTML"
+        hx-post="/examples/blob"/>
 } else {
     <Blob Model="@(Model)" />
 }
