@@ -6,10 +6,11 @@
                 id="@(Id)-input" 
                 type="file" 
                 name="@(Property)"
+                multiple="@(AllowMultiple)"
+                accept="@(Accept)"
                 aria-invalid="@(isInvalid ? "true" : false)"
                 aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
                 class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
-                @attributes=@(AdditionalAttributes)
                 />
             @if (isInvalid) {
                 @(ValidationContainer)
@@ -24,11 +25,9 @@
             id="@(Id)-submit"
             type="button"
             hx-encoding="multipart/form-data"
-            hx-target="@(HxTarget)"
-            hx-swap="@(HxSwap)"
-            hx-post="@(Endpoint)"
             hx-include="#@(Id)"
             hx-request='{ "timeout": @(RequestTimeoutMilliseconds) }'
+            @attributes=@(AdditionalAttributes)
             disabled
             class="@(SubmitButtonClass)">
             Upload
@@ -66,7 +65,7 @@
                     let status = (evt.detail.loaded / evt.detail.total) * 100;
                     progress.setAttribute("value", status);
                 });
-                htmx.on(submit, "htmx:afterRequest", (evt) => {
+                htmx.on(submit, "htmx:afterRequest", () => {
                     reset();
                 });
             }
@@ -94,10 +93,9 @@
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
-    [Parameter, EditorRequired] public string Endpoint { get; set; } = null!;
     [Parameter] public string Id { get; set; } = "";
-    [Parameter] public string HxTarget { get; set; } = null!;
-    [Parameter] public string HxSwap { get; set; } = null!;
+    [Parameter] public bool AllowMultiple { get; set; }
+    [Parameter] public string Accept { get; set; } = "";
     [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
     [Parameter] public ValidationContext? ValidationContext { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
@@ -116,12 +114,6 @@
         }
         if (string.IsNullOrWhiteSpace(Id)) {
             Id = Utilities.GenerateElementId();
-        }
-        if (string.IsNullOrWhiteSpace(HxTarget)) {
-            HxTarget = $"#{Id}";
-        }
-        if (string.IsNullOrWhiteSpace(HxSwap)) {
-            HxSwap = "outerHTML";
         }
     }
 }

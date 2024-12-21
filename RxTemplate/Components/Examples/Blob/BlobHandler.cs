@@ -24,14 +24,15 @@ public class BlobHandler : IRequestHandler {
         HttpResponse response,
         IBlobProvider blobProvider,
         IFormFile file,
-        IHxTriggers hxTriggers) {
+        IHxTriggers hxTriggers,
+        ILogger<BlobHandler> logger) {
         await using var stream = file.OpenReadStream();
         var m = await blobProvider.UploadAsync(stream, "single", file.FileName);
         hxTriggers
             .With(response)
             .Add(new HxToastTrigger("#blob-toast", "BLOB added"))
             .Build();
-        return response.RenderComponent<Blob, BlobModel>(m);
+        return response.RenderComponent<Blob, BlobModel>(m, logger);
     }
 
     [DisableRequestTimeout]
@@ -41,7 +42,8 @@ public class BlobHandler : IRequestHandler {
         HttpResponse response,
         IBlobProvider blobProvider,
         IFormFileCollection files,
-        IHxTriggers hxTriggers) {
+        IHxTriggers hxTriggers,
+        ILogger<BlobHandler> logger) {
         var m = new List<BlobModel>();
         foreach (var file in files) {
             await using var stream = file.OpenReadStream();
@@ -51,7 +53,7 @@ public class BlobHandler : IRequestHandler {
             .With(response)
             .Add(new HxToastTrigger("#blob-toast", $"BLOB{(files.Count > 1 ? "s" : "")} added"))
             .Build();
-        return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(m);
+        return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(m, logger);
     }
 
     public static async Task<IResult> Delete(
@@ -59,7 +61,8 @@ public class BlobHandler : IRequestHandler {
         string path,
         string id,
         IBlobProvider blobProvider,
-        IHxTriggers hxTriggers) {
+        IHxTriggers hxTriggers,
+        ILogger<BlobHandler> logger) {
         await blobProvider.DeleteAsync($"{path}/{id}");
         hxTriggers
             .With(response)
@@ -68,11 +71,11 @@ public class BlobHandler : IRequestHandler {
             .Build();
         if (path == "single") {
             response.HxRetarget("#example-blob");
-            return response.RenderComponent<SingleBlob>();
+            return response.RenderComponent<SingleBlob>(logger);
         }
         var l = await blobProvider.ListAsync("multi");
         response.HxRetarget("#blob-list");
-        return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(l);
+        return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(l, logger);
     }
 
     public static async Task<IResult> Download(
