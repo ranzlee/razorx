@@ -53,7 +53,7 @@ public class FormValidator : Validator<FormValidator, FormModel> {
 
         RuleFor(x => x.ReportingStatus)
             .Equal(ReportingStatusType.Completed)
-            .When(x => x.IsPublished == true)
+            .When(x => x.IsPublished)
             .WithMessage("Must be completed when published");
 
         RuleFor(x => x.Subscription)

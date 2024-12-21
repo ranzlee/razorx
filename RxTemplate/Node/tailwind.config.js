@@ -128,23 +128,14 @@ module.exports = {
       "nord",
       "sunset",
       {
-        // theme modification example
+        // theme modification example - replace the dark or light theme and apply customizations
         light: {
-          ...require("daisyui/src/theming/themes")["lofi"],
-          primary: "#1d4ed8",
+          ...require("daisyui/src/theming/themes")["nord"],
         },
       },
       {
-        // theme modification example
         dark: {
-          ...require("daisyui/src/theming/themes")["black"],
-          primary: "#0ea5e9",
-          secondary: "#10b981",
-          accent: "#8b5cf6",
-          info: "#1d4ed8",
-          success: "#15803d",
-          warning: "#f59e0b",
-          error: "#dc2626",
+          ...require("daisyui/src/theming/themes")["dark"],
         },
       },
     ], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]

@@ -4,7 +4,7 @@
         <input id="@(Id)" 
             type="checkbox" 
             name="@(Property)" 
-            checked="@(Value == true ? "checked" : false)"
+            checked="@(Value)"
             class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
             aria-invalid="@(isInvalid ? "true" : false)"
             aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
