@@ -131,6 +131,7 @@ module.exports = {
         // theme modification example - replace the dark or light theme and apply customizations
         light: {
           ...require("daisyui/src/theming/themes")["nord"],
+          primary: "#405874",
         },
       },
       {
