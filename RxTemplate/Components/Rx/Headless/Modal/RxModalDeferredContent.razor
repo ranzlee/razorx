@@ -4,11 +4,11 @@
 <div id="@(ContentId)"></div>
 <script>
     (function() {
-        var modal = document.getElementById("@(Id)");
+        var modal = document.getElementById("@(ModalId)");
         modal.addEventListener("opened", function(evt) {
             var content = document.getElementById("@(ContentId)-template")?.content?.cloneNode(true) ?? [];
             document.getElementById("@(ContentId)")?.prepend(content);
-            htmx.ajax('GET', `@(RenderFromRoute.Trim().TrimEnd('/'))/${evt.detail.id}`, { 
+            htmx.ajax('GET', `@(RenderFromRoute.Trim().TrimEnd('/'))/${evt.detail?.id ?? ''}`, { 
                 target: '#@(ContentId)', 
                 swap: 'outerHTML transition:true' 
             });
@@ -26,7 +26,7 @@
 </script>
 
 @code {
-    [CascadingParameter(Name = nameof(Id))] protected string Id { get; set; } = null!;
+    [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
     [Parameter, EditorRequired] public string ContentId { get; set; } = null!;
     [Parameter, EditorRequired] public string RenderFromRoute { get; set; } = null!;
     [Parameter] public string ClearOobContentIdOnClose { get; set; } = null!;

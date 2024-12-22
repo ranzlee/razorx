@@ -13,11 +13,11 @@
                 </div>
             </div>
         </div>
-        <ModalActions>
-            <RxModalDismissAction ModalId="delete-modal" class="btn btn-neutral">
+        <div class="modal-action">
+           <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
                 Cancel
-            </RxModalDismissAction>
-        </ModalActions>
+            </RxModalDismiss>
+        </div>
     </RxModalResolvedContent>
     return;
 }
@@ -62,25 +62,25 @@ OOB swap the title
         <div class="flex">
             <div class="w-32">Observed:</div>
             <div>
-                @(Utilities.AddSpacesToCamelCase(Model.TemperatureTaken.ToString()))
+                @(Utilities.SeparateCamelCaseWords(Model.TemperatureTaken.ToString()))
             </div>
         </div>
     </div>
-    <ModalActions>
+    <div class="modal-action">
         <div>
-            <RxGridActionButton 
+            <RxGridAction 
                 Model="@(gridModel)"
                 type="submit" 
                 hx-delete="@($"/examples/crud/{Model.Id}")"
                 hx-indicator="#delete-grid-item"
                 class="btn btn-error">
                 Delete
-            </RxGridActionButton>
+            </RxGridAction>
         </div>
-        <RxModalDismissAction ModalId="delete-modal" class="btn btn-neutral">
+        <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
             Cancel
-        </RxModalDismissAction>
-    </ModalActions>
+        </RxModalDismiss>
+    </div>
 </RxModalResolvedContent>
 
 @code {

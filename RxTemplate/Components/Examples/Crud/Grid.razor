@@ -18,20 +18,20 @@
                     filter.FilterValue = "Not Provided";
                 }
                 <div class="badge badge-warning gap-2">
-                    <RxGridActionButton 
+                    <RxGridAction 
                         Model="@(Model)"
                         hx-get="@(Model.RenderFromRoute)"
                         name="@(nameof(filter.FilterId))"
                         value="@(filter.FilterId)"
-                        aria-label="@($"Remove filter {ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.AddSpacesToCamelCase(filter.FilterOperation)} {filter.FilterValue}")"
+                        aria-label="@($"Remove filter {ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.SeparateCamelCaseWords(filter.FilterOperation)} {filter.FilterValue}")"
                         >
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-4 w-4 stroke-current">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </div>
-                    </RxGridActionButton>
-                    @($"{ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.AddSpacesToCamelCase(filter.FilterOperation)} {filter.FilterValue}")
+                    </RxGridAction>
+                    @($"{ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.SeparateCamelCaseWords(filter.FilterOperation)} {filter.FilterValue}")
                 </div>
             }
         </div>
@@ -196,7 +196,7 @@
                             @(item.IsVerified ? "Y" : "N")
                         </td>
                         <td>
-                            @(Utilities.AddSpacesToCamelCase(item.TemperatureTaken.ToString()))
+                            @(Utilities.SeparateCamelCaseWords(item.TemperatureTaken.ToString()))
                         </td>
                     </tr>
                 }

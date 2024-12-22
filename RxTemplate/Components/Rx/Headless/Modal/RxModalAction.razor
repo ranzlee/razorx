@@ -5,14 +5,13 @@
 </button>
 <script>
     (function() {
-        var modal = document.getElementById("@(ModalId)");
         var action = document.getElementById("@($"{ModalId}-{ActionId}")");
         var processHxAction = function(hxMethod, routeId) {
             var attr = action.getAttribute(hxMethod);
             if (attr === null) {
                 return false;
             }
-            var resolvedAttr = action.getAttribute("data-hx-method");
+            var resolvedAttr = action.getAttribute("data-hx-route");
             if (resolvedAttr !== null) {
                 action.setAttribute(hxMethod, `${resolvedAttr}/${routeId}`);
                 htmx.process(action);
@@ -22,13 +21,14 @@
             if (attr.endsWith("/")) {
                 attr = attr.slice(0, -1); 
             }
-            action.setAttribute("data-hx-method", attr);
+            action.setAttribute("data-hx-route", attr);
             action.setAttribute(hxMethod, `${attr}/${routeId}`);
             htmx.process(action);
             return true;
         }
+        var modal = document.getElementById("@(ModalId)");
         modal.addEventListener("opened", function(evt) {
-            var routeId = evt.detail.id ?? "";
+            var routeId = evt.detail?.id ?? "";
             if (processHxAction("hx-delete", routeId)) {
                 return;
             }

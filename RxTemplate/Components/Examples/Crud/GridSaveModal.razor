@@ -13,11 +13,11 @@
                 </div>
             </div>
         </div>
-        <ModalActions>
-            <RxModalDismissAction ModalId="save-modal" class="btn btn-neutral">
+        <div class="modal-action">
+           <RxModalDismiss ModalId="save-modal" class="btn btn-neutral">
                 Cancel
-            </RxModalDismissAction>
-        </ModalActions>
+            </RxModalDismiss>
+        </div>
     </RxModalResolvedContent>
     return;
 }
@@ -84,9 +84,9 @@ OOB swap the title
         </div>
     </div>
     <input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)" />
-    <ModalActions>
+    <div class="modal-action">
         <div>
-            <RxGridActionButton 
+            <RxGridAction 
                 Id="save-item"
                 Model="@(gridModel)"
                 type="submit" 
@@ -96,12 +96,12 @@ OOB swap the title
                 hx-disabled-elt="this"
                 class="btn btn-primary">
                 Save
-            </RxGridActionButton>
+            </RxGridAction>
         </div>
-        <RxModalDismissAction ModalId="save-modal" class="btn btn-neutral">
+        <RxModalDismiss ModalId="save-modal" class="btn btn-neutral">
             Cancel
-        </RxModalDismissAction>
-    </ModalActions>
+        </RxModalDismiss>
+    </div>
 </RxModalResolvedContent>
 
 @code {

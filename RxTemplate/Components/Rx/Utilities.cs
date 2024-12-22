@@ -7,14 +7,14 @@ public partial class Utilities() {
     [GeneratedRegex(@"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])")]
     private static partial Regex _splitEnumName();
 
-    public static string AddSpacesToCamelCase(string? val, ILogger? logger = null) {
+    public static string SeparateCamelCaseWords(string? val, ILogger? logger = null) {
         if (string.IsNullOrWhiteSpace(val)) {
-            logger?.LogTrace("{method} string not provided.", nameof(AddSpacesToCamelCase));
+            logger?.LogTrace("{method} string not provided.", nameof(SeparateCamelCaseWords));
             return "";
         }
         var s = _splitEnumName().Replace(val, " ");
         logger?.LogTrace("{method} converted {val} to {s}.",
-            nameof(AddSpacesToCamelCase),
+            nameof(SeparateCamelCaseWords),
             val,
             s);
         return s;

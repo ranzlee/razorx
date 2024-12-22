@@ -19,6 +19,15 @@
         "Logging__LogLevel__Microsoft.Hosting.Lifetime": "Information"
       }
     },
+    "no-dev": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:44376;http://localhost:8814",
+      "environmentVariables": {
+        "Logging__LogLevel__Microsoft.Hosting.Lifetime": "Information"
+      }
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,

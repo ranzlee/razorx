@@ -6,31 +6,32 @@
 
 <Toast Id="blob-toast" />
 
-<Modal Id="delete-modal">
-    <ModalTitle>
+<dialog id="delete-modal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
         <div class="flex justify-between items-center bg-base-300 p-5 rounded">
             <div class="text-lg font-bold">
                 Delete BLOB?
             </div>
         </div>
-    </ModalTitle>
-    <ModalBody>
-        <div class="p-5">
-            This is a destructive operation. Are you sure?
-        </div>
-        <ModalActions>
-            <RxModalHxAction
-                ModalId="delete-modal"
-                hx-delete="/examples/blob/" 
-                class="btn btn-error">
-                Delete
-            </RxModalHxAction>
-            <RxModalDismissAction ModalId="delete-modal" class="btn btn-neutral">
-                Cancel
-            </RxModalDismissAction>
-        </ModalActions>
-    </ModalBody>
-</Modal>
+        <form method="dialog">
+            <div class="p-5">
+                This is a destructive operation. Are you sure?
+            </div>
+            <div class="modal-action">
+                <RxModalAction
+                    ModalId="delete-modal"
+                    hx-delete="/examples/blob/" 
+                    hx-disabled-elt="this"
+                    class="btn btn-error">
+                    Delete
+                </RxModalAction>
+                <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
+                    Cancel
+                </RxModalDismiss>
+            </div>
+        </form>
+    </div>
+</dialog>
 
 <div class="flex justify-center">
     <article class="prose">

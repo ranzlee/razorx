@@ -52,11 +52,10 @@ public record GridState {
         if (!string.IsNullOrWhiteSpace(sortProperty)) {
             if (SortProperty == sortProperty) {
                 SortedDescending = !SortedDescending;
+                return;
             }
-            else {
-                SortProperty = sortProperty;
-                SortedDescending = false;
-            }
+            SortProperty = sortProperty;
+            SortedDescending = false;
             return;
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
