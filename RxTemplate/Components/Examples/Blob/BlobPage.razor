@@ -21,9 +21,7 @@
         <ModalActions>
             <RxModalHxAction
                 ModalId="delete-modal"
-                HxActionRoute="/examples/blob/" 
-                HxActionType="hx-delete"
-                hx-swap="outerHTML"
+                hx-delete="/examples/blob/" 
                 class="btn btn-error">
                 Delete
             </RxModalHxAction>
@@ -74,7 +72,7 @@
             Property="files"
             AllowMultiple="@(true)"
             hx-target="#blob-list"
-            hx-swap="beforeend"
+            hx-swap="beforeend transition:true"
             hx-post="/examples/blobs"/>
     </div>
 </div>

@@ -69,6 +69,7 @@ public class BlobHandler : IRequestHandler {
             .Add(new HxCloseModalTrigger("#delete-modal"))
             .Add(new HxToastTrigger("#blob-toast", "BLOB removed"))
             .Build();
+        response.HxReswap("outerHTML transition:true");
         if (path == "single") {
             response.HxRetarget("#example-blob");
             return response.RenderComponent<SingleBlob>(logger);
