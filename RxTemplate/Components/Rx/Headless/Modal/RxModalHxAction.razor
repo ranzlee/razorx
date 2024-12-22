@@ -7,9 +7,38 @@
     (function() {
         var modal = document.getElementById("@(ModalId)");
         var action = document.getElementById("@($"{ModalId}-{ActionId}")");
-        modal.addEventListener("opened", function(evt) {
-            action.setAttribute("@(HxActionType)", `@(HxActionRoute.Trim().TrimEnd('/'))/${evt.detail.id}`);
+        var processHxAction = function(hxMethod, routeId) {
+            var attr = action.getAttribute(hxMethod);
+            if (attr === null) {
+                return false;
+            }
+            var resolvedAttr = action.getAttribute("data-hx-method");
+            if (resolvedAttr !== null) {
+                action.setAttribute(hxMethod, `${resolvedAttr}/${routeId}`);
+                htmx.process(action);
+                return true;
+            }
+            attr = attr.trim();
+            if (attr.endsWith("/")) {
+                attr = attr.slice(0, -1); 
+            }
+            action.setAttribute("data-hx-method", attr);
+            action.setAttribute(hxMethod, `${attr}/${routeId}`);
             htmx.process(action);
+            return true;
+        }
+        modal.addEventListener("opened", function(evt) {
+            var routeId = evt.detail.id ?? "";
+            if (processHxAction("hx-delete", routeId)) {
+                return;
+            }
+            if (processHxAction("hx-post", routeId)) {
+                return;
+            }
+            if (processHxAction("hx-put", routeId)) {
+                return;
+            }
+            processHxAction("hx-patch", routeId);
         });
     })();
 </script>
@@ -18,17 +47,8 @@
     private string ActionId = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
-    [Parameter, EditorRequired] public string HxActionType { get; set; } = null!;
-    [Parameter, EditorRequired] public string HxActionRoute { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     protected override void OnParametersSet() {
-        if (!HxActionType.Equals("hx-get", StringComparison.InvariantCultureIgnoreCase)
-        && !HxActionType.Equals("hx-post", StringComparison.InvariantCultureIgnoreCase)
-        && !HxActionType.Equals("hx-put", StringComparison.InvariantCultureIgnoreCase)
-        && !HxActionType.Equals("hx-patch", StringComparison.InvariantCultureIgnoreCase)
-        && !HxActionType.Equals("hx-delete", StringComparison.InvariantCultureIgnoreCase)) {
-            throw new ArgumentOutOfRangeException(nameof(HxActionType), $"{nameof(HxActionType)} must be hx-[get, post, put, patch, or delete]");
-        }
         ActionId = Utilities.GenerateElementId();
     }
 }

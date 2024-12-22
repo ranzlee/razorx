@@ -137,6 +137,10 @@ module.exports = {
       {
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
+          "--rounded-box": "0.4rem",
+          "--rounded-btn": "0.2rem",
+          "--rounded-badge": "0.4rem",
+          "--tab-radius": "0.2rem",
         },
       },
     ], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]

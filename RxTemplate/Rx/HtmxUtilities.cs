@@ -30,4 +30,9 @@ public static class HtmxUtilities {
         logger?.LogInformation("HX-Retarget {target}.", targetSelector);
         response.Headers.Append("HX-Retarget", targetSelector);
     }
+
+    public static void HxReswap(this HttpResponse response, string strategy, ILogger? logger = null) {
+        logger?.LogInformation("HX-Reswap {strategy}.", strategy);
+        response.Headers.Append("HX-Reswap", strategy);
+    }
 }

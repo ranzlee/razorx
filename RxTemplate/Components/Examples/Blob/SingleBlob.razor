@@ -7,7 +7,7 @@
         Label="Pick a file" 
         Property="file" 
         hx-target="#example-blob"
-        hx-swap="outerHTML"
+        hx-swap="outerHTML transition:true"
         hx-post="/examples/blob"/>
 } else {
     <Blob Model="@(Model)" />

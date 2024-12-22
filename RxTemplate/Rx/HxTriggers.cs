@@ -157,7 +157,7 @@ file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxT
 
     public void Build() {
         if (isBuilt) {
-            logger.LogError("HxTriggers build attempted more than once for request {method}:{request}",
+            logger.LogError("HxTriggers build attempted more than once for request {method}:{request}.",
                 response.HttpContext.Request.Method,
                 response.HttpContext.Request.GetDisplayUrl());
             throw new InvalidOperationException("HxTriggers have already been built. Build() may only be called once.");

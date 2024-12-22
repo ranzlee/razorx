@@ -74,7 +74,7 @@ file sealed class BlobProvider : IBlobProvider {
             FileName = x.Metadata["filename"],
             FileSize = long.Parse(x.Metadata["filesize"]),
             Uploaded = DateTime.SpecifyKind(DateTime.Parse(x.Metadata["uploaded"]), DateTimeKind.Utc)
-        }).OrderByDescending(x => x.Uploaded);
+        }).OrderBy(x => x.Uploaded);
     }
 
     public async Task<BlobDownloadStreamingResult?> GetAsync(string id) {
