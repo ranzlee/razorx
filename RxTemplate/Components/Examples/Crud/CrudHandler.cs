@@ -101,15 +101,11 @@ public class CrudHandler : IRequestHandler {
         }
         var triggerBuilder = hxTriggers.With(response);
         // Validation passed, so save the item
-        if ((id ?? 0) > 0) {
-            // PUT (update)
-            triggerBuilder.Add(new HxFocusTrigger($"#edit-btn-{id}", true));
-        }
-        else {
-            // POST (insert)
-            triggerBuilder.Add(new HxFocusTrigger($"#new-btn"));
-        }
         Service.Save(model);
+        // Focus the new or edit button
+        triggerBuilder.Add((id ?? 0) > 0
+            ? new HxFocusTrigger($"#edit-btn-{id}", true)
+            : new HxFocusTrigger($"#new-btn"));
         // POST, PUT, and PATCH send metadata state as a request header instead of a parameter like GET and DELETE
         // htmx uses proper REST and HTTP semantics
         var demoGridState = request.Headers["DemoGridState"].ToString();
@@ -169,11 +165,9 @@ public class CrudHandler : IRequestHandler {
         // Simulate a DB latency
         await Task.Delay(200);
         // Load the state, which may be part of the request or new
-        GridState state = new();
-        if (!string.IsNullOrWhiteSpace(demoGridState)) {
-            // This state is the last state object that was returned from the server
-            state = JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
-        }
+        GridState state = string.IsNullOrWhiteSpace(demoGridState)
+            ? new()
+            : JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
         // Update the state based on the grid action (sort, page, filter) sent in the request.
         state.Update(page, sortProperty, filterId, filterProperty, filterOperation, filterValue);
         // Get the page data and total count based on the new state
@@ -209,12 +203,9 @@ public class CrudHandler : IRequestHandler {
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
             // Trigger focus on filter removal
-            if (state.Filters.Count != 0) {
-                triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
-            }
-            else {
-                triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]"));
-            }
+            triggerBuilder.Add(state.Filters.Count == 0
+                ? new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]")
+                : new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
         }
         //build triggers
         triggerBuilder.Build();

@@ -109,8 +109,8 @@ public class MockCrudService {
         state.TotalRecords = data.Count();
         // Sort data
         if (!string.IsNullOrWhiteSpace(state.SortProperty)) {
-            if (state.SortedDescending) {
-                data = state.SortProperty switch {
+            data = state.SortedDescending
+                ? state.SortProperty switch {
                     nameof(ItemModel.Id) => [.. data.OrderByDescending(x => x.Id)],
                     nameof(ItemModel.Date) => [.. data.OrderByDescending(x => x.Date)],
                     nameof(ItemModel.Summary) => [.. data.OrderByDescending(x => x.Summary)],
@@ -119,10 +119,8 @@ public class MockCrudService {
                     nameof(ItemModel.IsVerified) => [.. data.OrderByDescending(x => x.IsVerified)],
                     nameof(ItemModel.TemperatureTaken) => [.. data.OrderByDescending(x => x.TemperatureTaken.ToString())],
                     _ => data
-                };
-            }
-            else {
-                data = state.SortProperty switch {
+                }
+                : state.SortProperty switch {
                     nameof(ItemModel.Id) => [.. data.OrderBy(x => x.Id)],
                     nameof(ItemModel.Date) => [.. data.OrderBy(x => x.Date)],
                     nameof(ItemModel.Summary) => [.. data.OrderBy(x => x.Summary)],
@@ -132,7 +130,6 @@ public class MockCrudService {
                     nameof(ItemModel.TemperatureTaken) => [.. data.OrderBy(x => x.TemperatureTaken.ToString())],
                     _ => data
                 };
-            }
         }
         // Select page
         data = [.. data.Skip((state.Page - 1) * state.PageSize).Take(state.PageSize)];

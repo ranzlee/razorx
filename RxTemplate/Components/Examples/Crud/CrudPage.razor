@@ -13,61 +13,63 @@
         The confirm modal for DELETE operations. The contents of the modal are deferred loaded once triggered.
         The trigger is a grid action component present on each row.
         *@
-        <Modal Id="delete-modal">
-            <ModalTitle>
+        <dialog id="delete-modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
                 <div class="flex justify-between items-center bg-base-300 p-5 rounded">
                     <div class="text-lg font-bold">
                         <span id="delete-modal-title"></span>
                     </div>
                     <Spinner Id="delete-grid-item" />
                 </div>
-            </ModalTitle>
-            <ModalBody>
-                <RxModalDeferredContent 
-                    ContentId="delete-modal-form" 
-                    ClearOobContentIdOnClose="delete-modal-title" 
-                    RenderFromRoute="/examples/crud/delete-modal">
-                    <div class="h-[186px]">
-                        <Spinner AlwaysVisible="@(true)" />    
-                    </div>
-                    <ModalActions>
-                        <RxModalDismissAction ModalId="delete-modal" class="btn btn-neutral">
-                            Cancel
-                        </RxModalDismissAction>
-                    </ModalActions>
-                </RxModalDeferredContent>
-            </ModalBody>
-        </Modal>
+                <form method="dialog">
+                    <RxModalDeferredContent
+                        ModalId="delete-modal" 
+                        ContentId="delete-modal-form" 
+                        ClearOobContentIdOnClose="delete-modal-title" 
+                        RenderFromRoute="/examples/crud/delete-modal">
+                        <div class="h-[186px]">
+                            <Spinner AlwaysVisible="@(true)" />    
+                        </div>
+                        <div class="modal-action">
+                            <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
+                                Cancel
+                            </RxModalDismiss>
+                        </div>
+                    </RxModalDeferredContent>
+                </form>
+            </div>
+        </dialog>
 
         @*
         The new/edit modal for POST/PUT operations. The contents of the modal are deferred loaded once triggered.
         The trigger is a grid action component present on each row.
         *@
-        <Modal Id="save-modal">
-            <ModalTitle>
+        <dialog id="save-modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
                 <div class="flex justify-between items-center bg-base-300 p-5 rounded">
                     <div class="text-lg font-bold">
                         <span id="save-modal-title"></span>
                     </div>
                     <Spinner Id="save-grid-item" />
                 </div>
-            </ModalTitle>
-            <ModalBody>
-                <RxModalDeferredContent 
-                    ContentId="save-modal-form" 
-                    ClearOobContentIdOnClose="save-modal-title" 
-                    RenderFromRoute="/examples/crud/save-modal">
-                    <div class="h-[420px]">
-                        <Spinner AlwaysVisible="@(true)" />    
-                    </div>
-                    <ModalActions>
-                        <RxModalDismissAction ModalId="save-modal" class="btn btn-neutral">
-                            Cancel
-                        </RxModalDismissAction>
-                    </ModalActions>
-                </RxModalDeferredContent>
-            </ModalBody>
-        </Modal>
+                <form method="dialog">
+                    <RxModalDeferredContent
+                        ModalId="save-modal" 
+                        ContentId="save-modal-form" 
+                        ClearOobContentIdOnClose="save-modal-title" 
+                        RenderFromRoute="/examples/crud/save-modal">
+                        <div class="h-[420px]">
+                            <Spinner AlwaysVisible="@(true)" />    
+                        </div>
+                        <div class="modal-action">
+                            <RxModalDismiss ModalId="save-modal" class="btn btn-neutral">
+                                Cancel
+                            </RxModalDismiss>
+                        </div>
+                    </RxModalDeferredContent>
+                </form>
+            </div>
+        </dialog>
     </Authorized>
 </AuthorizeView>
 

@@ -8,8 +8,9 @@ The name RazorX represents the combination of ASP.NET Razor Components on the se
 
 Install the required dependencies, if necessary.
 
-- .NET SDK >= 8
-- Node.js or similar JS runtime for tailwindcss
+- [.NET SDK](https://dotnet.microsoft.com/en-us/download) >= 8
+- [Node.js](https://nodejs.org/en) or similar JS runtime for tailwindcss
+- [Azurite VS Code extension](https://marketplace.visualstudio.com/items?itemName=Azurite.azurite)
 
 Download and install the template
 

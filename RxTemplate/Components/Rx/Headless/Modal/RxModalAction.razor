@@ -28,7 +28,7 @@
         }
         var modal = document.getElementById("@(ModalId)");
         modal.addEventListener("opened", function(evt) {
-            var routeId = evt.detail.id ?? "";
+            var routeId = evt.detail?.id ?? "";
             if (processHxAction("hx-delete", routeId)) {
                 return;
             }

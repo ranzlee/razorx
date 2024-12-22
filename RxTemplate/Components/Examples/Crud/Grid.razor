@@ -18,7 +18,7 @@
                     filter.FilterValue = "Not Provided";
                 }
                 <div class="badge badge-warning gap-2">
-                    <RxGridActionButton 
+                    <RxGridAction 
                         Model="@(Model)"
                         hx-get="@(Model.RenderFromRoute)"
                         name="@(nameof(filter.FilterId))"
@@ -30,7 +30,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </div>
-                    </RxGridActionButton>
+                    </RxGridAction>
                     @($"{ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.SeparateCamelCaseWords(filter.FilterOperation)} {filter.FilterValue}")
                 </div>
             }

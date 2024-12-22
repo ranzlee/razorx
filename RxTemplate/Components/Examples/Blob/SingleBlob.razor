@@ -9,9 +9,9 @@
         hx-target="#example-blob"
         hx-swap="outerHTML transition:true"
         hx-post="/examples/blob"/>
-} else {
-    <Blob Model="@(Model)" />
-}
+    return;
+} 
+<Blob Model="@(Model)" />
 
 @code {
     [Parameter] public BlobModel? Model { get; set; }
