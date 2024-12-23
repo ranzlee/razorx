@@ -5,7 +5,7 @@
     OOB swap the title 
     *@
     <span id="save-modal-title" hx-swap-oob="true">Item Not Found</span>
-    <RxModalResolvedContent ContentId="save-modal-form">
+    <div id="save-modal-form">
        <div class="h-[420px]">
             <div class="flex justify-center h-full">
                 <div class="flex flex-col justify-center">
@@ -18,7 +18,7 @@
                 Cancel
             </RxModalDismiss>
         </div>
-    </RxModalResolvedContent>
+    </div>
     return;
 }
 
@@ -31,7 +31,7 @@ OOB swap the title
     <span id="save-modal-title" hx-swap-oob="true">New Item</span>
 }
 
-<RxModalResolvedContent ContentId="save-modal-form">
+<div id="save-modal-form">
     <div class="flex justify-center w-full">
         <div class="p-5">
             <div class="flex max-w-xs">
@@ -85,24 +85,21 @@ OOB swap the title
     </div>
     <input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)" />
     <div class="modal-action">
-        <div>
-            <RxGridAction 
-                Id="save-item"
-                Model="@(gridModel)"
-                type="submit" 
-                hx-put="@(Model.Id == 0 ? false : $"/examples/crud/{Model.Id}")"
-                hx-post="@(Model.Id == 0 ? $"/examples/crud" : false)"
-                hx-indicator="#save-grid-item"
-                hx-disabled-elt="this"
-                class="btn btn-primary">
-                Save
-            </RxGridAction>
-        </div>
         <RxModalDismiss ModalId="save-modal" class="btn btn-neutral">
             Cancel
         </RxModalDismiss>
+        <RxGridAction 
+            Id="save-item"
+            Model="@(gridModel)"
+            hx-put="@(Model.Id > 0 ? $"/examples/crud/{Model.Id}" : false)"
+            hx-post="@(Model.Id == 0 ? $"/examples/crud" : false)"
+            hx-indicator="#save-grid-item"
+            hx-disabled-elt="this"
+            class="btn btn-primary">
+            Save
+        </RxGridAction>
     </div>
-</RxModalResolvedContent>
+</div>
 
 @code {
     [Inject] public ValidationContext ValidationContext { get; set; } = new();

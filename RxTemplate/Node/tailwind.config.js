@@ -137,6 +137,7 @@ module.exports = {
       {
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
+          primary: "#d1fae5",
           "--rounded-box": "0.4rem",
           "--rounded-btn": "0.2rem",
           "--rounded-badge": "0.4rem",

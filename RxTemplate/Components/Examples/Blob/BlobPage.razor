@@ -18,6 +18,9 @@
                 This is a destructive operation. Are you sure?
             </div>
             <div class="modal-action">
+                <RxModalDismiss ModalId="delete-modal" autofocus class="btn btn-neutral">
+                    Cancel
+                </RxModalDismiss>
                 <RxModalAction
                     ModalId="delete-modal"
                     hx-delete="/examples/blob/" 
@@ -25,9 +28,6 @@
                     class="btn btn-error">
                     Delete
                 </RxModalAction>
-                <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
-                    Cancel
-                </RxModalDismiss>
             </div>
         </form>
     </div>
