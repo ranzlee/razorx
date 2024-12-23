@@ -39,7 +39,7 @@
         if (EnumType is not null) {
             var enumNames = Enum.GetNames(EnumType);
             foreach (var en in enumNames) {
-                Options.Add(Utilities.SeparateCamelCaseWords(en), en);
+                Options.Add(Utilities.SplitCamelCaseWords(en), en);
             }
         }
         if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
