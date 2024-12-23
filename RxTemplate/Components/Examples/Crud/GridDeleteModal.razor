@@ -5,7 +5,7 @@
     OOB swap the title 
     *@
     <span id="delete-modal-title" hx-swap-oob="true">Item Not Found</span>
-    <RxModalResolvedContent ContentId="delete-modal-form">
+    <div id="delete-modal-form">
         <div class="h-[186px]">
             <div class="flex justify-center h-full">
                 <div class="flex flex-col justify-center">
@@ -18,7 +18,7 @@
                 Cancel
             </RxModalDismiss>
         </div>
-    </RxModalResolvedContent>
+    </div>
     return;
 }
 
@@ -27,7 +27,7 @@ OOB swap the title
 *@
 <span id="delete-modal-title" hx-swap-oob="true">Delete Item ID: @(Model.Id)</span>
 
-<RxModalResolvedContent ContentId="delete-modal-form">
+<div id="delete-modal-form">
     <div class="p-5">
         <div class="flex">
             <div class="w-32">Date:</div>
@@ -62,26 +62,23 @@ OOB swap the title
         <div class="flex">
             <div class="w-32">Observed:</div>
             <div>
-                @(Utilities.SeparateCamelCaseWords(Model.TemperatureTaken.ToString()))
+                @(Utilities.SplitCamelCaseWords(Model.TemperatureTaken.ToString()))
             </div>
         </div>
     </div>
     <div class="modal-action">
-        <div>
-            <RxGridAction 
-                Model="@(gridModel)"
-                type="submit" 
-                hx-delete="@($"/examples/crud/{Model.Id}")"
-                hx-indicator="#delete-grid-item"
-                class="btn btn-error">
-                Delete
-            </RxGridAction>
-        </div>
-        <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
+         <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
             Cancel
         </RxModalDismiss>
+        <RxGridAction 
+            Model="@(gridModel)"
+            hx-delete="@($"/examples/crud/{Model.Id}")"
+            hx-indicator="#delete-grid-item"
+            class="btn btn-error">
+            Delete
+        </RxGridAction>
     </div>
-</RxModalResolvedContent>
+</div>
 
 @code {
     private GridModel gridModel = new();

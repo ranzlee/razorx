@@ -1,8 +1,0 @@
-<div id="@(ContentId)">
-    @(ChildContent)
-</div>
-
-@code {
-    [Parameter, EditorRequired] public string ContentId { get; set; } = null!;
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-}
