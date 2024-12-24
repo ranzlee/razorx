@@ -51,12 +51,12 @@
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
-    [Parameter, EditorRequired] public string Label { get; set; } = "";
-    [Parameter, EditorRequired] public string Property { get; set; } = "";
+    [Parameter, EditorRequired] public string Label { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string Property { get; set; } = string.Empty;
     [Parameter] public int AutosizeHeightBuffer { get; set; } = 16;
-    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public int? MaxLength { get; set; }
-    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public string Value { get; set; } = string.Empty;
     [Parameter] public ValidationContext? ValidationContext { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;

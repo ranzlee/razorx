@@ -1,3 +1,5 @@
+@implements IComponentModel<IGridModel<ItemModel>>
+
 <HeadContent>
     <title>Examples: The Kitchen Sync</title>
 </HeadContent>
@@ -130,12 +132,13 @@
 The component that contains the RxGrid. This is a "suspended" component since it will be 
 initially lazy-loaded based on existing state for the last page, sort, and filter options used. 
 *@
-<Grid />
+<Grid Model="@(Model)" />
 
 
 @code {
     private string FilterProperty = null!;
     private Dictionary<string, string> Options = [];
+    [Parameter] public IGridModel<ItemModel> Model { get; set; } = null!;
     protected override void OnParametersSet() {
         Options.Add("Select...", string.Empty);
         Options.Add("ID", nameof(ItemModel.Id));

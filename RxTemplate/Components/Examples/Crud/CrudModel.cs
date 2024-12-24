@@ -28,6 +28,7 @@ public record GridFilterModel : IGridFilterModel {
     public Type? FilterType { get; set; }
     public string FilterProperty { get; set; } = null!;
     public bool IsSuspended { get; set; }
+    public string InitialState { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -54,6 +55,7 @@ public record GridModel : IGridModel<ItemModel> {
     public IEnumerable<ItemModel> Data { get; set; } = [];
     public GridState State { get; set; } = new();
     public bool IsSuspended { get; set; }
+    public string InitialState { get; set; } = string.Empty;
 }
 
 /// <summary>

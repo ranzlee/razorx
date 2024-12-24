@@ -27,9 +27,9 @@
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
-    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public bool AllowMultiple { get; set; }
-    [Parameter] public string Accept { get; set; } = "";
+    [Parameter] public string Accept { get; set; } = string.Empty;
     [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
     [Parameter] public ValidationContext ValidationContext { get; set; } = new();
 }

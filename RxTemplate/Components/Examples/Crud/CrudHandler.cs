@@ -12,9 +12,18 @@ public class CrudHandler : IRequestHandler {
     /// </summary>
     private readonly static MockCrudService Service = new();
 
-    public static IResult Get(HttpResponse response, ILogger<CrudHandler> logger) {
+    public static IResult Get(
+        HttpResponse response,
+        string? demoGridState,
+        ILogger<CrudHandler> logger) {
+        GridModel model = new() {
+            IsSuspended = true,
+            InitialState = string.IsNullOrWhiteSpace(demoGridState)
+                ? string.Empty
+                : demoGridState
+        };
         // Render the page
-        return response.RenderComponent<CrudPage>(logger);
+        return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
     }
 
     public static IResult GetFilter(
@@ -178,8 +187,12 @@ public class CrudHandler : IRequestHandler {
             model = Service.GetModel(state);
         }
         var triggerBuilder = hxTriggers.With(response);
-        // Trigger the persistence of the state on the client    
-        triggerBuilder.Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, JsonSerializer.Serialize(state)));
+        // Trigger the persistence of the state on the client   
+        var serializedState = JsonSerializer.Serialize(state);
+        triggerBuilder.Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, serializedState));
+        // Optionally add the state to the URL - useful for allowing the state to be transferred to another client by copying the link
+        // You may remove this and everything will continue function as expected, only with a "clean" URL
+        response.HxReplaceUrl($"/examples/crud?{nameof(demoGridState)}={HttpUtility.UrlEncode(serializedState)}");
         // Pop toast for filter change
         if (!string.IsNullOrWhiteSpace(filterProperty)) {
             triggerBuilder.Add(new HxToastTrigger("#crud-toast", "Filter added"));
@@ -207,7 +220,7 @@ public class CrudHandler : IRequestHandler {
                 ? new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]")
                 : new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
         }
-        //build triggers
+        // Build triggers
         triggerBuilder.Build();
         // Render
         return response.RenderComponent<Grid, IGridModel<ItemModel>>(model, logger);
