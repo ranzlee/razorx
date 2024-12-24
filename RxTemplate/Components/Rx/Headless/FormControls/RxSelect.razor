@@ -21,7 +21,7 @@
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
-    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public string Value { get; set; } = null!;
     [Parameter] public Dictionary<string, string> Options { get; set; } = [];
     [Parameter] public Type? EnumType { get; set; }

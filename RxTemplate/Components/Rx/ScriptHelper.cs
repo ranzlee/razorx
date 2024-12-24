@@ -11,7 +11,7 @@ public static class ScriptHelperConfig {
 }
 
 file sealed class ScriptHelper : IScriptHelper {
-    private static string cacheBuster = "";
+    private static string cacheBuster = string.Empty;
     private static readonly object locker = new();
 
     public string GetCacheBuster() {
