@@ -35,4 +35,9 @@ public static class HtmxUtilities {
         logger?.LogInformation("HX-Reswap {strategy}.", strategy);
         response.Headers.Append("HX-Reswap", strategy);
     }
+
+    public static void HxReplaceUrl(this HttpResponse response, string url, ILogger? logger = null) {
+        logger?.LogInformation("HX-Replace-Url {url}.", url);
+        response.Headers.Append("HX-Replace-Url", url);
+    }
 }

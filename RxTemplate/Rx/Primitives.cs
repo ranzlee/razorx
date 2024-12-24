@@ -27,6 +27,7 @@ public interface ISuspendedComponent {
     bool IsSuspended { get; set; }
     string RenderFromRoute { get; set; }
     string SpinnerId { get; set; }
+    string InitialState { get; set; }
 }
 
 /// <summary>

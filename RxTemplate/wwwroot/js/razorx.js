@@ -127,24 +127,28 @@ var razorx = (function () {
       persistent: 2,
     },
 
+    set: function (scope, key, value) {
+      if (scope === _metadata.scope.transient) {
+        var input = document.getElementById(key);
+        if (input && value) {
+          input.value = encodeURIComponent(value);
+        }
+        return;
+      }
+      if (scope === _metadata.scope.session) {
+        sessionStorage.setItem(key, value);
+        return;
+      }
+      if (scope === _metadata.scope.persistent) {
+        localStorage.setItem(key, value);
+        return;
+      }
+    },
+
     handleSetTriggers: function () {
       document.addEventListener("razorx-set-metadata-trigger", function (evt) {
         var obj = evt.detail;
-        if (obj.Scope === _metadata.scope.transient) {
-          var input = document.getElementById(obj.Key);
-          if (input && obj.Value) {
-            input.value = encodeURIComponent(obj.Value);
-          }
-          return;
-        }
-        if (obj.Scope === _metadata.scope.session) {
-          sessionStorage.setItem(obj.Key, obj.Value);
-          return;
-        }
-        if (obj.Scope === _metadata.scope.persistent) {
-          localStorage.setItem(obj.Key, obj.Value);
-          return;
-        }
+        _metadata.set(obj.Scope, obj.Key, obj.Value);
       });
     },
 
@@ -335,6 +339,9 @@ var razorx = (function () {
       scope: _metadata.scope,
       addToRequest: function (scope, key, triggerElement) {
         _metadata.addToRequest(scope, key, triggerElement);
+      },
+      set: function (scope, key, value) {
+        _metadata.set(scope, key, value);
       },
     },
   };
