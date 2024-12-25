@@ -48,22 +48,26 @@
             var input = document.getElementById("@(Id)-input");
             var uploadStatus = { isUploading: false };
             var reset = function() {
-                progress.setAttribute("value", 0);
+                progress.value = 0;
+                uploadStatus.isUploading = false;
                 submit.setAttribute("disabled", "");
                 cancel.setAttribute("disabled", "");
                 input.removeAttribute("disabled");
                 input.value = "";
             }
             submit.onclick = function () {
-                htmx.on(submit, "htmx:xhr:progress", (evt) => {
-                    submit.setAttribute("disabled", "");  
-                    input.setAttribute("disabled", "");    
-                    uploadStatus.isUploading = true;
+                uploadStatus.isUploading = false;
+                htmx.on(submit, "htmx:xhr:progress", (evt) => {    
+                    if (!uploadStatus.isUploading) {
+                        uploadStatus.isUploading = true;
+                        submit.setAttribute("disabled", "");  
+                        input.setAttribute("disabled", "");    
+                    }
                     if (evt.detail.total === 0) {
                         return;
                     }
-                    let status = (evt.detail.loaded / evt.detail.total) * 100;
-                    progress.setAttribute("value", status);
+                    let status = Math.ceil((evt.detail.loaded / evt.detail.total) * 100);
+                    progress.value = status;
                 });
                 htmx.on(submit, "htmx:afterRequest", () => {
                     reset();
