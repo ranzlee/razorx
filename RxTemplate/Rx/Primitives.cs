@@ -23,10 +23,16 @@ public interface IComponentModel<TModel> {
     TModel Model { get; set; }
 }
 
+/// <summary>
+/// Interface for a component that initially renders a placeholder and 
+/// suspends content rendering with a load triggered hx-get request. 
+/// </summary>
 public interface ISuspendedComponent {
+    string Id { get; set; }
     bool IsSuspended { get; set; }
     string RenderFromRoute { get; set; }
-    string SpinnerId { get; set; }
+    string StateKey { get; set; }
+    HxMetadataScope StateScope { get; set; }
     string InitialState { get; set; }
 }
 
