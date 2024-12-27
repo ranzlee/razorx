@@ -3,9 +3,7 @@ using RxTemplate.Rx;
 namespace RxTemplate.Components.Rx.Headless.Grid;
 
 public interface IGrid : ISuspendedComponent {
-    string Id { get; set; }
-    string StateKey { get; set; }
-    HxMetadataScope StateScope { get; set; }
+    string SpinnerId { get; set; }
 }
 
 public interface IGridModel<T> : IGrid {
