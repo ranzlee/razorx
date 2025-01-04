@@ -14,7 +14,7 @@ namespace RxTemplate.Rx;
 /// </summary>
 /// <param name="httpContextAccessor">IHttpContextAccessor</param>
 /// <param name="logger">ILogger</param>
-public class HtmxJsonOptions(IHttpContextAccessor httpContextAccessor, ILogger<HtmxJsonOptions> logger) : IConfigureOptions<JsonOptions> {
+public class HxJsonOptions(IHttpContextAccessor httpContextAccessor, ILogger<HxJsonOptions> logger) : IConfigureOptions<JsonOptions> {
 
     public void Configure(JsonOptions options) {
         options.SerializerOptions.Converters.Add(new DateOnlyJsonConverter(httpContextAccessor, logger));

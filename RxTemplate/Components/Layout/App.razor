@@ -24,8 +24,8 @@
   @* eager load razorx scripts *@
   <script src="/js/razorx.js?@(ScriptHelper?.GetCacheBuster())"></script>
   <script>
-      razorx.debug(@(RxConfig?.DebugRxClient == true ? "true" : "false"));
-      razorx.theme.configureTheme("@(RxConfig?.LightTheme ?? "light")", "@(RxConfig?.DarkTheme ?? "dark")");
+      razorx.debug(false);
+      razorx.theme.configureTheme("light", "dark");
   </script>
   @* defer load htmx scripts *@
   <script src="/js/htmx.min.js?@(ScriptHelper?.GetCacheBuster())" defer></script>
@@ -143,7 +143,6 @@
 @code {
   [Inject] public IHttpContextAccessor? HttpContextAccessor { get; set; }
   [Inject] public IScriptHelper? ScriptHelper { get; set; }
-  [Inject] public RxConfig? RxConfig { get; set;}
   [Inject] public ILogger<App>? Logger { get; set; }
   [Parameter] public Type MainContent { get; set; } = null!;
   [Parameter] public Dictionary<string, object?> MainContentParameters { get; set; } = [];

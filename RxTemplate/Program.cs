@@ -42,9 +42,6 @@ if (!builder.Environment.IsDevelopment()) {
     });
 }
 
-// Add HTMX config
-services.AddSingleton(builder.Configuration.GetSection("RxConfig").Get<RxConfig>() ?? new());
-
 // Add HTTP context accessor
 services.AddHttpContextAccessor();
 
@@ -52,7 +49,7 @@ services.AddHttpContextAccessor();
 services.AddProblemDetails();
 
 // Add custom options for deserializing JSON from FORM data
-services.ConfigureOptions<HtmxJsonOptions>();
+services.ConfigureOptions<HxJsonOptions>();
 
 // Add HxTriggers
 services.AddHxTriggers();

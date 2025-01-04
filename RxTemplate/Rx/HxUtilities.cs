@@ -1,6 +1,6 @@
 namespace RxTemplate.Rx;
 
-public static class HtmxUtilities {
+public static class HxUtilities {
 
     /// <summary>
     /// Looks for the HX-Request request header.
