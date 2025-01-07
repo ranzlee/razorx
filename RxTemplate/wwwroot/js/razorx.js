@@ -312,24 +312,46 @@ var razorx = (function () {
   _pipeline.configureRequest();
   _pipeline.handleErrorResponses();
 
-  // public API
+  /**
+   * razorx public API
+   */
   return {
+    /**
+     * Puts the razorx client object into debug mode.
+     * @param {Boolean} isDebugging True to output debug information to the console
+     */
     debug: function (isDebugging) {
       _debug = isDebugging;
     },
 
     theme: {
       themeKey: _theme.themeKey,
+      /**
+       * Returns the name of the light theme.
+       * @returns {String} The name of the light theme
+       */
       getLightTheme() {
         return _theme.getLightTheme();
       },
+      /**
+       * Returns the name of the dark theme.
+       * @returns {String} The name of the dark theme
+       */
       getDarkTheme() {
         return _theme.getDarkTheme();
       },
+      /**
+       * Configures the light and dark theme names.
+       * @param {String} light Sets the name of the light theme
+       * @param {String} dark Sets the name of the dark theme
+       */
       configureTheme: function (light, dark) {
         _theme.configureTheme(light, dark);
         _theme.applyTheme();
       },
+      /**
+       * Set the theme value on the document element based on the local storage value or media query.
+       */
       applyTheme: function () {
         _theme.applyTheme();
       },
@@ -337,9 +359,23 @@ var razorx = (function () {
 
     metadata: {
       scope: _metadata.scope,
+      /**
+       * Adds the metadata state object to the request.
+       * GET and DELETE will send the state as a query parameter.
+       * POST, PUT, and PATCH will send the state as a request header.
+       * @param {Number} scope 0 (Transient), 1 (Session), or 2 (Persistent)
+       * @param {String} key The unique key of the state object
+       * @param {Element} triggerElement The element triggering the request
+       */
       addToRequest: function (scope, key, triggerElement) {
         _metadata.addToRequest(scope, key, triggerElement);
       },
+      /**
+       * Persists the metadata state object on the client.
+       * @param {Number} scope 0 (Transient), 1 (Session), or 2 (Persistent)
+       * @param {String} key The unique key of the state object
+       * @param {String} value The JSON stringified state object
+       */
       set: function (scope, key, value) {
         _metadata.set(scope, key, value);
       },
