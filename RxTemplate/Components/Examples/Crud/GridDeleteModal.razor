@@ -62,7 +62,7 @@ OOB swap the title
         <div class="flex">
             <div class="w-32">Observed:</div>
             <div>
-                @(Utilities.SplitCamelCaseWords(Model.TemperatureTaken.ToString()))
+                @(Model.TemperatureTaken.GetDescription())
             </div>
         </div>
     </div>

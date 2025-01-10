@@ -48,10 +48,7 @@
             var enumNames = Enum.GetNames(EnumType);
             foreach (var en in enumNames) {
                 var e = Enum.Parse(EnumType, en) as Enum;
-                var val = e is null 
-                    ? Utilities.SplitCamelCaseWords(en) 
-                    : e.GetDescription() ?? Utilities.SplitCamelCaseWords(en);
-                Options.Add(val, en);
+                Options.Add(e!.GetDescription(), en);
             }
         }
         if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {

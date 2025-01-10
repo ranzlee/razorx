@@ -4,14 +4,19 @@ using System.Reflection;
 namespace RxTemplate.Components.Rx;
 
 public static class Extensions {
-    public static string? GetDescription(this Enum value) {
-        var fi = value.GetType().GetFields(BindingFlags.Public | BindingFlags.Static).Single(x => x.GetValue(null)!.Equals(value));
+    public static string GetDescription(this Enum value) {
+        var fi = value
+                .GetType()
+                .GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Single(x => x.GetValue(null)!.Equals(value));
         if (fi is null) {
-            return null;
+            return Utilities.SplitCamelCaseWords(value.ToString());
         }
         if (Attribute.GetCustomAttribute(fi, typeof(DescriptionAttribute)) is not DescriptionAttribute attr) {
-            return null;
+            return Utilities.SplitCamelCaseWords(value.ToString());
         }
-        return attr.Description ?? null;
+        return string.IsNullOrWhiteSpace(attr.Description)
+            ? Utilities.SplitCamelCaseWords(value.ToString())
+            : attr.Description;
     }
 }

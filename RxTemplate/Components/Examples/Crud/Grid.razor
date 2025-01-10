@@ -23,7 +23,7 @@
                         hx-get="@(Model.RenderFromRoute)"
                         name="@(nameof(filter.FilterId))"
                         value="@(filter.FilterId)"
-                        aria-label="@($"Remove filter {ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.SplitCamelCaseWords(filter.FilterOperation)} {filter.FilterValue}")"
+                        aria-label="@($"Remove filter {ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.SplitCamelCaseWords(filter.FilterOperation)} {Utilities.SplitCamelCaseWords(filter.FilterValue)}")"
                         >
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-4 w-4 stroke-current">
@@ -31,7 +31,7 @@
                             </svg>
                         </div>
                     </RxGridAction>
-                    @($"{ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.SplitCamelCaseWords(filter.FilterOperation)} {filter.FilterValue}")
+                    @($"{ItemModel.DecodePropertyName(filter.FilterProperty)} {Utilities.SplitCamelCaseWords(filter.FilterOperation)} {Utilities.SplitCamelCaseWords(filter.FilterValue)}")
                 </div>
             }
         </div>
@@ -196,7 +196,7 @@
                             @(item.IsVerified ? "Y" : "N")
                         </td>
                         <td>
-                            @(Utilities.SplitCamelCaseWords(item.TemperatureTaken.ToString()))
+                            @(item.TemperatureTaken.GetDescription())
                         </td>
                     </tr>
                 }
