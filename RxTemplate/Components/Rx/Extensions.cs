@@ -19,4 +19,8 @@ public static class Extensions {
             ? Utilities.SplitCamelCaseWords(value.ToString())
             : attr.Description;
     }
+
+    public static T? AsEnum<T>(this string value) where T : Enum {
+        return Utilities.Converter<T>(value);
+    }
 }
