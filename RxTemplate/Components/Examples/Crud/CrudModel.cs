@@ -1,6 +1,7 @@
 using RxTemplate.Components.Rx;
 using RxTemplate.Components.Rx.Headless.Grid;
 using RxTemplate.Rx;
+using System.ComponentModel;
 
 namespace RxTemplate.Components.Examples.Crud;
 
@@ -102,6 +103,7 @@ public record ItemModel {
 /// The Enum for the TemperatureTaken property.
 /// </summary>
 public enum TimeOfDay {
+    [Description("Select...")]
     Select,
     Evening,
     Morning,

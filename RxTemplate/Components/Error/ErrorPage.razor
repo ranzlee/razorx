@@ -12,7 +12,7 @@
         <div class="not-prose">
             <div class="mockup-code mt-5">
                 <pre data-prefix=">" class="text-warning"><code>Status Code: @(Convert.ToInt32(Model.StatusCode))</code></pre>
-                <pre data-prefix=">" class="text-warning"><code>Description: @(Utilities.SplitCamelCaseWords(Model.StatusCode.ToString()))</code></pre>
+                <pre data-prefix=">" class="text-warning"><code>Description: @(Model.StatusCode.GetDescription())</code></pre>
             </div>
         </div>
     </article>
