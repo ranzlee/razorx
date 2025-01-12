@@ -15,7 +15,7 @@ public class ItemValidator : Validator<ItemValidator, ItemModel> {
             .NotEmpty()
             .WithMessage("Temp. C is required")
             .InclusiveBetween(-20, 55)
-            .WithMessage("Temp. C must be between -60 and 60");
+            .WithMessage("Temp. C must be between -20 and 55");
 
         RuleFor(x => x.Date)
             .NotNull()
