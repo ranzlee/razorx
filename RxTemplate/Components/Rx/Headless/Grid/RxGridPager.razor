@@ -5,49 +5,6 @@
     return;
 }
 
-<div popover id="@(PageSelectionId)-popover" class="bg-transparent">
-    <div class="bg-base-300 p-5 rounded shadow w-80">
-        <form
-            id="@(PageSelectionId)-form"
-            hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
-            hx-disabled-elt="this"
-            hx-get="@(Model.RenderFromRoute)" 
-            hx-swap="outerHTML transition:true" 
-            hx-target="#@(Model.Id)"
-            >
-            <div class="flex">
-                <label class="form-control w-full">
-                    <div class="label">
-                        <span class="label-text">Choose page</span>
-                        <span id="@(PageSelectionId)-value" class="label-text font-semibold">@(Model.State.Page)</span>
-                    </div>
-                    <input 
-                        Id="@(PageSelectionId)-range" 
-                        name="@(nameof(GridState.Page))" 
-                        type="range"
-                        value="@(Model.State.Page)"
-                        min="1"
-                        max="@(Model.State.GetTotalPages())"
-                        step="1"
-                        class="range range-xs range-primary w-full"
-                        autofocus />
-                    <script>
-                        (function() {
-                            var range = document.getElementById("@(PageSelectionId)-range");
-                            var rangeValue = document.getElementById("@(PageSelectionId)-value");
-                            range.oninput = function() {
-                                rangeValue.innerText = range.value;
-                            }
-                        })()
-                    </script>
-                </label>
-            </div>
-            <div class="mt-2 flex justify-end">
-                <button type="submit" class="btn btn-sm btn-primary">Go</button>
-            </div>
-        </form>
-    </div>
-</div>
 <div class="join">
     <button id="@(PreviousButtonId)" 
         type="button" 
@@ -67,7 +24,7 @@
     <button type="button"
         name="@nameof(GridState.Page)"
         value="range"
-        popovertarget="@(PageSelectionId)-popover" 
+        popovertarget="@(string.IsNullOrWhiteSpace(PageSelectorId) ? false : PageSelectorId)" 
         @attributes="@(AdditionalAttributes)">
         @(ChildContent)
     </button>
@@ -95,10 +52,6 @@
     razorx.metadata.addToRequest(
         @(Convert.ToInt32(Model.StateScope)), 
         "@(Model.StateKey)",
-        document.getElementById("@(PageSelectionId)-form"));
-    razorx.metadata.addToRequest(
-        @(Convert.ToInt32(Model.StateScope)), 
-        "@(Model.StateKey)",
         document.getElementById("@(NextButtonId)"));
 </script>
 
@@ -108,7 +61,7 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string NextButtonId { get; set; } = null!;
     [Parameter] public string PreviousButtonId { get; set; } = null!;
-    [Parameter] public string PageSelectionId { get; set; } = null!;
+    [Parameter] public string PageSelectorId { get; set; } = null!;
     [Parameter] public bool TriggerOnMouseDown { get; set; }
 
     protected override void OnParametersSet() {
@@ -118,8 +71,8 @@
         if (string.IsNullOrWhiteSpace(PreviousButtonId)) {
             PreviousButtonId = Utilities.GenerateElementId();
         }
-        if (string.IsNullOrWhiteSpace(PageSelectionId)) {
-            PageSelectionId = Utilities.GenerateElementId();
+        if (string.IsNullOrWhiteSpace(PageSelectorId)) {
+            PageSelectorId = Utilities.GenerateElementId();
         }
     }  
 }
