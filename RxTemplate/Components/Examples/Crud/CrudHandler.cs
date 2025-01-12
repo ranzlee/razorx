@@ -206,7 +206,7 @@ public class CrudHandler : IRequestHandler {
             page = page switch {
                 "next" => state.HasNextPage() ? "next" : "previous",
                 "previous" => state.HasPreviousPage() ? "previous" : "next",
-                _ => page
+                _ => "range"
             };
             triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][value=\"{page}\"]"));
         }

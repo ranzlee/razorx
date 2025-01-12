@@ -39,13 +39,19 @@ public record GridState {
         string? filterProperty = null,
         string? filterOperation = null,
         string? filterValue = null) {
-        if (page == "previous") {
-            Page -= 1;
-            return;
-        }
-        if (page == "next") {
-            Page += 1;
-            return;
+        if (!string.IsNullOrWhiteSpace(page)) {
+            if (int.TryParse(page, out var p)) {
+                Page = p;
+                return;
+            }
+            if (page == "previous") {
+                Page -= 1;
+                return;
+            }
+            if (page == "next") {
+                Page += 1;
+                return;
+            }
         }
         if (!string.IsNullOrWhiteSpace(sortProperty)) {
             if (SortProperty == sortProperty) {
