@@ -1,0 +1,61 @@
+@implements IComponentModel<IGridModel<T>>
+@typeparam T
+
+@if (Model is null) {
+    return;
+}
+
+<div popover id="@(PageSelectorId)">
+    <div class="@(ContainerClass)">
+        <form
+            id="@(PageSelectorId)-form"
+            hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
+            hx-disabled-elt="this"
+            hx-get="@(Model.RenderFromRoute)" 
+            hx-swap="outerHTML transition:true" 
+            hx-target="#@(Model.Id)"
+            >
+            <label class="@(LabelContainerClass)">
+                <div class="@(LabelClass)">
+                    Page&nbsp;<span id="@(PageSelectorId)-value">@(Model.State.Page)</span>
+                </div>
+                <input 
+                    Id="@(PageSelectorId)-range" 
+                    name="@(nameof(GridState.Page))" 
+                    type="range"
+                    value="@(Model.State.Page)"
+                    min="1"
+                    max="@(Model.State.GetTotalPages())"
+                    step="1"
+                    class="@(ControlClass)"
+                    autofocus />
+                <script>
+                    (function() {
+                        var range = document.getElementById("@(PageSelectorId)-range");
+                        var rangeValue = document.getElementById("@(PageSelectorId)-value");
+                        range.oninput = function() {
+                            rangeValue.innerText = range.value;
+                        }
+                    })()
+                </script>
+            </label>
+            @(ChildContent)
+        </form>
+    </div>
+</div>
+<script>
+    razorx.metadata.addToRequest(
+        @(Convert.ToInt32(Model.StateScope)), 
+        "@(Model.StateKey)",
+        document.getElementById("@(PageSelectorId)-form"));
+</script>
+
+@code {
+    [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!; 
+    [Parameter, EditorRequired] public string PageSelectorId { get; set; } = null!;  
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string ContainerClass { get; set; } = null!;
+    [Parameter] public string ControlClass { get; set; } = null!;
+    [Parameter] public string LabelContainerClass { get; set; } = null!;
+    [Parameter] public string LabelClass { get; set; } = null!;
+}
