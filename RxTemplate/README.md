@@ -8,8 +8,4 @@ Install the required dependencies, if necessary.
 - [Node.js](https://nodejs.org/en) or similar JS runtime for tailwindcss
 - [Azurite VS Code extension](https://marketplace.visualstudio.com/items?itemName=Azurite.azurite)
 
-Build and install the template.
-
-1. Clone the razorx repository.
-2. Use the /RxTemplatePack/makefile to build and install the template. If you're on Windows, you may need to create the template manually.
-3. Create a new app with `dotnet new razorx`.
+Run the app with `dotnet watch`
