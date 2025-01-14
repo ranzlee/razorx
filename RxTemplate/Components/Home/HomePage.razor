@@ -3,7 +3,7 @@
 </HeadContent>
 
 <div class="flex justify-center">
-    <article class="prose prose-a:link prose-a:link-primary prose-code:bg-info prose-code:text-info-content prose-code:rounded prose-code:font-semibold prose-code:text-nowrap">
+    <article class="prose prose-a:link prose-a:link-primary prose-strong:text-info prose-strong:text-nowrap prose-strong:font-mono">
         <div class="flex justify-center">
             <h2>Welcome</h2>
         </div>
@@ -16,39 +16,39 @@
             and there are no dependencies on Blazor for routing or interactivity.    
         </p>
         <p>
-            <code>{Project}/Rx</code> contains the types and implementations for concerns
+            <strong>{Project}/Rx</strong> contains the types and implementations for concerns
             like routing, server-to-client event dispatch, model binding, and validation orchestration
             for <a target="_blank" href="https://docs.fluentvalidation.net/en/latest/">FluentValidation</a>. 
         </p>
         <p>    
-            <code>{Project}/wwwroot/js/razorx.js</code> contains the JS integrations with htmx. 
+            <strong>{Project}/wwwroot/js/razorx.js</strong> contains the JS integrations with htmx. 
         </p>
         <p>    
-            <code>{Project}/Components/Rx</code>
+            <strong>{Project}/Components/Rx</strong>
             contains common use components. These components are separated into
             headless and skinned. Headless components provide structure, functionality, and accessibility, but lack
             visual styling. The skinned components wrap the headless components with CSS visual styling applied.
         </p>
         <p>    
-            <code>{Project}/wwwroot/css/razorx.css</code> contains the CSS required for component behavior that is
-            unrelated to visual appearance. 
+            <strong>{Project}/app.css</strong> contains the <a target="_blank" href="https://tailwindcss.com/">Tailwind CSS</a> 
+            imports and base styles required for component behavior. 
         </p>
         <p>
-            <a target="_blank" href="https://tailwindcss.com/">tailwindcss</a> is the core 
+            Tailwind CSS is the core 
             CSS framework and design system, and <a target="_blank" href="https://daisyui.com/">daisyUI</a> is the 
-            sematic CSS library. RazorX does not directly depend on tailwindcss or daisyUI, with the exception
-            of the skinned components. The built-in themes can be found in <code>{Project}/Node/tailwind.config.js</code>. You may also  
-            modify existing themes or roll your own custom themes if you prefer.
+            sematic CSS library. RazorX does not directly depend on Tailwind CSS or daisyUI, with the exception
+            of the skinned components. The built-in daisyUI themes are included in the Tailwind CSS config file 
+            <strong>{Project}/tailwind.config.js</strong>. You may also modify existing themes or roll your own custom themes if you prefer.
         </p>
         <p>
-            <strong class="bg-warning text-warning-content px-2 rounded">Important:</strong> You must open a terminal in <code>{Project}/Node</code> and
-            run <code>npm run build-css</code> anytime you use new (first use) tailwindcss or daisyUI classes. This is because tailwindcss tree-shakes
-            unused classes when building the output <code>{Project}/wwwroot/css/app.css</code> file.
+            <span class="bg-warning text-warning-content px-2 rounded font-bold">Important:</span> You must open a terminal in <strong>{Project}</strong> and
+            run <strong>npm run build-css</strong> anytime you use new (first use) Tailwind CSS or daisyUI classes. This is because Tailwind CSS 
+            tree-shakes unused classes when building the output <strong>{Project}/wwwroot/css/app.css</strong> file.
         </p>
         <p>
             Take a look at the <a href="/examples">examples</a> to see
             what is possible with a Hypermedia Event-Driven Application. Once you no longer need the examples
-            as reference, just delete the <code>{Project}/Router/Examples.cs</code> file and <code>{Project}/Components/Examples</code>
+            as reference, just delete the <strong>{Project}/Router/Examples.cs</strong> file and <strong>{Project}/Components/Examples</strong>
             folder. 
         </p>
         <p>
