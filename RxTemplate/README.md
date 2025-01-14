@@ -13,8 +13,3 @@ Build and install the template.
 1. Clone the razorx repository.
 2. Use the /RxTemplatePack/makefile to build and install the template. If you're on Windows, you may need to create the template manually.
 3. Create a new app with `dotnet new razorx`.
-
-## In-progress work
-
-- The 1.0.0-alpha template will be available via NuGet in the coming days.
-- A documentation site is in the works and will be available with the v 1.0 release.
