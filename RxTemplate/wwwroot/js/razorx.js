@@ -330,14 +330,14 @@ var razorx = (function () {
        * Returns the name of the light theme.
        * @returns {String} The name of the light theme
        */
-      getLightTheme() {
+      getLightTheme: function () {
         return _theme.getLightTheme();
       },
       /**
        * Returns the name of the dark theme.
        * @returns {String} The name of the dark theme
        */
-      getDarkTheme() {
+      getDarkTheme: function () {
         return _theme.getDarkTheme();
       },
       /**

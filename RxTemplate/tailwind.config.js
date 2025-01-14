@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "../Components/**/*.{razor,razor.css}",
-    "src/js/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["Components/**/*.razor"],
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
   // You may removed the daisyui themes you don't need to reduce the minified wwwroot/css/app.css file size
   daisyui: {

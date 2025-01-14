@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="content\**\*" Exclude="content\**\.DS_Store;content\**\bin\**;content\**\obj\**;content\**\.vscode\**;content\**\Node\node_modules\**;content\**\wwwroot\css\app.css;content\**\.gitignore;content\**\.git\**;content\**\appsettings.Development.json;content\**\*.sln;" />
+    <Content Include="content\**\*" Exclude="content\**\.DS_Store;content\**\bin\**;content\**\obj\**;content\**\.vscode\**;content\**\node_modules\**;content\**\wwwroot\css\app.css;content\**\.git\**;content\**\appsettings.Development.json;content\**\*.sln;" />
     <Compile Remove="**\*" />
   </ItemGroup>
 
