@@ -29,21 +29,22 @@
             headless and skinned. Headless components provide structure, functionality, and accessibility, but lack
             visual styling. The skinned components wrap the headless components with CSS visual styling applied.
         </p>
-        <p>    
-            <strong>{Project}/app.css</strong> contains the <a target="_blank" href="https://tailwindcss.com/">Tailwind CSS</a> 
-            imports and base styles required for component behavior. 
-        </p>
         <p>
-            Tailwind CSS is the core 
+            <a target="_blank" href="https://tailwindcss.com/">Tailwind CSS</a> is the core 
             CSS framework and design system, and <a target="_blank" href="https://daisyui.com/">daisyUI</a> is the 
             sematic CSS library. RazorX does not directly depend on Tailwind CSS or daisyUI, with the exception
             of the skinned components. The built-in daisyUI themes are included in the Tailwind CSS config file 
             <strong>{Project}/tailwind.config.js</strong>. You may also modify existing themes or roll your own custom themes if you prefer.
         </p>
+        <p>    
+            <strong>{Project}/app.css</strong> contains the Tailwind CSS 
+            imports and base styles required for component behavior. This is the input file for the Tailwind CSS 
+            build process that creates the <strong>{Project}/wwwroot/css/app.css</strong> output file.
+        </p>
         <p>
             <span class="bg-warning text-warning-content px-2 rounded font-bold">Important:</span> You must open a terminal in <strong>{Project}</strong> and
             run <strong>npm run build-css</strong> anytime you use new (first use) Tailwind CSS or daisyUI classes. This is because Tailwind CSS 
-            tree-shakes unused classes when building the output <strong>{Project}/wwwroot/css/app.css</strong> file.
+            tree-shakes unused classes when building the output file.
         </p>
         <p>
             Take a look at the <a href="/examples">examples</a> to see
