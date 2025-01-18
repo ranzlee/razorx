@@ -1,0 +1,65 @@
+<a id="@(Id)"
+    href="@(NavItemRoute)" 
+    @attributes=@(AdditionalAttributes)
+    aria-current="@(IsCurrentRoute(MatchPartial) ? "page" : false)">
+    @ChildContent
+</a>
+@if (IsCurrentRoute(MatchPartial)) {
+    <script>    
+        (function(){
+            var navItem = document.getElementById("@(Id)");
+            navItem.className += " @(CurrentRouteClass)";
+        })()
+    </script>        
+}
+@if (AddMetadataToRequest && !string.IsNullOrWhiteSpace(MetadataKey)) {
+    var store = MetadataStorage == NavMetadataStorageType.Session
+        ? "sessionStorage"
+        : "localStorage";
+    <script>
+        (function() {
+            var navItem = document.getElementById("@(Id)");
+            var href = "@(NavItemRoute)";
+            navItem.onclick = function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var state = @(store).getItem("@(MetadataKey)");
+                if (state === null) {
+                    window.location.assign(href);
+                    return;
+                }
+                state = encodeURIComponent(state);
+                window.location.assign(`${href}?@(MetadataKey)=${state}`);
+            }
+        })()
+    </script>
+}
+
+
+@code {
+    [Inject] public IHttpContextAccessor? HttpContextAccessor { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public string NavItemRoute { get; set; } = null!;
+    [Parameter] public bool MatchPartial { get; set; }
+    [Parameter] public string CurrentRouteClass { get; set; } = string.Empty;
+    [Parameter] public bool AddMetadataToRequest { get; set; }
+    [Parameter] public string MetadataKey { get; set; } = string.Empty;
+    [Parameter] public NavMetadataStorageType MetadataStorage { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+
+    private bool IsCurrentRoute(bool matchPartialRoute) {
+        if (matchPartialRoute) {
+            return MatchPartial
+            ? HttpContextAccessor!.HttpContext!.GetCurrentRoute().StartsWith(NavItemRoute)
+            : NavItemRoute == HttpContextAccessor!.HttpContext!.GetCurrentRoute();
+        }
+        return NavItemRoute == HttpContextAccessor!.HttpContext!.GetCurrentRoute();
+    }
+}

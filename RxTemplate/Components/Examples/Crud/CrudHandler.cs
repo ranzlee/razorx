@@ -26,6 +26,28 @@ public class CrudHandler : IRequestHandler {
         return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
     }
 
+    // public static IResult Get(
+    //     HttpResponse response,
+    //     string? demoGridState,
+    //     IHxTriggers hxTriggers,
+    //     ILogger<CrudHandler> logger) {
+    //     GridState state = string.IsNullOrWhiteSpace(demoGridState)
+    //         ? new()
+    //         : JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
+    //     var model = Service.GetModel(state);
+    //     if (!model.Data.Any() && state.Page > 1) {
+    //         state.Page = 1;
+    //         model = Service.GetModel(state);
+    //     }
+    //     var serializedState = JsonSerializer.Serialize(state);
+    //     hxTriggers
+    //         .With(response)
+    //         .Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, serializedState))
+    //         .Build();
+    //     // Render the page
+    //     return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
+    // }
+
     public static IResult GetFilter(
         HttpResponse response,
         string filterProperty,
