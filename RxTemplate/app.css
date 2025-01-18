@@ -6,6 +6,10 @@
   navigation: auto;
 }
 
+script {
+  display: none !important;
+}
+
 dialog {
   display: none;
   opacity: 1;
