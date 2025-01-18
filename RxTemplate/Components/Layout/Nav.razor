@@ -22,34 +22,55 @@
     </div>
     <ul class="menu">
         <li>
-            <NavItem NavItemRoute="/" MatchPartial="@(false)">
+            <RxNavItem 
+                NavItemRoute="/" 
+                CurrentRouteClass="font-semibold">
                 Home
-            </NavItem>
+            </RxNavItem>
         </li>
         <li>
-            <NavItem NavItemRoute="/examples" MatchPartial="@(true)">
+            <RxNavItem 
+                NavItemRoute="/examples" 
+                MatchPartial="@(true)" 
+                CurrentRouteClass="font-semibold">
                 Examples
-            </NavItem>
+            </RxNavItem>
             <ul class="bg-base-100 rounded-t-none p-2">
                 <li>
-                    <NavItem NavItemRoute="/examples/counter">
+                    <RxNavItem 
+                        NavItemRoute="/examples/counter" 
+                        CurrentRouteClass="font-semibold">
                         The Obligatory Counter
-                    </NavItem>
+                    </RxNavItem>
                 </li>
                 <li>
-                    <NavItem NavItemRoute="/examples/form">
+                    <RxNavItem 
+                        NavItemRoute="/examples/form" 
+                        CurrentRouteClass="font-semibold">
                         Form Submission and Validation
-                    </NavItem>
+                    </RxNavItem>
                 </li>
                 <li>
-                    <NavItem NavItemRoute="/examples/blob">
+                    <RxNavItem 
+                        NavItemRoute="/examples/blob" 
+                        CurrentRouteClass="font-semibold">
                         BLOBs
-                    </NavItem>
+                    </RxNavItem>
                 </li>
                 <li>
-                    <NavItem NavItemRoute="/examples/crud">
+                    <RxNavItem 
+                        NavItemRoute="/examples/crud" 
+                        CurrentRouteClass="font-semibold">
                         The Kitchen Sync
-                    </NavItem>
+                    </RxNavItem>
+                    @* <RxNavItem 
+                        NavItemRoute="/examples/crud" 
+                        AddMetadataToRequest="@(true)" 
+                        MetadataKey="DemoGridState"
+                        MetadataStorage="@(NavMetadataStorageType.Session)"
+                        CurrentRouteClass="font-semibold">
+                        The Kitchen Sync
+                    </RxNavItem> *@
                 </li>
             </ul>
         </li>

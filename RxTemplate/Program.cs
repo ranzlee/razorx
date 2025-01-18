@@ -35,7 +35,8 @@ if (!builder.Environment.IsDevelopment()) {
         options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat([
             "application/javascript",
             "application/json",
-            "text/css"
+            "text/css",
+            "text/html"
         ]);
     });
 }
