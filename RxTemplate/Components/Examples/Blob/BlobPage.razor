@@ -10,12 +10,12 @@
     <div class="modal-box">
         <div class="flex justify-between items-center bg-base-300 p-5 rounded">
             <div class="text-lg font-bold">
-                Delete BLOB?
+                Delete <RxModalTextNode ModalId="delete-modal" />?
             </div>
         </div>
         <form method="dialog">
             <div class="p-5">
-                This is a destructive operation. Are you sure?
+                This is a destructive operation. Are you sure you want to delete the file <RxModalTextNode ModalId="delete-modal" />?
             </div>
             <div class="modal-action">
                 <RxModalDismiss ModalId="delete-modal" autofocus class="btn btn-neutral">

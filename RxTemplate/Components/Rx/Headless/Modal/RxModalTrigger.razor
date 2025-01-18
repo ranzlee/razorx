@@ -1,12 +1,22 @@
-<div id="@(Id)">
+<button id="@(Id)" type="button" @attributes="@(AdditionalAttributes)">
     @(ChildContent)
-</div>
+</button>
 <script>
     (function() {
         var trigger = document.getElementById("@(Id)");
         var handler = function() {
-            document.getElementById('@(ModalId)').showModal();
-            htmx.trigger('#@(ModalId)', 'opened', { id: "@(RouteValue)" });
+            var modalId = "@(ModalId)";
+            var modal = document.getElementById(modalId);
+            if (modal === null) {
+                console.warn(`dialog element with id ${modalId} was not found.`);
+                return;
+            }
+            if (modal.tagName.toLowerCase() !== 'dialog') {
+                console.warn(`element with id ${modalId} must be of type dialog.`);
+                return;
+            }
+            modal.showModal();
+            htmx.trigger('#@(ModalId)', 'opened', { routeValue: "@(RouteValue)", textNodeValue: "@(TextNodeValue)" });
         }
         trigger.onmousedown = @(TriggerOnMouseDown ? "handler" : "null");
         trigger.onclick = handler;
@@ -14,8 +24,10 @@
 </script>
 
 @code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
     [Parameter] public string? RouteValue { get; set; }
+    [Parameter] public string? TextNodeValue { get; set; }
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public bool TriggerOnMouseDown { get; set; }

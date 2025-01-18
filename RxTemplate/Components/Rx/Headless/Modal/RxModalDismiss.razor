@@ -1,4 +1,4 @@
-<button id="@(ModalId)-dismiss-action" 
+<button id="@(Id)" 
     type="button"  
     aria-label="Dismiss this dialog" 
     @attributes="@(AdditionalAttributes)">
@@ -6,7 +6,7 @@
 </button>
 <script>
     (function() {
-        var dismiss = document.getElementById("@(ModalId)-dismiss-action");
+        var dismiss = document.getElementById("@(Id)");
         dismiss.onclick = function() {
             var modal = document.getElementById("@(ModalId)");
             modal.close();
@@ -17,5 +17,11 @@
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
+    [Parameter] public string Id { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }

@@ -80,7 +80,7 @@ var razorx = (function () {
         var transitionClass = ele.getAttribute("data-transition-class") ?? "";
         var beginTransitionAfter =
           ele.getAttribute("data-begin-transition-after") ?? "3500";
-        var removeAfter = ele.getAttribute("data-remove-after") ?? "1000";
+        var removeAfter = ele.getAttribute("data-remove-after") ?? "4500";
         setTimeout(() => {
           ele.classList.add(transitionClass);
         }, Number(beginTransitionAfter));

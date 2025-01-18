@@ -14,7 +14,6 @@ public class FormHandler : IRequestHandler {
         IHxTriggers hxTriggers,
         ILogger<FormHandler> logger) {
         if (validationContext.Errors.Count > 0) {
-            response.HxRetarget("#input-form", logger);
             // The server must always send back a UTC date for datetime-local form fields
             if (model.AppointmentTime.HasValue) {
                 model.AppointmentTime = model.GetAppointmentTimeAsUtc(logger);
@@ -23,6 +22,8 @@ public class FormHandler : IRequestHandler {
                 .With(response)
                 .Add(new HxFocusTrigger("#form-submit"))
                 .Build();
+            // re-render the form with validation errors
+            response.HxRetarget("#input-form", logger);
             return response.RenderComponent<Form, FormModel>(model, logger);
         }
         hxTriggers
