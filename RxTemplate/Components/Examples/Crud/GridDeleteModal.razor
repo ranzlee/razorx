@@ -1,10 +1,6 @@
 @implements IComponentModel<ItemModel?>
 
 @if (Model is null) {
-    @* 
-    OOB swap the title 
-    *@
-    <span id="delete-modal-title" hx-swap-oob="true">Item Not Found</span>
     <div id="delete-modal-form">
         <div class="h-[186px]">
             <div class="flex justify-center h-full">
@@ -14,18 +10,13 @@
             </div>
         </div>
         <div class="modal-action">
-           <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
+           <RxModalDismiss Id="delete-modal-dismiss-action" ModalId="delete-modal" class="btn btn-neutral">
                 Cancel
             </RxModalDismiss>
         </div>
     </div>
     return;
 }
-
-@* 
-OOB swap the title 
-*@
-<span id="delete-modal-title" hx-swap-oob="true">Delete Item ID: @(Model.Id)</span>
 
 <div id="delete-modal-form">
     <div class="p-5">
@@ -67,7 +58,7 @@ OOB swap the title
         </div>
     </div>
     <div class="modal-action">
-         <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral">
+         <RxModalDismiss Id="delete-modal-dismiss-action" ModalId="delete-modal" class="btn btn-neutral">
             Cancel
         </RxModalDismiss>
         <RxGridAction 

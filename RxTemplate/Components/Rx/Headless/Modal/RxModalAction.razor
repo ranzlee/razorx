@@ -1,54 +1,53 @@
 <button
-    id="@($"{ModalId}-{ActionId}")"
+    id="@(Id)"
     @attributes="@(AdditionalAttributes)">
     @(ChildContent)
 </button>
+<input id="@(Id)-hx-method" type="hidden" value="" /> 
+<input id="@(Id)-hx-route" type="hidden" value="" /> 
 <script>
     (function() {
-        var action = document.getElementById("@($"{ModalId}-{ActionId}")");
-        var processHxAction = function(hxMethod, routeId) {
-            var attr = action.getAttribute(hxMethod);
+        var action = document.getElementById("@(Id)");
+        var method = document.getElementById("@(Id)-hx-method");
+        var route = document.getElementById("@(Id)-hx-route");
+        ['hx-delete', 'hx-post', 'hx-put', 'hx-patch'].some(m => {
+            var attr = action.getAttribute(m);
             if (attr === null) {
                 return false;
             }
-            var resolvedAttr = action.getAttribute("data-hx-route");
-            if (resolvedAttr !== null) {
-                action.setAttribute(hxMethod, `${resolvedAttr}/${routeId}`);
-                htmx.process(action);
-                return true;
-            }
+            method.value = m;
             attr = attr.trim();
             if (attr.endsWith("/")) {
                 attr = attr.slice(0, -1); 
             }
-            action.setAttribute("data-hx-route", attr);
-            action.setAttribute(hxMethod, `${attr}/${routeId}`);
-            htmx.process(action);
+            route.value = attr;
             return true;
-        }
+        });
         var modal = document.getElementById("@(ModalId)");
         modal.addEventListener("opened", function(evt) {
-            var routeId = evt.detail?.id ?? "";
-            if (processHxAction("hx-delete", routeId)) {
+            if (method.value === '') {
+                console.warn(`hx-[method] not provided for modal ${modal.id} action.`);
                 return;
             }
-            if (processHxAction("hx-post", routeId)) {
+            if (route.value === '') {
+                console.warn(`${method.value} route not provided for modal ${modal.id} action.`);
                 return;
             }
-            if (processHxAction("hx-put", routeId)) {
-                return;
-            }
-            processHxAction("hx-patch", routeId);
+            var routeValue = evt.detail?.routeValue ?? "";
+            action.setAttribute(method.value, `${route.value}/${routeValue}`);
+            htmx.process(action);
         });
     })();
 </script>
 
 @code {
-    private string ActionId = null!;
+    [Parameter] public string Id { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     protected override void OnParametersSet() {
-        ActionId = Utilities.GenerateElementId();
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
     }
 }

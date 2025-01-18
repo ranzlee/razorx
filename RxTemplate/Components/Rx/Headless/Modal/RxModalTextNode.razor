@@ -1,0 +1,26 @@
+<span id="@(Id)" @attributes="@(AdditionalAttributes)"></span>
+<script>
+    (function() {
+        var modal = document.getElementById("@(ModalId)");
+        modal.addEventListener("opened", function(evt) {
+            var node = document.getElementById("@(Id)");
+            node.innerText = evt.detail?.textNodeValue ?? "";
+        });
+        modal.addEventListener("close", function() {
+            var node = document.getElementById("@(Id)");
+            node.innerText = '';
+        });
+    })();
+</script>
+
+@code {
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+    
+}

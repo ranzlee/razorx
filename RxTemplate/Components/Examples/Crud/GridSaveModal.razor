@@ -1,10 +1,6 @@
 @implements IComponentModel<ItemModel?>
 
 @if (Model is null) {
-    @* 
-    OOB swap the title 
-    *@
-    <span id="save-modal-title" hx-swap-oob="true">Item Not Found</span>
     <div id="save-modal-form">
        <div class="h-[420px]">
             <div class="flex justify-center h-full">
@@ -20,15 +16,6 @@
         </div>
     </div>
     return;
-}
-
-@* 
-OOB swap the title 
-*@
-@if (Model.Id > 0) {
-    <span id="save-modal-title" hx-swap-oob="true">Edit Item ID: @(Model.Id)</span>
-} else {
-    <span id="save-modal-title" hx-swap-oob="true">New Item</span>
 }
 
 <div id="save-modal-form">
