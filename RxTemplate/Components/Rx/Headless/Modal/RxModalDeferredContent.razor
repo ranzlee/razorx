@@ -5,6 +5,10 @@
 <script>
     (function() {
         var modal = document.getElementById("@(ModalId)");
+        if (modal === null) {
+            console.warn("@($"dialog element with id {ModalId} not found.")");
+            return;
+        }
         modal.addEventListener("opened", function(evt) {
             var content = document.getElementById("@(Id)-template")?.content?.cloneNode(true) ?? [];
             document.getElementById("@(Id)")?.prepend(content);

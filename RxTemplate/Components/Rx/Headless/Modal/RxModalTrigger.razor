@@ -5,14 +5,13 @@
     (function() {
         var trigger = document.getElementById("@(Id)");
         var handler = function() {
-            var modalId = "@(ModalId)";
-            var modal = document.getElementById(modalId);
+            var modal = document.getElementById("@(ModalId)");
             if (modal === null) {
-                console.warn(`dialog element with id ${modalId} was not found.`);
+                console.warn("@($"dialog element with id {ModalId} not found.")");
                 return;
             }
             if (modal.tagName.toLowerCase() !== 'dialog') {
-                console.warn(`element with id ${modalId} must be of type dialog.`);
+                console.warn("@($"element with id ${ModalId} must be of type dialog.")");
                 return;
             }
             modal.showModal();
