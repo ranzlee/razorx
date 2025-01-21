@@ -94,7 +94,9 @@ var razorx = (function () {
       document.addEventListener("razorx-close-modal-trigger", function (evt) {
         var modal = htmx.find(evt.detail.ModalSelector);
         if (modal) {
+          modal.style.display = "none";
           modal.close();
+          modal.style.display = "";
         }
       });
     },
