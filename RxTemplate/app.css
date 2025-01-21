@@ -10,21 +10,6 @@ script {
   display: none !important;
 }
 
-dialog {
-  display: none;
-  opacity: 1;
-  transform: scale(1);
-  transition: all 0.3s ease-in-out;
-  @starting-style {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-}
-
-dialog[open] {
-  display: grid;
-}
-
 dialog::backdrop {
   backdrop-filter: blur(2px);
 }
