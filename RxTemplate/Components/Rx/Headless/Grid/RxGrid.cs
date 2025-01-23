@@ -2,7 +2,7 @@ using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Rx.Headless.Grid;
 
-public interface IGrid : ISuspendedComponent {
+public interface IGrid : IAsyncComponent {
     string SpinnerId { get; set; }
 }
 

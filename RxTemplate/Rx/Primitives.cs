@@ -25,11 +25,11 @@ public interface IComponentModel<TModel> {
 
 /// <summary>
 /// Interface for a component that initially renders a placeholder and 
-/// suspends content rendering with a load triggered hx-get request. 
+/// lazy loads content rendered with a load-triggered hx-get request. 
 /// </summary>
-public interface ISuspendedComponent {
+public interface IAsyncComponent {
     string Id { get; set; }
-    bool IsSuspended { get; set; }
+    bool IsAsync { get; set; }
     string RenderFromRoute { get; set; }
     string StateKey { get; set; }
     HxMetadataScope StateScope { get; set; }

@@ -17,7 +17,7 @@ public class CrudHandler : IRequestHandler {
         string? demoGridState,
         ILogger<CrudHandler> logger) {
         GridModel model = new() {
-            IsSuspended = true,
+            IsAsync = true,
             InitialState = string.IsNullOrWhiteSpace(demoGridState)
                 ? string.Empty
                 : demoGridState

@@ -5,27 +5,26 @@
     return;
 }
 
-@if (Model.IsSuspended) {
-    <RxSuspenseBoundary
-        Model="@(Model)"
-        AdditionalAttributes="@(AdditionalAttributes)">
-        @(SuspensionContent)
-    </RxSuspenseBoundary>
-    return;
-}
+<RxAsyncComponent Model="@(Model)">
+    <FallbackContent>
+        <div @attributes="@(AdditionalAttributes)">
+            @(FallbackContent)
+        </div>
+    </FallbackContent>
+    <AwaitContent>
+        @(FilterContent)
+        <div @attributes="@(AdditionalAttributes)">
+            @(TableContent)
+        </div>
+    </AwaitContent>
+</RxAsyncComponent>
 
-<div id="@(Model.Id)">
-    <input id="@(Model.StateKey)" type="hidden" /> 
-    @(FilterContent)
-    <div @attributes="@(AdditionalAttributes)">
-        @(TableContent)
-    </div>
-</div>
+
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!;
-    [Parameter] public RenderFragment? SuspensionContent { get; set; }
+    [Parameter] public RenderFragment? FallbackContent { get; set; }
     [Parameter] public RenderFragment? FilterContent { get; set; }
     [Parameter] public RenderFragment? TableContent { get; set; }
 }

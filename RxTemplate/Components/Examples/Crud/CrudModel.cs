@@ -28,7 +28,7 @@ public record GridFilterModel : IGridFilterModel {
     public string SpinnerId { get; set; } = GridProperties.SpinnerId;
     public Type? FilterType { get; set; }
     public string FilterProperty { get; set; } = null!;
-    public bool IsSuspended { get; set; }
+    public bool IsAsync { get; set; }
     public string InitialState { get; set; } = string.Empty;
 }
 
@@ -55,7 +55,7 @@ public record GridModel : IGridModel<ItemModel> {
     public string SpinnerId { get; set; } = GridProperties.SpinnerId;
     public IEnumerable<ItemModel> Data { get; set; } = [];
     public GridState State { get; set; } = new();
-    public bool IsSuspended { get; set; }
+    public bool IsAsync { get; set; }
     public string InitialState { get; set; } = string.Empty;
 }
 

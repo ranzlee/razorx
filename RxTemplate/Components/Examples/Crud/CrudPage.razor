@@ -73,7 +73,7 @@
     </Authorized>
 </AuthorizeView>
 
-<div id="form-page" class="flex justify-center">
+<div id="crud-page" class="flex justify-center">
     <article class="prose">
         <div class="flex justify-center">
             <h2>The Kitchen Sync</h2>
@@ -128,8 +128,9 @@
 </div>
 
 @*
-The component that contains the RxGrid. This is a "suspended" component since it will be 
-initially lazy-loaded based on existing state for the last page, sort, and filter options used. 
+The component that contains the RxGrid. This is an async component since it will be 
+initially rendered with fallback content (spinner) and then lazy-loaded based on existing state 
+for the last page, sort, and filter options used. 
 *@
 <Grid Model="@(Model)" />
 
