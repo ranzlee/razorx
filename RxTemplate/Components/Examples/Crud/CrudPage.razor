@@ -24,19 +24,21 @@
                     <Spinner Id="delete-grid-item" />
                 </div>
                 <form method="dialog">
-                    <RxModalDeferredContent
+                    <RxModalAsyncContent
                         Id="delete-modal-form"
                         ModalId="delete-modal" 
                         RenderFromRoute="/examples/crud/delete-modal">
-                        <div class="h-[186px]">
-                            <Spinner AlwaysVisible="@(true)" />    
-                        </div>
-                        <div class="modal-action">
-                            <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral" autofocus>
-                                Cancel
-                            </RxModalDismiss>
-                        </div>
-                    </RxModalDeferredContent>
+                        <FallbackContent>
+                            <div class="h-[186px]">
+                                <Spinner AlwaysVisible="@(true)" />    
+                            </div>
+                            <div class="modal-action">
+                                <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral" autofocus>
+                                    Cancel
+                                </RxModalDismiss>
+                            </div>
+                        </FallbackContent>
+                    </RxModalAsyncContent>
                 </form>
             </div>
         </dialog>
@@ -54,19 +56,21 @@
                     <Spinner Id="save-grid-item" />
                 </div>
                 <form method="dialog">
-                    <RxModalDeferredContent
+                    <RxModalAsyncContent
                         Id="save-modal-form"
                         ModalId="save-modal" 
                         RenderFromRoute="/examples/crud/save-modal">
-                        <div class="h-[420px]">
-                            <Spinner AlwaysVisible="@(true)" />    
-                        </div>
-                        <div class="modal-action">
-                            <RxModalDismiss ModalId="save-modal" class="btn btn-neutral" autofocus>
-                                Cancel
-                            </RxModalDismiss>
-                        </div>
-                    </RxModalDeferredContent>
+                        <FallbackContent>
+                            <div class="h-[420px]">
+                                <Spinner AlwaysVisible="@(true)" />    
+                            </div>
+                            <div class="modal-action">
+                                <RxModalDismiss ModalId="save-modal" class="btn btn-neutral" autofocus>
+                                    Cancel
+                                </RxModalDismiss>
+                            </div>
+                        </FallbackContent>
+                    </RxModalAsyncContent>
                 </form>
             </div>
         </dialog>

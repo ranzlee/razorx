@@ -1,5 +1,5 @@
 <template id="@(Id)-template">
-    @(ChildContent)
+    @(FallbackContent)
 </template>
 <div id="@(Id)"></div>
 <script>
@@ -27,5 +27,5 @@
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
     [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
     [Parameter, EditorRequired] public string RenderFromRoute { get; set; } = null!;
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? FallbackContent { get; set; }
 }

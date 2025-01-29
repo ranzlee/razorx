@@ -45,7 +45,7 @@
     [Parameter] public string CurrentRouteClass { get; set; } = string.Empty;
     [Parameter] public bool AddMetadataToRequest { get; set; }
     [Parameter] public string MetadataKey { get; set; } = string.Empty;
-    [Parameter] public NavMetadataStorageType MetadataStorage { get; set; }
+    [Parameter] public NavMetadataStorageType MetadataStorage { get; set; } = NavMetadataStorageType.Session;
     [Parameter] public RenderFragment ChildContent { get; set; } = null!;
 
     protected override void OnParametersSet() {
