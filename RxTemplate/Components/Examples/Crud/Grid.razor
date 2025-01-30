@@ -236,7 +236,7 @@
 
 @code {
     [Inject] public IHttpContextAccessor? HttpContextAccessor { get; set; }
-    private bool CanEdit { get; set; }
+    private bool CanEdit;
     [Parameter] public IGridModel<ItemModel> Model { get; set; } = null!;
     protected override void OnInitialized() {
         if (HttpContextAccessor!.HttpContext!.User.IsInRole("Admin")) {

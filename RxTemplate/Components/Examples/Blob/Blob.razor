@@ -3,7 +3,7 @@
 
 <div id="example-blob" class="flex justify-between items-center">
     <div>
-        <a href="/examples/blob/@(Model.Id)" class="link link-primary" download="@(Model.FileName)" title="Download @(Model.FileName)">@(Model.FileName)</a>
+        <a id="example-blob-link" href="/examples/blob/@(Model.Id)" class="link link-primary" download="@(Model.FileName)" title="Download @(Model.FileName)">@(Model.FileName)</a>
     </div>
     <div>
         <RxModalTrigger 

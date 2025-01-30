@@ -101,8 +101,7 @@
         *@
         <div class="max-w-40">
             <Select 
-                Property="@(nameof(FilterProperty))" 
-                Value="@(FilterProperty)" 
+                Property="@(nameof(GridFilter.FilterProperty))" 
                 Label="Filter" 
                 Options="@(Options)"
                 hx-trigger="change"
@@ -140,8 +139,7 @@ for the last page, sort, and filter options used.
 
 
 @code {
-    private string FilterProperty = null!;
-    private Dictionary<string, string> Options = [];
+    private readonly Dictionary<string, string> Options = [];
     [Parameter] public IGridModel<ItemModel> Model { get; set; } = null!;
     protected override void OnParametersSet() {
         Options.Add("Select...", string.Empty);

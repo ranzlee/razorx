@@ -217,6 +217,7 @@ public class CrudHandler : IRequestHandler {
         response.HxReplaceUrl($"/examples/crud?{nameof(demoGridState)}={HttpUtility.UrlEncode(serializedState)}");
         // Pop toast for filter change
         if (!string.IsNullOrWhiteSpace(filterProperty)) {
+            triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]"));
             triggerBuilder.Add(new HxToastTrigger("#crud-toast", "Filter added"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {

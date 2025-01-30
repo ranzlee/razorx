@@ -12,7 +12,7 @@ public class BlobHandler : IRequestHandler {
         ILogger<BlobHandler> logger) {
         var m = new BlobPageModel {
             SingleBlob = (await blobProvider.ListAsync("single")).FirstOrDefault(),
-            ListBlobs = [.. (await blobProvider.ListAsync("multi"))]
+            ListBlobs = [.. await blobProvider.ListAsync("multi")]
         };
         return response.RenderComponent<BlobPage, BlobPageModel>(m, logger);
     }
@@ -30,6 +30,7 @@ public class BlobHandler : IRequestHandler {
         var m = await blobProvider.UploadAsync(stream, "single", file.FileName);
         hxTriggers
             .With(response)
+            .Add(new HxFocusTrigger("#example-blob-link"))
             .Add(new HxToastTrigger("#blob-toast", "BLOB added"))
             .Build();
         return response.RenderComponent<Blob, BlobModel>(m, logger);
@@ -51,6 +52,7 @@ public class BlobHandler : IRequestHandler {
         }
         hxTriggers
             .With(response)
+            .Add(new HxFocusTrigger($"#example-blobs-input"))
             .Add(new HxToastTrigger("#blob-toast", $"BLOB{(files.Count > 1 ? "s" : "")} added"))
             .Build();
         return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(m, logger);
@@ -64,17 +66,19 @@ public class BlobHandler : IRequestHandler {
         IHxTriggers hxTriggers,
         ILogger<BlobHandler> logger) {
         await blobProvider.DeleteAsync($"{path}/{id}");
-        hxTriggers
-            .With(response)
-            .Add(new HxCloseModalTrigger("#delete-modal"))
-            .Add(new HxToastTrigger("#blob-toast", "BLOB removed"))
-            .Build();
+        var triggerBuilder = hxTriggers.With(response);
+        triggerBuilder.Add(new HxCloseModalTrigger("#delete-modal"));
+        triggerBuilder.Add(new HxToastTrigger("#blob-toast", "BLOB removed"));
         response.HxReswap("outerHTML transition:true");
         if (path == "single") {
+            triggerBuilder.Add(new HxFocusTrigger("#example-blob-input"));
+            triggerBuilder.Build();
             response.HxRetarget("#example-blob");
             return response.RenderComponent<SingleBlob>(logger);
         }
         var l = await blobProvider.ListAsync("multi");
+        triggerBuilder.Add(new HxFocusTrigger("#example-blobs-input"));
+        triggerBuilder.Build();
         response.HxRetarget("#blob-list");
         return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(l, logger);
     }
