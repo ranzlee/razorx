@@ -31,9 +31,9 @@ file sealed class BlobProvider : IBlobProvider {
         _container.CreateIfNotExists();
     }
 
-    public async Task<BlobModel> UploadAsync(Stream stream, string path, string fileName) {
+    public async Task<BlobModel> UploadAsync(Stream stream, string prefix, string fileName) {
         var name = Guid.NewGuid().ToString();
-        var blobName = string.IsNullOrWhiteSpace(path) ? name : $"{path.Replace("\\", "/").TrimEnd('/').ToLower().Trim()}/{name}";
+        var blobName = string.IsNullOrWhiteSpace(prefix) ? name : $"{prefix.Replace("\\", "/").TrimEnd('/').ToLower().Trim()}/{name}";
         var length = stream.Length;
         var uploaded = DateTime.UtcNow;
         var metadata = new Dictionary<string, string>
@@ -56,12 +56,12 @@ file sealed class BlobProvider : IBlobProvider {
         };
     }
 
-    public async Task<IEnumerable<BlobModel>> ListAsync(string? path) {
-        path = path is null
+    public async Task<IEnumerable<BlobModel>> ListAsync(string? prefix) {
+        prefix = prefix is null
             ? ""
-            : path.Replace("\\", "/").ToLower().Trim();
+            : prefix.Replace("\\", "/").ToLower().Trim();
         var list = new List<BlobItem>();
-        var resultSegment = _container.GetBlobsByHierarchyAsync(BlobTraits.Metadata, BlobStates.None, null, string.IsNullOrWhiteSpace(path) ? null : path).AsPages();
+        var resultSegment = _container.GetBlobsByHierarchyAsync(BlobTraits.Metadata, BlobStates.None, null, string.IsNullOrWhiteSpace(prefix) ? null : prefix).AsPages();
         await foreach (var blobHierarchyItemPage in resultSegment) {
             foreach (var blobHierarchyItem in blobHierarchyItemPage.Values) {
                 if (blobHierarchyItem.IsBlob) {

@@ -19,7 +19,7 @@
         <!-- Counter Value -->
         <div 
             aria-errormessage="@(ValidationContext.TryGetError(nameof(Model.Count), out _) ? "count-error" : false)"
-            aria-invalid="@(ValidationContext.TryGetError(nameof(Model.Count), out _) ? "true" : "false")"
+            aria-invalid="@(ValidationContext.TryGetError(nameof(Model.Count), out _) ? "true" : false)"
             class="flex justify-center items-center">
             <input 
                 id="@(nameof(Model.Count))" 

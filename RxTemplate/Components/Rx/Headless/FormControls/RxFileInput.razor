@@ -113,7 +113,7 @@
     [Parameter] public string CancelButtonClass { get; set; } = null!;
     private bool isInvalid { get; set; }
     protected override void OnParametersSet() {
-        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
+        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var _)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {

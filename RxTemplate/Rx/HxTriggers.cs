@@ -167,16 +167,16 @@ file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxT
         StringBuilder header = new();
         foreach (var t in Triggers) {
             header.Append(t switch {
-                HxCustomTrigger => (t as HxCustomTrigger)!.TriggerType == HxCustomTriggerType.Normal
-                    ? $"\"{(t as HxCustomTrigger)!.EventId}\": {(t as HxCustomTrigger)!.JsonDetail},"
+                HxCustomTrigger customTrigger => customTrigger.TriggerType == HxCustomTriggerType.Normal
+                    ? $"\"{customTrigger.EventId}\": {customTrigger.JsonDetail},"
                     : "",
-                HxToastTrigger => $"\"razorx-toast-trigger\": {JsonSerializer.Serialize(t as HxToastTrigger)},",
-                HxCloseModalTrigger => $"\"razorx-close-modal-trigger\": {JsonSerializer.Serialize(t as HxCloseModalTrigger)},",
-                HxSetMetadataTrigger => (t as HxSetMetadataTrigger)!.Scope != HxMetadataScope.Transient
-                    ? $"\"razorx-set-metadata-trigger\": {JsonSerializer.Serialize(t as HxSetMetadataTrigger)},"
+                HxToastTrigger toastTrigger => $"\"razorx-toast-trigger\": {JsonSerializer.Serialize(toastTrigger)},",
+                HxCloseModalTrigger closeModalTrigger => $"\"razorx-close-modal-trigger\": {JsonSerializer.Serialize(closeModalTrigger)},",
+                HxSetMetadataTrigger setMetadataTrigger => setMetadataTrigger.Scope != HxMetadataScope.Transient
+                    ? $"\"razorx-set-metadata-trigger\": {JsonSerializer.Serialize(setMetadataTrigger)},"
                     : "",
-                HxRemoveMetadataTrigger => (t as HxRemoveMetadataTrigger)!.Scope != HxMetadataScope.Transient
-                    ? $"\"razorx-remove-metadata-trigger\": {JsonSerializer.Serialize(t as HxRemoveMetadataTrigger)},"
+                HxRemoveMetadataTrigger removeMetadataTrigger => removeMetadataTrigger.Scope != HxMetadataScope.Transient
+                    ? $"\"razorx-remove-metadata-trigger\": {JsonSerializer.Serialize(removeMetadataTrigger)},"
                     : "",
                 _ => ""
             });
@@ -191,8 +191,8 @@ file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxT
         header.Clear();
         foreach (var t in Triggers) {
             header.Append(t switch {
-                HxCustomTrigger => (t as HxCustomTrigger)!.TriggerType == HxCustomTriggerType.AfterSwap
-                    ? $"\"{(t as HxCustomTrigger)!.EventId}\": {(t as HxCustomTrigger)!.JsonDetail},"
+                HxCustomTrigger customTrigger => customTrigger.TriggerType == HxCustomTriggerType.AfterSwap
+                    ? $"\"{customTrigger.EventId}\": {customTrigger.JsonDetail},"
                     : "",
                 _ => ""
             });
@@ -207,15 +207,15 @@ file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxT
         header.Clear();
         foreach (var t in Triggers) {
             header.Append(t switch {
-                HxCustomTrigger => (t as HxCustomTrigger)!.TriggerType == HxCustomTriggerType.AfterSettle
-                    ? $"\"{(t as HxCustomTrigger)!.EventId}\": {(t as HxCustomTrigger)!.JsonDetail},"
+                HxCustomTrigger customTrigger => customTrigger.TriggerType == HxCustomTriggerType.AfterSettle
+                    ? $"\"{customTrigger.EventId}\": {customTrigger.JsonDetail},"
                     : "",
-                HxFocusTrigger => $"\"razorx-focus-trigger\": {JsonSerializer.Serialize(t as HxFocusTrigger)},",
-                HxSetMetadataTrigger => (t as HxSetMetadataTrigger)!.Scope == HxMetadataScope.Transient
-                    ? $"\"razorx-set-metadata-trigger\": {JsonSerializer.Serialize(t as HxSetMetadataTrigger)},"
+                HxFocusTrigger focusTrigger => $"\"razorx-focus-trigger\": {JsonSerializer.Serialize(focusTrigger)},",
+                HxSetMetadataTrigger setMetadataTrigger => setMetadataTrigger.Scope == HxMetadataScope.Transient
+                    ? $"\"razorx-set-metadata-trigger\": {JsonSerializer.Serialize(setMetadataTrigger)},"
                     : "",
-                HxRemoveMetadataTrigger => (t as HxRemoveMetadataTrigger)!.Scope == HxMetadataScope.Transient
-                    ? $"\"razorx-remove-metadata-trigger\": {JsonSerializer.Serialize(t as HxRemoveMetadataTrigger)},"
+                HxRemoveMetadataTrigger removeMetadataTrigger => removeMetadataTrigger.Scope == HxMetadataScope.Transient
+                    ? $"\"razorx-remove-metadata-trigger\": {JsonSerializer.Serialize(removeMetadataTrigger)},"
                     : "",
                 _ => ""
             });

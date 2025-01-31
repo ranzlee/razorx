@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace RxTemplate.Components.Rx;
 
-public partial class Utilities() {
+public static partial class Utilities {
 
     [GeneratedRegex(@"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])")]
     private static partial Regex _splitEnumName();

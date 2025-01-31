@@ -7,7 +7,7 @@ namespace RxTemplate.Rx;
 /// <summary>
 /// Enumerated HTTP methods.
 /// </summary>
-public enum HTTP {
+public enum RequestType {
     GET,
     POST,
     PUT,
@@ -21,23 +21,23 @@ public static class RoutingExtensions {
     /// Helper to define a route handler endpoint delegate.
     /// </summary>
     /// <param name="routeBuilder">IEndpointRouteBuilder</param>
-    /// <param name="httpMethod">Http enum</param>
+    /// <param name="requestType">Http enum</param>
     /// <param name="routePath">Route path</param>
     /// <param name="endpointHandler">Delegate handler</param>
     /// <returns>RouteHandlerBuilder</returns>
     /// <exception cref="NotSupportedException">Unsupported HTTP method</exception>
     public static RouteHandlerBuilder AddRoutePath(
         this IEndpointRouteBuilder routeBuilder,
-        HTTP httpMethod,
+        RequestType requestType,
         string routePath,
         Delegate endpointHandler) {
-        return httpMethod switch {
-            HTTP.GET => routeBuilder.MapGet(routePath, endpointHandler),
-            HTTP.POST => routeBuilder.MapPost(routePath, endpointHandler),
-            HTTP.PUT => routeBuilder.MapPut(routePath, endpointHandler),
-            HTTP.PATCH => routeBuilder.MapPatch(routePath, endpointHandler),
-            HTTP.DELETE => routeBuilder.MapDelete(routePath, endpointHandler),
-            _ => throw new NotSupportedException($"Http method '{httpMethod}' is not supported")
+        return requestType switch {
+            RequestType.GET => routeBuilder.MapGet(routePath, endpointHandler),
+            RequestType.POST => routeBuilder.MapPost(routePath, endpointHandler),
+            RequestType.PUT => routeBuilder.MapPut(routePath, endpointHandler),
+            RequestType.PATCH => routeBuilder.MapPatch(routePath, endpointHandler),
+            RequestType.DELETE => routeBuilder.MapDelete(routePath, endpointHandler),
+            _ => throw new NotSupportedException($"Http method '{requestType}' is not supported")
         };
     }
 
@@ -66,7 +66,7 @@ public static class RoutingExtensions {
     public static RouteHandlerBuilder PageRouteFor<TRootComponent>(this RouteHandlerBuilder routeBuilder)
     where TRootComponent : IRootComponent {
         return routeBuilder
-            .AddEndpointFilter<PageRouteFor<TRootComponent>>()
+            .AddEndpointFilter<PageRouteFor>()
             .WithMetadata(new PageRouteForAttribute<TRootComponent>());
     }
 
@@ -80,7 +80,7 @@ public static class RoutingExtensions {
 public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         // Verify is GET request.
-        if (context.HttpContext.Request.Method != HTTP.GET.ToString()) {
+        if (context.HttpContext.Request.Method != RequestType.GET.ToString()) {
             logger.LogTrace("Skip pre-route processing for non-get request {method}:{request}.",
                 context.HttpContext.Request.Method,
                 context.HttpContext.Request.GetDisplayUrl());
@@ -159,8 +159,7 @@ where TRootComponent : IRootComponent {
 /// <summary>
 /// Identifies an endpoint as a route that should return a complete page.
 /// </summary>
-/// <typeparam name="TRootComponent">The root component that is the layout for the page.</typeparam>
-public class PageRouteFor<TRootComponent>() : IEndpointFilter where TRootComponent : IRootComponent {
+public class PageRouteFor() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }

@@ -50,12 +50,10 @@
         if (InputType.Trim().ToLower() == "date") {
             Value = (Value as DateOnly?)?.ToString("yyyy-MM-dd");
         }
-        if (InputType.Trim().ToLower() == "datetime-local") {
-            if (DateTime.TryParse(Value?.ToString(), out var dt)) {
-                Value = dt.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
-            }
+        if (InputType.Trim().ToLower() == "datetime-local" && DateTime.TryParse(Value?.ToString(), out var dt)) {
+            Value = dt.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
         }
-        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
+        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var _)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {

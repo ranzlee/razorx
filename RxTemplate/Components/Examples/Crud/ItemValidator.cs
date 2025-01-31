@@ -3,7 +3,7 @@ using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Crud;
 
-public class ItemValidator : Validator<ItemValidator, ItemModel> {
+public class ItemValidator : Validator<ItemModel> {
     public ItemValidator(ValidationContext validationContext, ILogger<ItemValidator> logger)
     : base(validationContext, logger) {
 

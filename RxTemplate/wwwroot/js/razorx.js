@@ -143,7 +143,6 @@ var razorx = (function () {
       }
       if (scope === _metadata.scope.persistent) {
         localStorage.setItem(key, value);
-        return;
       }
     },
 
@@ -172,7 +171,6 @@ var razorx = (function () {
           }
           if (obj.Scope === _metadata.scope.persistent) {
             localStorage.removeItem(obj.Key);
-            return;
           }
         }
       );
@@ -280,7 +278,9 @@ var razorx = (function () {
         // and add the request header so we're not dependent on hidden fields in forms
         const value = `; ${document.cookie}`;
         const parts = value.split("; RequestVerificationToken=");
-        if (parts.length !== 2) return;
+        if (parts.length !== 2) {
+          return;
+        }
         evt.detail.headers["RequestVerificationToken"] = parts
           .pop()
           .split(";")

@@ -3,7 +3,7 @@ using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Form;
 
-public class FormValidator : Validator<FormValidator, FormModel> {
+public class FormValidator : Validator<FormModel> {
     public FormValidator(ValidationContext validationContext, ILogger<FormValidator> logger)
     : base(validationContext, logger) {
 

@@ -18,7 +18,7 @@ public static class Root {
             .WithErrorHandling<App, ErrorPage>();
 
         // Common routes
-        routes.AddRoutePath(HTTP.GET, "/", HomeHandler.Get)
+        routes.AddRoutePath(RequestType.GET, "/", HomeHandler.Get)
             .AllowAnonymous()
             // The PageRouteFor filter identifies the root (layout) component for the page.
             // Alternatively, the PageRouteForAttribute may be applied to the endpoint

@@ -11,19 +11,13 @@ public static class ScriptHelperConfig {
 }
 
 file sealed class ScriptHelper : IScriptHelper {
-    private static string cacheBuster = string.Empty;
-    private static readonly object locker = new();
+    private readonly string cacheBuster;
+    
+    public ScriptHelper() {
+        cacheBuster = $"v={GetType().Assembly.GetName().Version!.Revision}";
+    }
 
     public string GetCacheBuster() {
-        if (!string.IsNullOrWhiteSpace(cacheBuster)) {
-            return cacheBuster;
-        }
-        lock (locker) {
-            if (!string.IsNullOrWhiteSpace(cacheBuster)) {
-                return cacheBuster;
-            }
-            cacheBuster = $"v={GetType().Assembly.GetName().Version!.Revision}";
-        }
         return cacheBuster;
     }
 }

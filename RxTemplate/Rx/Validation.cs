@@ -14,11 +14,10 @@ public sealed class ValidationContext {
 /// <summary>
 /// Runs ValidateAsync on a model
 /// </summary>
-/// <typeparam name="TValidator">Validator type</typeparam>
 /// <typeparam name="TModel">Model type</typeparam>
 /// <param name="validationContext">ValidationContext</param>
 /// <param name="logger">ILogger</param>
-public class Validator<TValidator, TModel>(ValidationContext validationContext, ILogger? logger = null)
+public class Validator<TModel>(ValidationContext validationContext, ILogger? logger = null)
 : AbstractValidator<TModel>, IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         var model = context.Arguments.OfType<TModel>().SingleOrDefault();

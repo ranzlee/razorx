@@ -3,7 +3,7 @@ using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Counter;
 
-public class CounterValidator : Validator<CounterValidator, CounterModel> {
+public class CounterValidator : Validator<CounterModel> {
     public CounterValidator(ValidationContext validationContext, ILogger<CounterValidator> logger)
     : base(validationContext, logger) {
         //validation occurs after model binding and before endpoint handler, so...

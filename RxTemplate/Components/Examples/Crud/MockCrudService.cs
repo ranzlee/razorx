@@ -266,11 +266,11 @@ public class MockCrudService {
             }
             var compareIsVerified = f.FilterValue.Equals("Y", StringComparison.InvariantCultureIgnoreCase);
             if (f.FilterOperation == FilterOperationType.Equals.ToString()) {
-                data = data = data.Where(x => x.IsVerified == compareIsVerified);
+                data = data.Where(x => x.IsVerified == compareIsVerified);
                 continue;
             }
             if (f.FilterOperation == FilterOperationType.NotEquals.ToString()) {
-                data = data = data.Where(x => x.IsVerified != compareIsVerified);
+                data = data.Where(x => x.IsVerified != compareIsVerified);
                 continue;
             }
         }
@@ -287,11 +287,11 @@ public class MockCrudService {
             }
             var compareTemperatureTaken = Utilities.Converter<TimeOfDay>(f.FilterValue);
             if (f.FilterOperation == FilterOperationType.Equals.ToString()) {
-                data = data = data.Where(x => x.TemperatureTaken == compareTemperatureTaken);
+                data = data.Where(x => x.TemperatureTaken == compareTemperatureTaken);
                 continue;
             }
             if (f.FilterOperation == FilterOperationType.NotEquals.ToString()) {
-                data = data = data.Where(x => x.TemperatureTaken != compareTemperatureTaken);
+                data = data.Where(x => x.TemperatureTaken != compareTemperatureTaken);
                 continue;
             }
         }

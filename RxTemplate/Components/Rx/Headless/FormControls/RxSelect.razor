@@ -43,7 +43,7 @@
                 Options.Add(e!.GetDescription(), en);
             }
         }
-        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var error)) {
+        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var _)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {
