@@ -37,7 +37,11 @@ public static class Examples {
             .AllowAnonymous();
 
         // CRUD example routes
-        router.AddRoutePath(RequestType.GET, "/examples/crud", CrudHandler.Get)
+        router.AddRoutePath(RequestType.GET, "/examples/crud/blocking", CrudHandler.GetBlocking)
+            .AllowAnonymous()
+            .PageRouteFor<App>();
+
+        router.AddRoutePath(RequestType.GET, "/examples/crud/non-blocking", CrudHandler.GetNonBlocking)
             .AllowAnonymous()
             .PageRouteFor<App>();
 

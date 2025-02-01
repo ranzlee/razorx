@@ -11,42 +11,40 @@ public class CrudHandler : IRequestHandler {
     /// A mock service/repository that would be replaced with a real implementation and injected in.
     /// </summary>
     private readonly static MockCrudService Service = new();
+    public static bool IsBlockingExample { get; set; }
 
-    public static IResult Get(
+    public async static Task<IResult> GetBlocking(
+        HttpResponse response,
+        string? demoGridState,
+        ILogger<CrudHandler> logger) {
+        // just a test flag to demonstrate blocking versus non-blocking
+        GridState? state = string.IsNullOrWhiteSpace(demoGridState)
+            ? new()
+            : JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
+        // Simulate a DB latency
+        await Task.Delay(200);
+        // Get the model
+        var model = (GridModel)Service.GetModel(state);
+        if (!model.Data.Any() && state.Page > 1) {
+            state.Page = 1;
+            model = (GridModel)Service.GetModel(state);
+        }
+        model.IsAsync = false;
+        // Render the page
+        return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
+    }
+
+    public static IResult GetNonBlocking(
         HttpResponse response,
         string? demoGridState,
         ILogger<CrudHandler> logger) {
         GridModel model = new() {
             IsAsync = true,
-            InitialState = string.IsNullOrWhiteSpace(demoGridState)
-                ? string.Empty
-                : demoGridState
+            InitialState = demoGridState ?? string.Empty
         };
         // Render the page
         return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
     }
-
-    // public static IResult Get(
-    //     HttpResponse response,
-    //     string? demoGridState,
-    //     IHxTriggers hxTriggers,
-    //     ILogger<CrudHandler> logger) {
-    //     GridState state = string.IsNullOrWhiteSpace(demoGridState)
-    //         ? new()
-    //         : JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
-    //     var model = Service.GetModel(state);
-    //     if (!model.Data.Any() && state.Page > 1) {
-    //         state.Page = 1;
-    //         model = Service.GetModel(state);
-    //     }
-    //     var serializedState = JsonSerializer.Serialize(state);
-    //     hxTriggers
-    //         .With(response)
-    //         .Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, serializedState))
-    //         .Build();
-    //     // Render the page
-    //     return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
-    // }
 
     public static IResult GetFilter(
         HttpResponse response,
@@ -214,7 +212,7 @@ public class CrudHandler : IRequestHandler {
         triggerBuilder.Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, serializedState));
         // Optionally add the state to the URL - useful for allowing the state to be transferred to another client by copying the link
         // You may remove this and everything will continue function as expected, only with a "clean" URL
-        response.HxReplaceUrl($"/examples/crud?{nameof(demoGridState)}={HttpUtility.UrlEncode(serializedState)}");
+        response.HxReplaceUrl($"/examples/crud/{(IsBlockingExample ? "blocking" : "non-blocking")}?{nameof(demoGridState)}={HttpUtility.UrlEncode(serializedState)}");
         // Pop toast for filter change
         if (!string.IsNullOrWhiteSpace(filterProperty)) {
             triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]"));

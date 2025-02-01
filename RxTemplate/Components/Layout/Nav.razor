@@ -1,3 +1,5 @@
+@using RxTemplate.Components.Examples.Crud
+
 <div class="z-50 bg-base-100 min-h-full w-96 p-4">
     <div class="flex justify-between items-center">
         <h2 class="text-2xl font-semibold text-primary">
@@ -58,19 +60,24 @@
                     </RxNavItem>
                 </li>
                 <li>
+                    @* Use this to async load the grid *@
+                    @* WHY: If you don't want to block the rendering of the page waiting on the grid *@
                     <RxNavItem 
-                        NavItemRoute="/examples/crud" 
+                        NavItemRoute="/examples/crud/non-blocking" 
                         CurrentRouteClass="font-semibold">
                         The Kitchen Sync
                     </RxNavItem>
-                    @* <RxNavItem 
-                        NavItemRoute="/examples/crud" 
+                    @* Use this to load the grid from existing state on initial request *@
+                    @* WHY: If you want to load the grid with the page *@
+                    @* @{ CrudHandler.IsBlockingExample = true; }                 
+                    <RxNavItem 
+                        NavItemRoute="/examples/crud/blocking" 
                         AddMetadataToRequest="@(true)" 
                         MetadataKey="DemoGridState"
                         MetadataStorage="@(NavMetadataStorageType.Session)"
                         CurrentRouteClass="font-semibold">
                         The Kitchen Sync
-                    </RxNavItem> *@
+                    </RxNavItem>  *@
                 </li>
             </ul>
         </li>
