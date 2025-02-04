@@ -102,6 +102,7 @@
     [Parameter] public string Accept { get; set; } = string.Empty;
     [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
     [Parameter] public ValidationContext? ValidationContext { get; set; }
+    [Parameter] public string? ValidationProperty { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string InvalidClass { get; set; } = null!;
@@ -113,7 +114,10 @@
     [Parameter] public string CancelButtonClass { get; set; } = null!;
     private bool isInvalid { get; set; }
     protected override void OnParametersSet() {
-        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var _)) {
+        var validationProperty = string.IsNullOrWhiteSpace(ValidationProperty)
+            ? Property
+            : ValidationProperty;
+        if (ValidationContext is not null && ValidationContext.TryGetError(validationProperty, out var _)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {
