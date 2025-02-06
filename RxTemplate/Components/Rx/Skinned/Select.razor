@@ -4,6 +4,7 @@
     Value="@(Value)" 
     Label="@(Label)" 
     ValidationContext="@(ValidationContext)" 
+    AllowValidateOnChange="@(AllowValidateOnChange)"
     EnumType="@(EnumType)"
     ContainerClass="form-control w-full"
     InvalidClass="select-error"
@@ -28,6 +29,7 @@
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public ValidationContext ValidationContext { get; set; } = new();
     [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public Type? EnumType { get; set; }
     [Parameter] public Dictionary<string, string> Options { get; set; } = [];
 }

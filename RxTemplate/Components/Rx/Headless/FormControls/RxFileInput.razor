@@ -3,6 +3,7 @@
         <label class="@(LabelContainerClass)">
             <div class="@(LabelClass)">@(Label)</div>
             <input 
+                data-id="@(Id)"
                 id="@(Id)-input" 
                 type="file" 
                 name="@(Property)"
@@ -20,7 +21,7 @@
     <div>
         <progress id="@(Id)-progress" class="@(ProgressClass)" value="0" max="100"></progress>
     </div>
-    <div class="flex justify-end gap-x-2">
+    <div class="@(ButtonContainerClass)">
         <button
             id="@(Id)-submit"
             type="button"
@@ -110,6 +111,7 @@
     [Parameter] public string LabelContainerClass { get; set; } = null!;
     [Parameter] public string LabelClass { get; set; } = null!;
     [Parameter] public string ProgressClass { get; set; } = null!;
+    [Parameter] public string ButtonContainerClass { get; set; } = null!;
     [Parameter] public string SubmitButtonClass { get; set; } = null!;
     [Parameter] public string CancelButtonClass { get; set; } = null!;
     private bool isInvalid { get; set; }

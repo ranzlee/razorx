@@ -1,16 +1,19 @@
-<label class="@(ContainerClass)">
+<label id="@(Id)" class="@(ContainerClass)">
   <div class="@(LabelContainerClass)">
     <span class="@(LabelClass)">@(Label)</span>
   </div>
-  <select id="@(Id)" 
-        name="@(Property)" 
-        class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
-        aria-invalid="@(isInvalid ? "true" : false)"
-        aria-describedby="@(isInvalid ? $"{Id}-error" : false)"
-        @attributes=@(AdditionalAttributes)>
-        @foreach (var kv in Options) {
-            <option selected="@(Value == kv.Value)" value="@(kv.Value)">@(kv.Key)</option>
-        }
+  <select
+    data-id="@(Id)"
+    data-validate-on-change="@(AllowValidateOnChange)"
+    id="@(Id)-select" 
+    name="@(Property)" 
+    class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
+    aria-invalid="@(isInvalid ? "true" : false)"
+    aria-describedby="@(isInvalid ? $"{Id}-error" : false)"
+    @attributes=@(AdditionalAttributes)>
+    @foreach (var kv in Options) {
+        <option selected="@(Value == kv.Value)" value="@(kv.Value)">@(kv.Key)</option>
+    }
   </select>
   @if (isInvalid) {
         @(ValidationContainer)
@@ -23,6 +26,7 @@
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public Dictionary<string, string> Options { get; set; } = [];
     [Parameter] public Type? EnumType { get; set; }
     [Parameter] public ValidationContext? ValidationContext { get; set; }

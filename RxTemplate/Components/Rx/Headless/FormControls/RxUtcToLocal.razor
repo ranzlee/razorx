@@ -1,14 +1,17 @@
-<span id="@(Id)" data-utcdate="@(DateInput.ToString("u"))"></span>
-<script>
-    (function() {
-        var el = document.getElementById("@(Id)");
-        var dt = new Date(el.getAttribute("data-utcdate"));
-        if (isNaN(dt.getTime())) {
-            return;
-        }
-        el.innerText = dt.toLocaleString("@(Locales)", @((MarkupString)Options));    
-    })();
-</script>
+<div id="@(Id)">
+    <span id="@(Id)-date" data-utcdate="@(DateInput.ToString("u"))"></span>
+    <script>
+        (function() {
+            var el = document.getElementById("@(Id)-date");
+            var dt = new Date(el.getAttribute("data-utcdate"));
+            if (isNaN(dt.getTime())) {
+                return;
+            }
+            el.innerText = dt.toLocaleString("@(Locales)", @((MarkupString)Options));    
+        })();
+    </script>
+</div>
+
 
 @code {
     [Parameter, EditorRequired] public DateTime DateInput { get; set; }

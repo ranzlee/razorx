@@ -6,6 +6,9 @@
                 <span class="@($"{LabelClass} {(isInvalid ? InvalidLabelClass : "")}")">@(option.Key)</span>
                 &nbsp;&nbsp;
                 <input
+                    data-id="@(Id)"
+                    data-validate-on-change="@(AllowValidateOnChange)"
+                    id="@($"{Id}-{option.Value}")"
                     type="radio" 
                     name="@(Property)"
                     value="@(option.Value)" 
@@ -28,6 +31,7 @@
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public Dictionary<string, string> Options { get; set; } = [];
     [Parameter] public Type? EnumType { get; set; }
     [Parameter] public ValidationContext? ValidationContext { get; set; }

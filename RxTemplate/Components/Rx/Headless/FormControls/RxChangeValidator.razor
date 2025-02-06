@@ -1,0 +1,42 @@
+<div id="@(Id)" hx-ext="morph" @attributes=@(AdditionalAttributes)>
+    @(ChildContent)
+    <script>
+        function validate(evt) {
+            if (!evt.srcElement.hasAttribute("data-validate-on-change")) {
+                return;
+            }
+            var dataId = evt.srcElement.getAttribute("data-id");
+            htmx.ajax('PATCH', '@(ValidationRoute)', {
+                select: `#${dataId}`,
+                target: `#${dataId}`,
+                swap: 'morph:{ignoreActiveValue:true}',
+                source: evt.srcElement.form
+            }).then(() => {
+                var evt = new Event('validationChange');
+                var ele = document.getElementById(dataId);
+                ele?.dispatchEvent(evt);
+            });
+        }
+        function debounce() {
+            var timer;
+            return function(evt) {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    validate(evt);
+                }, @(DebounceMilliseconds));
+            }
+        }
+        document.getElementById("@(Id)").oninput = @(IsDisabled ? "null" : "debounce()"); 
+    </script>
+</div>
+
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string Id { get; set; } = null!;
+    [Parameter, EditorRequired] public string ValidationRoute { get; set; } = null!;
+    [Parameter] public bool IsDisabled { get; set; }
+    [Parameter] public int DebounceMilliseconds { get; set; } = 600;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+}

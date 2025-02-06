@@ -1,7 +1,10 @@
-<div class="@(ContainerClass)">
+<div id="@(Id)" class="@(ContainerClass)">
     <label class="@(LabelContainerClass)">
         <span class="@(LabelClass)">@(Label)</span>
-        <input id="@(Id)" 
+        <input
+            data-id="@(Id)" 
+            data-validate-on-change="@(AllowValidateOnChange)"
+            id="@(Id)-input" 
             type="checkbox" 
             name="@(Property)" 
             checked="@(Value)"
@@ -21,6 +24,7 @@
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public bool Value { get; set; }
+    [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public ValidationContext? ValidationContext { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;

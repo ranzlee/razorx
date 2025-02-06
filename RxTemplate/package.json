@@ -9,7 +9,8 @@
   "license": "0BSD",
   "dependencies": {
     "htmx-ext-json-enc": "^2.0.1",
-    "htmx.org": "^2.0.4"
+    "htmx.org": "^2.0.4",
+    "idiomorph": "^0.4.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",

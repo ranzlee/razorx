@@ -7,8 +7,15 @@ public class FormHandler : IRequestHandler {
         return response.RenderComponent<FormPage>(logger);
     }
 
-    public static IResult SubmitForm
-        (HttpResponse response,
+    public static IResult ValidateForm(
+        HttpResponse response,
+        FormModel model,
+        ILogger<FormHandler> logger) {
+        return response.RenderComponent<Form, FormModel>(model, logger);
+    }
+
+    public static IResult SubmitForm(
+        HttpResponse response,
         FormModel model,
         ValidationContext validationContext,
         IHxTriggers hxTriggers,

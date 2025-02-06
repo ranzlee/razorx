@@ -5,6 +5,7 @@
     Label="@(Label)" 
     InputType="@(InputType)"
     ValidationContext="@(ValidationContext)"
+    AllowValidateOnChange="@(AllowValidateOnChange)"
     ContainerClass="form-control w-full"
     InvalidClass="input-error"
     ControlClass="input input-bordered w-full"
@@ -27,5 +28,6 @@
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public ValidationContext ValidationContext { get; set; } = new();
     [Parameter] public object? Value { get; set; }
+    [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public string InputType { get; set; } = null!;
 }

@@ -5,6 +5,7 @@
     Label="@(Label)" 
     MaxLength="@(MaxLength)" 
     ValidationContext="@(ValidationContext)"
+    AllowValidateOnChange="@(AllowValidateOnChange)"
     ContainerClass="form-control w-full"
     InvalidClass="textarea-error"
     ControlClass="textarea textarea-bordered"
@@ -28,5 +29,6 @@
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public ValidationContext ValidationContext { get; set; } = new();
     [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public int? MaxLength { get; set; }
 }

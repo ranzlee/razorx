@@ -9,6 +9,9 @@
 .vs/
 .vscode/
 
+#Rider
+.idea/
+
 #macos
 .DS_Store
 

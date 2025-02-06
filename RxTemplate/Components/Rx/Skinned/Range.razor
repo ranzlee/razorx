@@ -4,6 +4,7 @@
     Value="@(Value)" 
     Label="@(Label)" 
     ValidationContext="@(ValidationContext)"
+    AllowValidateOnChange="@(AllowValidateOnChange)"
     ContainerClass="form-control w-full"
     InvalidClass="range-error"
     ControlClass="range w-full"
@@ -27,4 +28,5 @@
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public ValidationContext ValidationContext { get; set; } = new();
     [Parameter] public int Value { get; set; }
+    [Parameter] public bool AllowValidateOnChange { get; set; }
 }

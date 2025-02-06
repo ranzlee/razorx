@@ -1,10 +1,12 @@
-<label class="@(ContainerClass)">
+<label id="@(Id)" class="@(ContainerClass)">
     <div class="@(LabelContainerClass)">
         <span class="@(LabelClass)">@(Label)</span>
         <span id="@(Id)-value" class="@(ValueClass)">@(Value)</span>
     </div>
     <input 
-        Id="@(Id)" 
+        data-id="@(Id)"
+        data-validate-on-change="@(AllowValidateOnChange)"
+        Id="@(Id)-input" 
         name="@(Property)" 
         type="range"
         value="@(Value)"
@@ -15,7 +17,7 @@
         />
     <script>
         (function() {
-            var range = document.getElementById("@(Id)");
+            var range = document.getElementById("@(Id)-input");
             var rangeValue = document.getElementById("@(Id)-value");
             range.oninput = function() {
                 rangeValue.innerText = range.value;
@@ -33,6 +35,7 @@
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public int Value { get; set; }
+    [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public ValidationContext? ValidationContext { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;

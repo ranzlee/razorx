@@ -4,6 +4,7 @@
     Value="@(Value)" 
     Legend="@(Label)" 
     ValidationContext="@(ValidationContext)" 
+    AllowValidateOnChange="@(AllowValidateOnChange)"
     EnumType="@(EnumType)"
     Options="@(Options)"
     InvalidClass="radio-error"
@@ -35,6 +36,7 @@
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public ValidationContext ValidationContext { get; set; } = new();
     [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public Type? EnumType { get; set; }
     [Parameter] public Dictionary<string, string> Options { get; set; } = [];
     [Parameter] public DirectionType Direction { get; set; }

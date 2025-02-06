@@ -31,6 +31,10 @@ public static class Examples {
         router.AddRoutePath(RequestType.GET, "/examples/form", FormHandler.Get)
             .AllowAnonymous()
             .PageRouteFor<App>();
+        
+        router.AddRoutePath(RequestType.PATCH, "/examples/form/validate", FormHandler.ValidateForm)
+            .WithValidation<FormValidator>()
+            .AllowAnonymous();
 
         router.AddRoutePath(RequestType.POST, "/examples/form/submit", FormHandler.SubmitForm)
             .WithValidation<FormValidator>()
