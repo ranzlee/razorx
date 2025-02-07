@@ -40,6 +40,9 @@
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {
+            if (AllowValidateOnChange) {
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned. {nameof(AllowValidateOnChange)} has been reset to false");    
+            }
             Id = Utilities.GenerateElementId();
         }
     }
