@@ -142,7 +142,6 @@
 @code {
   [Inject] public IHttpContextAccessor? HttpContextAccessor { get; set; }
   [Inject] public IScriptHelper? ScriptHelper { get; set; }
-  [Inject] public ILogger<App>? Logger { get; set; }
   [Parameter] public Type MainContent { get; set; } = null!;
   [Parameter] public Dictionary<string, object?> MainContentParameters { get; set; } = [];
 }

@@ -29,7 +29,6 @@ public class CrudHandler : IRequestHandler {
             state.Page = 1;
             model = (GridModel)Service.GetModel(state);
         }
-        model.IsAsync = false;
         // Render the page
         return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
     }
