@@ -26,27 +26,31 @@
     }
     <script>
         (function() {
-            var memoLength = document.getElementById("@(Id)-len");
-            memoLength.innerText = 0;
             var memo = document.getElementById("@(Id)-input");
+            var memoLength = document.getElementById("@(Id)-len");
+            var skipResize = true;
+            memoLength.innerText = 0;
             var resize = function() {
                 memo.style.height = 'auto';
                 memo.style.height = (memo.scrollHeight + @(AutosizeHeightBuffer)).toString() +'px';
             }
             var calc = function() {
-                resize();
-                memo.style.resize = "none";
+                if (!skipResize) {
+                    resize();
+                }
                 memoLength.innerText = memo.value.length;
             }
             var calcAfterTick = function() {
                 setTimeout(calc, 0);
             }
+            memo.onfocus = resize;
             memo.onchange = calc;
             memo.oncut = calcAfterTick;
             memo.onpaste = calcAfterTick;
             memo.ondrop = calcAfterTick;
             memo.onkeydown = calcAfterTick;
             calc();
+            skipResize = false;
             document.getElementById("@(Id)").addEventListener("validationChange", () => {
                 calc();
             });
@@ -57,7 +61,7 @@
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Label { get; set; } = string.Empty;
     [Parameter, EditorRequired] public string Property { get; set; } = string.Empty;
-    [Parameter] public int AutosizeHeightBuffer { get; set; } = 16;
+    [Parameter] public int AutosizeHeightBuffer { get; set; } = 4;
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public int? MaxLength { get; set; }
     [Parameter] public string Value { get; set; } = string.Empty;
@@ -79,7 +83,7 @@
         }
         if (string.IsNullOrWhiteSpace(Id)) {
             if (AllowValidateOnChange) {
-                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned. {nameof(AllowValidateOnChange)} has been reset to false");    
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} requires the {nameof(Id)} property to be set to a unique value.");
             }
             Id = Utilities.GenerateElementId();
         }
