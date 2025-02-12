@@ -139,6 +139,12 @@ public class CrudHandler : IRequestHandler {
         var demoGridState = request.Headers["DemoGridState"].ToString();
         var state = JsonSerializer.Deserialize<GridState>(demoGridState)!;
         var gridModel = Service.GetModel(state);
+        if (!gridModel.Data.Any() && state.Page > 1) {
+            //reset page back 1 if the delete was for the last item on the current page
+            state.Page -= 1;
+            gridModel = Service.GetModel(state);
+        }
+        triggerBuilder.Add(new HxSetMetadataTrigger(gridModel.StateScope, gridModel.StateKey, JsonSerializer.Serialize(state)));
         triggerBuilder.Add(new HxCloseModalTrigger("#save-modal"));
         triggerBuilder.Add(new HxToastTrigger("#crud-toast", $"Item ID: {model.Id} was {(id.HasValue ? "updated" : "created")}"));
         triggerBuilder.Build();
