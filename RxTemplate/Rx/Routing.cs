@@ -37,7 +37,7 @@ public static class RoutingExtensions {
             RequestType.PUT => routeBuilder.MapPut(routePath, endpointHandler),
             RequestType.PATCH => routeBuilder.MapPatch(routePath, endpointHandler),
             RequestType.DELETE => routeBuilder.MapDelete(routePath, endpointHandler),
-            _ => throw new NotSupportedException($"Http method '{requestType}' is not supported")
+            _ => throw new NotSupportedException($"HTTP method '{requestType}' is not supported")
         };
     }
 
