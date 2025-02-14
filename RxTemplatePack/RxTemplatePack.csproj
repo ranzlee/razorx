@@ -9,7 +9,7 @@
     <Description>A meta-framework for ASP.NET Minimal API, Razor Components, and htmx.</Description>
     <PackageTags>dotnet-new;templates;razorx</PackageTags>
     <PackageProjectUrl>https://github.com/ranzlee/razorx</PackageProjectUrl>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
