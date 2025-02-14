@@ -8,7 +8,7 @@ The name RazorX represents the combination of ASP.NET Razor Components on the se
 
 Install the required dependencies, if necessary.
 
-- [.NET SDK](https://dotnet.microsoft.com/en-us/download) >= 8 - Tested on SDK 8.0.400 and above (Runtime 8.0.8).
+- [.NET SDK](https://dotnet.microsoft.com/en-us/download) >= 9.0
 - [Node.js](https://nodejs.org/en) or similar JS runtime for tailwindcss
 - [Azurite VS Code extension](https://marketplace.visualstudio.com/items?itemName=Azurite.azurite)
 
@@ -28,6 +28,6 @@ Build and install the template
 
 ## Request/Response Cycle
 
-The following diagram shows the basic flow of a request. The basic concept is to first send the request through a series of middleware, both global and specific to the endpoint, to apply common behaviors like anti-forgery token validation, authorization policy enforcement, and model validation. Next, the request is passed to a handler for processing application logic. The request handler returns a RazorComponentResult for creating an HTML response. Finally, HTMX may modify the DOM to swap in partial content and trigger any events specified in response headers.
+The following diagram describes the flow of a request. The basic concept is to first route the request through a series of middleware, both global and endpoint specific (`IEndpointFilters`). This applies common behaviors like anti-forgery token validation, authorization policy enforcement, and model validation. Next, the request is routed to a specific handler (`IRequestHandler Delegate`) for processing application logic. The request handler will usually return a `RazorComponentResult` for creating an HTML response. Finally, HTMX may modify the DOM to swap partial content and trigger events specified in response headers. The events are handled with JavaScript event handlers in `razorx.js`.
 
 ![RazorX Request-Response Cycle](razorx-request-response.png "RazorX Request-Response Cycle")
