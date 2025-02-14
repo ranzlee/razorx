@@ -1,32 +1,34 @@
 <div id="@(Id)" hx-ext="morph" @attributes=@(AdditionalAttributes)>
     @(ChildContent)
     <script>
-        function validate(evt) {
-            if (!evt.srcElement.hasAttribute("data-validate-on-change")) {
-                return;
+        (function() {
+            var validate = function(evt) {
+                if (!evt.srcElement.hasAttribute("data-validate-on-change")) {
+                    return;
+                }
+                var dataId = evt.srcElement.getAttribute("data-id");
+                htmx.ajax('PATCH', '@(ValidationRoute)', {
+                    select: `#${dataId}`,
+                    target: `#${dataId}`,
+                    swap: 'morph:{ignoreActiveValue:true}',
+                    source: evt.srcElement.form
+                }).then(() => {
+                    var evt = new Event('validationChange');
+                    var ele = document.getElementById(dataId);
+                    ele?.dispatchEvent(evt);
+                });
             }
-            var dataId = evt.srcElement.getAttribute("data-id");
-            htmx.ajax('PATCH', '@(ValidationRoute)', {
-                select: `#${dataId}`,
-                target: `#${dataId}`,
-                swap: 'morph:{ignoreActiveValue:true}',
-                source: evt.srcElement.form
-            }).then(() => {
-                var evt = new Event('validationChange');
-                var ele = document.getElementById(dataId);
-                ele?.dispatchEvent(evt);
-            });
-        }
-        function debounce() {
-            var timer;
-            return function(evt) {
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    validate(evt);
-                }, @(DebounceMilliseconds));
+            var debounce = function() {
+                var timer;
+                return function(evt) {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        validate(evt);
+                    }, @(DebounceMilliseconds));
+                }
             }
-        }
-        document.getElementById("@(Id)").oninput = @(IsDisabled ? "null" : "debounce()"); 
+            document.getElementById("@(Id)").oninput = @(IsDisabled ? "null" : "debounce()"); 
+        })()
     </script>
 </div>
 
