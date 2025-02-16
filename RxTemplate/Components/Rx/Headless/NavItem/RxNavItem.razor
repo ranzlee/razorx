@@ -37,7 +37,7 @@
 
 
 @code {
-    [Inject] public IHttpContextAccessor? HttpContextAccessor { get; set; }
+    [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public string NavItemRoute { get; set; } = null!;
@@ -57,9 +57,9 @@
     private bool IsCurrentRoute(bool matchPartialRoute) {
         if (matchPartialRoute) {
             return MatchPartial
-            ? HttpContextAccessor!.HttpContext!.GetCurrentRoute().StartsWith(NavItemRoute)
-            : NavItemRoute == HttpContextAccessor!.HttpContext!.GetCurrentRoute();
+            ? HttpContextAccessor.HttpContext!.GetCurrentRoute().StartsWith(NavItemRoute)
+            : NavItemRoute == HttpContextAccessor.HttpContext!.GetCurrentRoute();
         }
-        return NavItemRoute == HttpContextAccessor!.HttpContext!.GetCurrentRoute();
+        return NavItemRoute == HttpContextAccessor.HttpContext!.GetCurrentRoute();
     }
 }

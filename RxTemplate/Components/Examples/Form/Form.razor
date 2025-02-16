@@ -175,6 +175,6 @@
 
 
 @code {
-    [Inject] public ValidationContext ValidationContext { get; set; } = new();
+    [Inject] public ValidationContext ValidationContext { get; set; } = null!;
     [Parameter] public FormModel Model { get; set; } = new();
 }

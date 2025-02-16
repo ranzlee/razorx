@@ -235,11 +235,11 @@
 </RxGrid>
 
 @code {
-    [Inject] public IHttpContextAccessor? HttpContextAccessor { get; set; }
+    [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
     private bool CanEdit;
     [Parameter] public IGridModel<ItemModel> Model { get; set; } = null!;
     protected override void OnInitialized() {
-        if (HttpContextAccessor!.HttpContext!.User.IsInRole("Admin")) {
+        if (HttpContextAccessor.HttpContext!.User.IsInRole("Admin")) {
             CanEdit = true;
         }
     }
