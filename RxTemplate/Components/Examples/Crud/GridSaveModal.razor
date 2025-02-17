@@ -27,7 +27,6 @@
                     Value="@(Model.Date)" 
                     Label="Date" 
                     InputType="datetime-local"  
-                    ValidationContext="@(ValidationContext)"
                     placeholder=@($"e.g. {DateTime.Now.ToString("MM/dd/yyyy, hh:mm tt")}")>
                 </Field>
             </div>
@@ -37,7 +36,6 @@
                     Value="@(Model.TemperatureC)" 
                     Label="Temp. C"
                     InputType="number" 
-                    ValidationContext="@(ValidationContext)"
                     placeholder="e.g. 17">
                 </Field>
             </div>
@@ -47,7 +45,6 @@
                     Value="@(Model.Summary)" 
                     Label="Summary" 
                     InputType="text"
-                    ValidationContext="@(ValidationContext)"
                     placeholder="e.g. Balmy">
                 </Field>
             </div>
@@ -55,8 +52,7 @@
                 <Toggle 
                     Property="@(nameof(Model.IsVerified))" 
                     Value="@(Model.IsVerified)" 
-                    Label="Verified"
-                    ValidationContext="@(ValidationContext)">
+                    Label="Verified">
                 </Toggle>
             </div>
             <div class="flex max-w-xs">
@@ -64,7 +60,6 @@
                     Property="@(nameof(Model.TemperatureTaken))" 
                     Value="@(Model.TemperatureTaken.ToString())" 
                     Label="Observed" 
-                    ValidationContext="@(ValidationContext)" 
                     EnumType="@(typeof(TimeOfDay))">
                 </Select>
             </div>

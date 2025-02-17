@@ -30,13 +30,13 @@
 </label>
 
 @code {
+    [Inject] public ValidationContext ValidationContext { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public int Value { get; set; }
     [Parameter] public bool AllowValidateOnChange { get; set; }
-    [Parameter] public ValidationContext? ValidationContext { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string InvalidClass { get; set; } = null!;
@@ -47,7 +47,7 @@
 
     private bool isInvalid { get; set; }
     protected override void OnParametersSet() {
-        if (ValidationContext is not null && ValidationContext.TryGetError(Property, out var _)) {
+        if (ValidationContext.TryGetError(Property, out var _)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {

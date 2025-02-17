@@ -3,7 +3,6 @@
     Property="@(Property)" 
     Value="@(Value)" 
     Legend="@(Label)" 
-    ValidationContext="@(ValidationContext)" 
     AllowValidateOnChange="@(AllowValidateOnChange)"
     EnumType="@(EnumType)"
     Options="@(Options)"
@@ -19,13 +18,13 @@
     <ValidationContainer>
         <RxFormError 
             Property="@(Property)" 
-            ValidationContext="@(ValidationContext)" 
             ContainerClass="label" 
             ErrorMessageClass="label-text text-error" />
     </ValidationContainer>
 </RxRadioSet>
 
 @code {
+    [Inject] public ValidationContext ValidationContext { get; set; } = null!;
     public enum DirectionType {
         Vertical,
         Horizontal
@@ -34,7 +33,6 @@
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
-    [Parameter] public ValidationContext ValidationContext { get; set; } = new();
     [Parameter] public string Value { get; set; } = null!;
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public Type? EnumType { get; set; }

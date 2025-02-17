@@ -17,7 +17,6 @@
                             Value="@(Model.Name)" 
                             Label="Name" 
                             InputType="text"
-                            ValidationContext="@(ValidationContext)"
                             AllowValidateOnChange="@(true)"
                             placeholder="e.g. John Doe">
                         </Field>
@@ -32,7 +31,6 @@
                             Value="@(Model.Email)" 
                             Label="Email" 
                             InputType="email"
-                            ValidationContext="@(ValidationContext)"
                             AllowValidateOnChange="@(true)"
                             placeholder="e.g. john.doe@email.com">
                         </Field>
@@ -49,7 +47,6 @@
                             Value="@(Model.BirthDate)" 
                             Label="Birth Date" 
                             InputType="date"
-                            ValidationContext="@(ValidationContext)"
                             AllowValidateOnChange="@(true)"
                             placeholder="e.g. 01/01/1970">
                         </Field>
@@ -64,7 +61,6 @@
                             Value="@(Model.AppointmentTime)" 
                             Label="Appointment Time"
                             InputType="datetime-local" 
-                            ValidationContext="@(ValidationContext)"
                             AllowValidateOnChange="@(true)"
                             placeholder="e.g. 01/01/2026, 03:00 PM">
                         </Field>
@@ -80,7 +76,6 @@
                             Property="@(nameof(Model.NumberOfDays))" 
                             Value="@(Model.NumberOfDays ?? 0)" 
                             Label="Number of Days"
-                            ValidationContext="@(ValidationContext)"
                             AllowValidateOnChange="@(true)"
                             min="0"
                             max="10"
@@ -97,7 +92,6 @@
                             Value="@(Model.Cost)" 
                             Label="Cost" 
                             InputType="number"
-                            ValidationContext="@(ValidationContext)"
                             AllowValidateOnChange="@(true)"
                             placeholder="e.g. 60.00" 
                             min="0" 
@@ -113,7 +107,6 @@
                     Value="@(Model.Subscription.ToString())" 
                     Label="Subscription Type" 
                     Direction="@(RadioSet.DirectionType.Horizontal)"
-                    ValidationContext="@(ValidationContext)"
                     AllowValidateOnChange="@(true)" 
                     EnumType="@(typeof(SubscriptionType))">
                 </RadioSet>
@@ -127,7 +120,6 @@
                             Property="@(nameof(Model.ReportingStatus))" 
                             Value="@(Model.ReportingStatus.ToString())" 
                             Label="Reporting Status" 
-                            ValidationContext="@(ValidationContext)" 
                             AllowValidateOnChange="@(true)"
                             EnumType="@(typeof(ReportingStatusType))">
                         </Select>
@@ -141,7 +133,6 @@
                             Property="@(nameof(Model.IsPublished))" 
                             Value="@(Model.IsPublished)" 
                             Label="Is Published"
-                            ValidationContext="@(ValidationContext)"
                             AllowValidateOnChange="@(true)">
                         </Checkbox>
                     </div>
@@ -156,7 +147,6 @@
                         Value="@(Model.Notes)" 
                         Label="Notes" 
                         MaxLength="1000" 
-                        ValidationContext="@(ValidationContext)"
                         AllowValidateOnChange="@(true)"
                         placeholder="Enter notes">
                     </MemoField>
