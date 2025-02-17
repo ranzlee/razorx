@@ -7,15 +7,15 @@ public class CounterValidator : Validator<CounterModel> {
     public CounterValidator(ValidationContext validationContext, ILogger<CounterValidator> logger)
     : base(validationContext, logger) {
         //validation occurs after model binding and before endpoint handler, so...
-        //shift -1 on add
-        RuleFor(x => x.Count)
-            .InclusiveBetween(-6, 4)
+        RuleFor(x => x.Count + 1)
+            .InclusiveBetween(-5, 5)
             .When(x => x.IsAdd.HasValue)
+            .WithName(nameof(CounterModel.Count))
             .WithMessage("Value must be between -5 and 5.");
-        //shift +1 on subtract
-        RuleFor(x => x.Count)
-            .InclusiveBetween(-4, 6)
+        RuleFor(x => x.Count - 1)
+            .InclusiveBetween(-5, 5)
             .When(x => !x.IsAdd.HasValue)
+            .WithName(nameof(CounterModel.Count))
             .WithMessage("Value must be between -5 and 5.");
 
         //if you want to validate manually in the handler...
