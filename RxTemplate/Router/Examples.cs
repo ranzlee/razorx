@@ -31,7 +31,7 @@ public static class Examples {
         router.AddRoutePath(RequestType.GET, "/examples/form", FormHandler.Get)
             .AllowAnonymous()
             .PageRouteFor<App>();
-        
+
         router.AddRoutePath(RequestType.PATCH, "/examples/form/validate", FormHandler.ValidateForm)
             .WithValidation<FormValidator>()
             .AllowAnonymous();
@@ -53,24 +53,24 @@ public static class Examples {
             .AllowAnonymous();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/delete-modal/{id:int}", CrudHandler.GetDeleteModal)
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/save-modal/{id:int}", CrudHandler.GetSaveModal)
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/grid", CrudHandler.GetGrid)
             .AllowAnonymous();
 
         router.AddRoutePath(RequestType.DELETE, "/examples/crud/{id:int}", CrudHandler.DeleteItem)
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         router.AddRoutePath(RequestType.PUT, "/examples/crud/{id:int}", CrudHandler.SaveItem)
             .WithValidation<ItemValidator>()
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         router.AddRoutePath(RequestType.POST, "/examples/crud", CrudHandler.SaveItem)
             .WithValidation<ItemValidator>()
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         // BLOBs
         router.AddRoutePath(RequestType.GET, "/examples/blob", BlobHandler.Get)
