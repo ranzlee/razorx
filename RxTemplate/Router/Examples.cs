@@ -14,40 +14,40 @@ public static class Examples {
         // Examples page
         router.AddRoutePath(RequestType.GET, "/examples", ExamplesHandler.Get)
             .AllowAnonymous()
-            .PageRouteFor<App>();
+            .WithRxPageRouteFor<App>();
 
         // Counter example routes
         router.AddRoutePath(RequestType.GET, "/examples/counter", CounterHandler.Get)
             .AllowAnonymous()
-            .PageRouteFor<App>();
+            .WithRxPageRouteFor<App>();
 
         router.AddRoutePath(RequestType.POST, "/examples/counter/update", CounterHandler.UpdateCounter)
-            // The WithValidation filter execute the model's Validator
+            // The WithRxValidation filter execute the model's Validator
             // before the handler is invoked.
-            .WithValidation<CounterValidator>()
+            .WithRxValidation<CounterValidator>()
             .AllowAnonymous();
 
         // Form example routes
         router.AddRoutePath(RequestType.GET, "/examples/form", FormHandler.Get)
             .AllowAnonymous()
-            .PageRouteFor<App>();
+            .WithRxPageRouteFor<App>();
 
         router.AddRoutePath(RequestType.PATCH, "/examples/form/validate", FormHandler.ValidateForm)
-            .WithValidation<FormValidator>()
+            .WithRxValidation<FormValidator>()
             .AllowAnonymous();
 
         router.AddRoutePath(RequestType.POST, "/examples/form/submit", FormHandler.SubmitForm)
-            .WithValidation<FormValidator>()
+            .WithRxValidation<FormValidator>()
             .AllowAnonymous();
 
         // CRUD example routes
         router.AddRoutePath(RequestType.GET, "/examples/crud/blocking", CrudHandler.GetBlocking)
             .AllowAnonymous()
-            .PageRouteFor<App>();
+            .WithRxPageRouteFor<App>();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/non-blocking", CrudHandler.GetNonBlocking)
             .AllowAnonymous()
-            .PageRouteFor<App>();
+            .WithRxPageRouteFor<App>();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/filter", CrudHandler.GetFilter)
             .AllowAnonymous();
@@ -65,17 +65,17 @@ public static class Examples {
             .RequireAuthorization();
 
         router.AddRoutePath(RequestType.PUT, "/examples/crud/{id:int}", CrudHandler.SaveItem)
-            .WithValidation<ItemValidator>()
+            .WithRxValidation<ItemValidator>()
             .RequireAuthorization();
 
         router.AddRoutePath(RequestType.POST, "/examples/crud", CrudHandler.SaveItem)
-            .WithValidation<ItemValidator>()
+            .WithRxValidation<ItemValidator>()
             .RequireAuthorization();
 
         // BLOBs
         router.AddRoutePath(RequestType.GET, "/examples/blob", BlobHandler.Get)
             .AllowAnonymous()
-            .PageRouteFor<App>();
+            .WithRxPageRouteFor<App>();
 
         // single file upload
         router.AddRoutePath(RequestType.POST, "/examples/blob", BlobHandler.PostFile)
@@ -91,8 +91,8 @@ public static class Examples {
         // download
         router.AddRoutePath(RequestType.GET, "/examples/blob/{path}/{id}", BlobHandler.Download)
             .AllowAnonymous()
-            // This is a [download] href, so we need to skip route filtering
-            .SkipRouteFilter();
+            // This is a [download] href, so we need to skip route handling
+            .WithRxSkipRouteHandling();
 
         return router;
     }

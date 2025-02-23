@@ -41,11 +41,11 @@ public static class RoutingExtensions {
         };
     }
 
-    public static RouteGroupBuilder WithRouteHandling(this RouteGroupBuilder routeBuilder) {
+    public static RouteGroupBuilder WithRxRouteHandling(this RouteGroupBuilder routeBuilder) {
         return routeBuilder.AddEndpointFilter<RouteHandler>();
     }
 
-    public static RouteGroupBuilder WithErrorHandling<TFallbackRootComponent, TComponent>(this RouteGroupBuilder routeBuilder)
+    public static RouteGroupBuilder WithRxErrorHandling<TFallbackRootComponent, TComponent>(this RouteGroupBuilder routeBuilder)
     where TFallbackRootComponent : IRootComponent
     where TComponent : IComponent, IComponentModel<ErrorModel> {
         routeBuilder.MapFallback(static (context) => {
@@ -57,23 +57,23 @@ public static class RoutingExtensions {
 
 
     /// <summary>
-    /// Adds the PageRouteForAttribute to the endpoint via the RouteHandlerBuilder if the preference is not to 
+    /// Adds the WithAttribute to the endpoint via the RouteHandlerBuilder if the preference is not to 
     /// declare the attribute on the endpoint explicitly.
     /// </summary>
     /// <typeparam name="TRootComponent"></typeparam>
     /// <param name="routeBuilder"></param>
     /// <returns></returns>
-    public static RouteHandlerBuilder PageRouteFor<TRootComponent>(this RouteHandlerBuilder routeBuilder)
+    public static RouteHandlerBuilder WithRxPageRouteFor<TRootComponent>(this RouteHandlerBuilder routeBuilder)
     where TRootComponent : IRootComponent {
         return routeBuilder
-            .AddEndpointFilter<PageRouteFor>()
-            .WithMetadata(new PageRouteForAttribute<TRootComponent>());
+            .AddEndpointFilter<WithRxPageRouteFor>()
+            .WithMetadata(new WithRxPageRouteForAttribute<TRootComponent>());
     }
 
-    public static RouteHandlerBuilder SkipRouteFilter(this RouteHandlerBuilder routeBuilder) {
+    public static RouteHandlerBuilder WithRxSkipRouteHandling(this RouteHandlerBuilder routeBuilder) {
         return routeBuilder
-            .AddEndpointFilter<SkipRouteFilter>()
-            .WithMetadata(new SkipRouteFilterAttribute());
+            .AddEndpointFilter<WithRxSkipRouteHandling>()
+            .WithMetadata(new WithRxSkipRouteHandlingAttribute());
     }
 }
 
@@ -97,8 +97,8 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
             return await next(context);
         }
         // Check for skip Rx custom route processing metadata.    
-        var skipRouteFilter = endpoint.Metadata.GetMetadata<SkipRouteFilterAttribute>();
-        if (skipRouteFilter is not null) {
+        var skipRouteHandling = endpoint.Metadata.GetMetadata<WithRxSkipRouteHandlingAttribute>();
+        if (skipRouteHandling is not null) {
             return await next(context);
         }
         // Check if the request is a not-boosted htmx request.
@@ -110,10 +110,10 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
             return await next(context);
         }
         // Check for razor component response metadata.    
-        var pageRouteFor = endpoint.Metadata.GetMetadata<IPageRouteForAttribute>();
+        var pageRouteFor = endpoint.Metadata.GetMetadata<IWithRxPageRouteForAttribute>();
         // Full page request to a partial component
         if (pageRouteFor is null) {
-            logger.LogTrace("No PageRouteForAttribute for request {method}:{request}. Responding with 404 NOT FOUND.",
+            logger.LogTrace("No WithRxPageRouteForAttribute for request {method}:{request}. Responding with 404 NOT FOUND.",
                 context.HttpContext.Request.Method,
                 context.HttpContext.Request.GetDisplayUrl());
             // The status code may have been sent by the client after a handler response error
@@ -131,16 +131,16 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
         }
         // Add the root component type to the context.
         var rootComponent = pageRouteFor.GetRootComponentType();
-        logger.LogTrace("Adding PageRouteFor context item for root component type {rootComponent} for request {method}:{request}.",
+        logger.LogTrace("Adding WithRxPageRouteFor context item for root component type {rootComponent} for request {method}:{request}.",
                 rootComponent,
                 context.HttpContext.Request.Method,
                 context.HttpContext.Request.GetDisplayUrl());
-        context.HttpContext.Items.Add(nameof(IPageRouteForAttribute), rootComponent);
+        context.HttpContext.Items.Add(nameof(IWithRxPageRouteForAttribute), rootComponent);
         return await next(context);
     }
 }
 
-public interface IPageRouteForAttribute {
+public interface IWithRxPageRouteForAttribute {
     public Type GetRootComponentType();
 }
 
@@ -149,7 +149,7 @@ public interface IPageRouteForAttribute {
 /// </summary>
 /// <typeparam name="TRootComponent">The root component that is the layout for the page.</typeparam>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class PageRouteForAttribute<TRootComponent> : Attribute, IPageRouteForAttribute
+public class WithRxPageRouteForAttribute<TRootComponent> : Attribute, IWithRxPageRouteForAttribute
 where TRootComponent : IRootComponent {
     public Type GetRootComponentType() {
         return typeof(TRootComponent);
@@ -159,16 +159,16 @@ where TRootComponent : IRootComponent {
 /// <summary>
 /// Identifies an endpoint as a route that should return a complete page.
 /// </summary>
-public class PageRouteFor() : IEndpointFilter {
+public class WithRxPageRouteFor() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }
 }
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class SkipRouteFilterAttribute : Attribute { }
+public class WithRxSkipRouteHandlingAttribute : Attribute { }
 
-public class SkipRouteFilter() : IEndpointFilter {
+public class WithRxSkipRouteHandling() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }
@@ -185,7 +185,7 @@ where TComponent : IComponent, IComponentModel<ErrorModel> {
                context.HttpContext.Request.GetDisplayUrl(),
                model is null ? "null" : model.ToString());
             // Add the layout component
-            context.HttpContext.Items.Add(nameof(IPageRouteForAttribute), typeof(TFallbackRootComponent));
+            context.HttpContext.Items.Add(nameof(IWithRxPageRouteForAttribute), typeof(TFallbackRootComponent));
             //short circuit and return error
             if (model is null) {
                 return context.HttpContext.Response.RenderComponent<TComponent>();

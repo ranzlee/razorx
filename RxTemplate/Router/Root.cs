@@ -14,16 +14,16 @@ public static class Root {
             // The RouteHandler and ErrorHandler filters add the correct behavior for 
             // Minimal APIs that return RazorComponentResults. They are not used for 
             // JSON APIs.
-            .WithRouteHandling()
-            .WithErrorHandling<App, ErrorPage>();
+            .WithRxRouteHandling()
+            .WithRxErrorHandling<App, ErrorPage>();
 
         // Common routes
         routes.AddRoutePath(RequestType.GET, "/", HomeHandler.Get)
             .AllowAnonymous()
-            // The PageRouteFor filter identifies the root (layout) component for the page.
-            // Alternatively, the PageRouteForAttribute may be applied to the endpoint
+            // The WithRxPageRouteFor filter identifies the root (layout) component for the page.
+            // Alternatively, the WithRxPageRouteForAttribute may be applied to the endpoint
             // handler directly.
-            .PageRouteFor<App>();
+            .WithRxPageRouteFor<App>();
 
         return routes;
     }

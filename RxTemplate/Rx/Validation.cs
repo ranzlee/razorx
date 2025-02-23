@@ -7,8 +7,8 @@ namespace RxTemplate.Rx;
 /// The validation context for a model.
 /// </summary>
 public sealed class ValidationContext {
-    public ValidationResult ValidationResults { get; set; } = new();
-    public List<ValidationFailure> Errors => ValidationResults.Errors;
+    public ValidationResult ValidationResult { get; set; } = new();
+    public List<ValidationFailure> Errors => ValidationResult.Errors;
 }
 
 /// <summary>
@@ -30,7 +30,7 @@ public class Validator<TModel>(ValidationContext validationContext, ILogger? log
             typeof(TModel),
             validationResult.IsValid ? "Passed" : $"Failed - Details:\n",
             validationResult);
-        validationContext.ValidationResults = validationResult;
+        validationContext.ValidationResult = validationResult;
         return await next(context);
     }
 }
@@ -43,7 +43,7 @@ public static class ValidationExtensions {
     /// <typeparam name="TValidator">IEndpointFilter</typeparam>
     /// <param name="routeBuilder">RouteHandlerBuilder</param>
     /// <returns>RouteHandlerBuilder</returns>
-    public static RouteHandlerBuilder WithValidation<TValidator>(this RouteHandlerBuilder routeBuilder)
+    public static RouteHandlerBuilder WithRxValidation<TValidator>(this RouteHandlerBuilder routeBuilder)
     where TValidator : IEndpointFilter {
         return routeBuilder.AddEndpointFilter<TValidator>();
     }

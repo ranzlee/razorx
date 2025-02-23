@@ -21,12 +21,12 @@ public class CounterValidator : Validator<CounterModel> {
         //if you want to validate manually in the handler...
         //REMOVE from the route
         //************************************************************
-        // .WithValidation<CounterValidator>()
+        // .WithRxValidation<CounterValidator>()
         //************************************************************
         //ADD to the handler after modifying the model
         //************************************************************
         // var validationResult = await ValidateAsync(model);
-        // validationContext.ValidationResults = validationResult;
+        // validationContext.ValidationResult = validationResult;
         //************************************************************
 
     }

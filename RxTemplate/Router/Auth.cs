@@ -15,14 +15,14 @@ public static class Auth {
             .AllowAnonymous()
             // This will be a POST from the IDP, so Antiforgery validation must be skipped
             // The token will be validated after the redirect from the IDP
-            .SkipAntiforgeryValidation();
+            .WithRxSkipAntiforgeryValidation();
 
         // Post-authentication processing to sync the app state with the cookie
         // and perhaps request the "ReturnUrl" if the user was attempting to reach 
         // protected route that triggered the authentication.
         router.AddRoutePath(RequestType.GET, "/auth/complete", AuthHandler.SignInComplete)
             .AllowAnonymous()
-            .PageRouteFor<App>();
+            .WithRxPageRouteFor<App>();
 
         router.AddRoutePath(RequestType.POST, "/auth/sign-out", AuthHandler.SignOut)
             .RequireAuthorization();

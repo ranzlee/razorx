@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http.Extensions;
 namespace RxTemplate.Rx;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class SkipAntiforgeryValidationAttribute : Attribute { }
+public class WithRxSkipAntiforgeryValidationAttribute : Attribute { }
 
-public class SkipAntiforgeryValidation() : IEndpointFilter {
+public class WithRxSkipAntiforgeryValidation() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }
@@ -14,10 +14,10 @@ public class SkipAntiforgeryValidation() : IEndpointFilter {
 
 public static class AntiforgeryExtensions {
 
-    public static RouteHandlerBuilder SkipAntiforgeryValidation(this RouteHandlerBuilder routeBuilder) {
+    public static RouteHandlerBuilder WithRxSkipAntiforgeryValidation(this RouteHandlerBuilder routeBuilder) {
         return routeBuilder
-            .AddEndpointFilter<SkipAntiforgeryValidation>()
-            .WithMetadata(new SkipAntiforgeryValidationAttribute());
+            .AddEndpointFilter<WithRxSkipAntiforgeryValidation>()
+            .WithMetadata(new WithRxSkipAntiforgeryValidationAttribute());
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public sealed class AntiforgeryCookieMiddleware(RequestDelegate next) {
         // Check for explicit antiforgery skip validation
         var endpoint = context.GetEndpoint();
         if (endpoint is not null
-        && endpoint.Metadata.GetMetadata<SkipAntiforgeryValidationAttribute>() is not null) {
+        && endpoint.Metadata.GetMetadata<WithRxSkipAntiforgeryValidationAttribute>() is not null) {
             await next(context);
             return;
         }
