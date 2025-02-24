@@ -22,7 +22,7 @@ public static class Auth {
         // protected route that triggered the authentication.
         router.AddRoutePath(RequestType.GET, "/auth/complete", AuthHandler.SignInComplete)
             .AllowAnonymous()
-            .WithRxPageRouteFor<App>();
+            .WithRxRootComponent<App>();
 
         router.AddRoutePath(RequestType.POST, "/auth/sign-out", AuthHandler.SignOut)
             .RequireAuthorization();

@@ -20,10 +20,10 @@ public static class Root {
         // Common routes
         routes.AddRoutePath(RequestType.GET, "/", HomeHandler.Get)
             .AllowAnonymous()
-            // The WithRxPageRouteFor filter identifies the root (layout) component for the page.
-            // Alternatively, the WithRxPageRouteForAttribute may be applied to the endpoint
+            // The WithRxRootComponent filter identifies the root (layout) component for the page.
+            // Alternatively, the WithRxRootComponentAttribute may be applied to the endpoint
             // handler directly.
-            .WithRxPageRouteFor<App>();
+            .WithRxRootComponent<App>();
 
         return routes;
     }

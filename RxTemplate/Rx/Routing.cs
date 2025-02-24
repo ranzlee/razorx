@@ -63,11 +63,11 @@ public static class RoutingExtensions {
     /// <typeparam name="TRootComponent"></typeparam>
     /// <param name="routeBuilder"></param>
     /// <returns></returns>
-    public static RouteHandlerBuilder WithRxPageRouteFor<TRootComponent>(this RouteHandlerBuilder routeBuilder)
+    public static RouteHandlerBuilder WithRxRootComponent<TRootComponent>(this RouteHandlerBuilder routeBuilder)
     where TRootComponent : IRootComponent {
         return routeBuilder
-            .AddEndpointFilter<WithRxPageRouteFor>()
-            .WithMetadata(new WithRxPageRouteForAttribute<TRootComponent>());
+            .AddEndpointFilter<WithRxRootComponent>()
+            .WithMetadata(new WithRxRootComponentAttribute<TRootComponent>());
     }
 
     public static RouteHandlerBuilder WithRxSkipRouteHandling(this RouteHandlerBuilder routeBuilder) {
@@ -110,10 +110,10 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
             return await next(context);
         }
         // Check for razor component response metadata.    
-        var pageRouteFor = endpoint.Metadata.GetMetadata<IWithRxPageRouteForAttribute>();
+        var rootComponentAttr = endpoint.Metadata.GetMetadata<IWithRxRootComponentAttribute>();
         // Full page request to a partial component
-        if (pageRouteFor is null) {
-            logger.LogTrace("No WithRxPageRouteForAttribute for request {method}:{request}. Responding with 404 NOT FOUND.",
+        if (rootComponentAttr is null) {
+            logger.LogTrace("No WithRxRootComponentAttribute for request {method}:{request}. Responding with 404 NOT FOUND.",
                 context.HttpContext.Request.Method,
                 context.HttpContext.Request.GetDisplayUrl());
             // The status code may have been sent by the client after a handler response error
@@ -130,17 +130,17 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
             return await next(context);
         }
         // Add the root component type to the context.
-        var rootComponent = pageRouteFor.GetRootComponentType();
-        logger.LogTrace("Adding WithRxPageRouteFor context item for root component type {rootComponent} for request {method}:{request}.",
+        var rootComponent = rootComponentAttr.GetRootComponentType();
+        logger.LogTrace("Adding WithRxRootComponent context item for root component type {rootComponent} for request {method}:{request}.",
                 rootComponent,
                 context.HttpContext.Request.Method,
                 context.HttpContext.Request.GetDisplayUrl());
-        context.HttpContext.Items.Add(nameof(IWithRxPageRouteForAttribute), rootComponent);
+        context.HttpContext.Items.Add(nameof(IWithRxRootComponentAttribute), rootComponent);
         return await next(context);
     }
 }
 
-public interface IWithRxPageRouteForAttribute {
+public interface IWithRxRootComponentAttribute {
     public Type GetRootComponentType();
 }
 
@@ -149,7 +149,7 @@ public interface IWithRxPageRouteForAttribute {
 /// </summary>
 /// <typeparam name="TRootComponent">The root component that is the layout for the page.</typeparam>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class WithRxPageRouteForAttribute<TRootComponent> : Attribute, IWithRxPageRouteForAttribute
+public class WithRxRootComponentAttribute<TRootComponent> : Attribute, IWithRxRootComponentAttribute
 where TRootComponent : IRootComponent {
     public Type GetRootComponentType() {
         return typeof(TRootComponent);
@@ -159,7 +159,7 @@ where TRootComponent : IRootComponent {
 /// <summary>
 /// Identifies an endpoint as a route that should return a complete page.
 /// </summary>
-public class WithRxPageRouteFor() : IEndpointFilter {
+public class WithRxRootComponent() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }
@@ -185,7 +185,7 @@ where TComponent : IComponent, IComponentModel<ErrorModel> {
                context.HttpContext.Request.GetDisplayUrl(),
                model is null ? "null" : model.ToString());
             // Add the layout component
-            context.HttpContext.Items.Add(nameof(IWithRxPageRouteForAttribute), typeof(TFallbackRootComponent));
+            context.HttpContext.Items.Add(nameof(IWithRxRootComponentAttribute), typeof(TFallbackRootComponent));
             //short circuit and return error
             if (model is null) {
                 return context.HttpContext.Response.RenderComponent<TComponent>();

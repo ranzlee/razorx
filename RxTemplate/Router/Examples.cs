@@ -14,12 +14,12 @@ public static class Examples {
         // Examples page
         router.AddRoutePath(RequestType.GET, "/examples", ExamplesHandler.Get)
             .AllowAnonymous()
-            .WithRxPageRouteFor<App>();
+            .WithRxRootComponent<App>();
 
         // Counter example routes
         router.AddRoutePath(RequestType.GET, "/examples/counter", CounterHandler.Get)
             .AllowAnonymous()
-            .WithRxPageRouteFor<App>();
+            .WithRxRootComponent<App>();
 
         router.AddRoutePath(RequestType.POST, "/examples/counter/update", CounterHandler.UpdateCounter)
             // The WithRxValidation filter execute the model's Validator
@@ -30,7 +30,7 @@ public static class Examples {
         // Form example routes
         router.AddRoutePath(RequestType.GET, "/examples/form", FormHandler.Get)
             .AllowAnonymous()
-            .WithRxPageRouteFor<App>();
+            .WithRxRootComponent<App>();
 
         router.AddRoutePath(RequestType.PATCH, "/examples/form/validate", FormHandler.ValidateForm)
             .WithRxValidation<FormValidator>()
@@ -43,11 +43,11 @@ public static class Examples {
         // CRUD example routes
         router.AddRoutePath(RequestType.GET, "/examples/crud/blocking", CrudHandler.GetBlocking)
             .AllowAnonymous()
-            .WithRxPageRouteFor<App>();
+            .WithRxRootComponent<App>();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/non-blocking", CrudHandler.GetNonBlocking)
             .AllowAnonymous()
-            .WithRxPageRouteFor<App>();
+            .WithRxRootComponent<App>();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/filter", CrudHandler.GetFilter)
             .AllowAnonymous();
@@ -75,7 +75,7 @@ public static class Examples {
         // BLOBs
         router.AddRoutePath(RequestType.GET, "/examples/blob", BlobHandler.Get)
             .AllowAnonymous()
-            .WithRxPageRouteFor<App>();
+            .WithRxRootComponent<App>();
 
         // single file upload
         router.AddRoutePath(RequestType.POST, "/examples/blob", BlobHandler.PostFile)

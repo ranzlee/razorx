@@ -68,7 +68,7 @@ public static class RazorComponentRenderer {
     }
 
     private static Type? GetRootComponent(this HttpContext context) {
-        return context.Items[nameof(IWithRxPageRouteForAttribute)] as Type;
+        return context.Items[nameof(IWithRxRootComponentAttribute)] as Type;
     }
 
 }
