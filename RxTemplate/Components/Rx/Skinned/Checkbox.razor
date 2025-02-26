@@ -19,7 +19,6 @@
 </RxCheckbox>
 
 @code {
-    [Inject] public ValidationContext ValidationContext { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter, EditorRequired] public bool IsChecked { get; set; }
