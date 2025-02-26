@@ -7,7 +7,7 @@
             id="@(Id)-input" 
             type="checkbox" 
             name="@(Property)" 
-            checked="@(Value)"
+            checked="@(IsChecked)"
             class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
             aria-invalid="@(isInvalid ? "true" : false)"
             aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
@@ -24,7 +24,7 @@
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter] public string Id { get; set; } = string.Empty;
-    [Parameter] public bool Value { get; set; }
+    [Parameter] public bool IsChecked { get; set; }
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;

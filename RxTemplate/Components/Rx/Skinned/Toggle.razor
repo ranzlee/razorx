@@ -1,7 +1,7 @@
 <RxCheckbox
     Id="@(Id)"
     Property="@(Property)" 
-    Value="@(Value)" 
+    IsChecked="@(IsChecked)" 
     Label="@(Label)"
     AllowValidateOnChange="@(AllowValidateOnChange)"
     ContainerClass="form-control w-full"
@@ -24,6 +24,6 @@
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
-    [Parameter] public bool Value { get; set; }
+    [Parameter] public bool IsChecked { get; set; }
     [Parameter] public bool AllowValidateOnChange { get; set; }
 }
