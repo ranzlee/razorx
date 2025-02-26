@@ -17,13 +17,66 @@ namespace RxTemplate.Rx;
 public class HxJsonOptions(IHttpContextAccessor httpContextAccessor, ILogger<HxJsonOptions> logger) : IConfigureOptions<JsonOptions> {
 
     public void Configure(JsonOptions options) {
+        // form values
         options.SerializerOptions.Converters.Add(new DateOnlyJsonConverter(httpContextAccessor, logger));
         options.SerializerOptions.Converters.Add(new DateTimeJsonConverter(httpContextAccessor, logger));
         options.SerializerOptions.Converters.Add(new BooleanJsonConverter(httpContextAccessor, logger));
         options.SerializerOptions.Converters.Add(new IntJsonConverter(httpContextAccessor, logger));
         options.SerializerOptions.Converters.Add(new DecimalJsonConverter(httpContextAccessor, logger));
+        // form value collections
+        options.SerializerOptions.Converters.Add(new SingleOrArrayConverter<string>(httpContextAccessor, logger));
+        options.SerializerOptions.Converters.Add(new SingleOrArrayConverter<int>(httpContextAccessor, logger));
+        options.SerializerOptions.Converters.Add(new SingleOrArrayConverter<bool>(httpContextAccessor, logger));
+        options.SerializerOptions.Converters.Add(new SingleOrArrayConverter<DateOnly>(httpContextAccessor, logger));
+        options.SerializerOptions.Converters.Add(new SingleOrArrayConverter<DateTime>(httpContextAccessor, logger));
+        options.SerializerOptions.Converters.Add(new SingleOrArrayConverter<decimal>(httpContextAccessor, logger));
+        // enum converter
         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
     }
+}
+
+file sealed class SingleOrArrayConverter<T>(IHttpContextAccessor httpContextAccessor, ILogger logger) : JsonConverter<IEnumerable<T>> {
+    public override IEnumerable<T>? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options) {
+        if (httpContextAccessor.HttpContext is null || !httpContextAccessor.HttpContext.Request.IsHxRequest()) {
+            var s = reader.GetString();
+            if (string.IsNullOrWhiteSpace(s)) {
+                logger.LogTrace("{converter}.{method} returned null.",
+                    nameof(SingleOrArrayConverter<T>),
+                    nameof(Read));
+                return null;
+            }
+            logger.LogTrace("No HttpContext or is not HX-Request - {converter}.{method} called default JsonSerializer.Deserialize<{type}>() for \"{val}\".",
+                nameof(SingleOrArrayConverter<T>),
+                nameof(Read),
+                typeof(T),
+                s);
+            return JsonSerializer.Deserialize<IEnumerable<T>>(s);
+        }
+        switch (reader.TokenType) {
+            case JsonTokenType.Null:
+                return null;
+            case JsonTokenType.StartArray:
+                var list = new List<T>();
+                while (reader.Read()) {
+                    if (reader.TokenType == JsonTokenType.EndArray) {
+                        break;
+                    }
+                    list.Add(JsonSerializer.Deserialize<T>(ref reader, options)!);
+                }
+                return list;
+            default:
+                return new List<T>() { JsonSerializer.Deserialize<T>(ref reader, options)! };
+        }
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        IEnumerable<T> objectToWrite,
+        JsonSerializerOptions options) =>
+        JsonSerializer.Serialize(writer, objectToWrite, objectToWrite.GetType(), options);
 }
 
 file sealed class DateOnlyJsonConverter(IHttpContextAccessor httpContextAccessor, ILogger logger) : JsonConverter<DateOnly?> {
