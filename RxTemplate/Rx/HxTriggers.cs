@@ -142,7 +142,7 @@ public record HxCustomTrigger(HxCustomTriggerType TriggerType, string EventId, s
 
 file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxTriggerBuilder {
     private readonly List<IHxTrigger> Triggers = [];
-    private bool isBuilt = false;
+    private const string HX_TRIGGER_BUILDER_KEY = "HX-Trigger-Builder";
 
     public IHxTriggerBuilder Add(IHxTrigger trigger) {
         logger.LogInformation("Adding htmx response trigger for request {method}:{request}.",
@@ -156,13 +156,20 @@ file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxT
     }
 
     public void Build() {
+        var isBuilt = response.Headers.ContainsKey(HX_TRIGGER_BUILDER_KEY);
         if (isBuilt) {
             logger.LogError("HxTriggers build attempted more than once for request {method}:{request}.",
                 response.HttpContext.Request.Method,
                 response.HttpContext.Request.GetDisplayUrl());
             throw new InvalidOperationException("HxTriggers have already been built. Build() may only be called once.");
         }
-        isBuilt = true;
+        response.Headers.Append(HX_TRIGGER_BUILDER_KEY, true.ToString());
+        BuildHxTriggerHeader();
+        BuildHxTriggerAfterSwapHeader();
+        BuildHxTriggerAfterSettleHeader();
+    }
+
+    private void BuildHxTriggerHeader() {
         // Immediate response triggers
         StringBuilder header = new();
         foreach (var t in Triggers) {
@@ -187,8 +194,10 @@ file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxT
                 response.HttpContext.Request.GetDisplayUrl());
             response.Headers.Append("HX-Trigger", $"{{{header.ToString().TrimEnd(',')}}}");
         }
-        // After swap triggers
-        header.Clear();
+    }
+
+    private void BuildHxTriggerAfterSwapHeader() {
+        StringBuilder header = new();
         foreach (var t in Triggers) {
             header.Append(t switch {
                 HxCustomTrigger customTrigger => customTrigger.TriggerType == HxCustomTriggerType.AfterSwap
@@ -203,8 +212,10 @@ file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxT
                 response.HttpContext.Request.GetDisplayUrl());
             response.Headers.Append("HX-Trigger-After-Swap", $"{{{header.ToString().TrimEnd(',')}}}");
         }
-        // After settle triggers
-        header.Clear();
+    }
+
+    private void BuildHxTriggerAfterSettleHeader() {
+        StringBuilder header = new();
         foreach (var t in Triggers) {
             header.Append(t switch {
                 HxCustomTrigger customTrigger => customTrigger.TriggerType == HxCustomTriggerType.AfterSettle
