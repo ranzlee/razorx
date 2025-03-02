@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Extensions;
 
@@ -16,6 +17,27 @@ public enum RequestType {
 }
 
 public static class RoutingExtensions {
+
+    public static void UseRouter<TRootComponent, TErrorPage>(this WebApplication app, string routePrefix = "")
+        where TRootComponent : IRootComponent
+        where TErrorPage : IComponent, IComponentModel<ErrorModel> {
+
+        var router = app.MapGroup(routePrefix)
+            .WithRxRouteHandling()
+            .WithRxErrorHandling<TRootComponent, TErrorPage>();
+
+        // Inspect for IRouteGroups 
+        var routeGroups = Assembly.GetExecutingAssembly().DefinedTypes
+            .Where(type => type is { IsAbstract: false, IsInterface: false }
+                && type.IsAssignableTo(typeof(IRequestHandler)))
+            .Select(type => Activator.CreateInstance(type) as IRequestHandler)
+            .ToArray();
+
+        // Map routes for IRouteGroups found
+        foreach (var routeGroup in routeGroups) {
+            routeGroup?.MapRoutes(router);
+        }
+    }
 
     /// <summary>
     /// Helper to define a route handler endpoint delegate.

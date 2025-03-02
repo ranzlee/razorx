@@ -5,7 +5,9 @@ namespace RxTemplate.Rx;
 /// <summary>
 /// Interface for a class that contains endpoints.
 /// </summary>
-public interface IRequestHandler { }
+public interface IRequestHandler {
+    void MapRoutes(IEndpointRouteBuilder router);
+}
 
 /// <summary>
 /// Interface for a component that represents a page layout.

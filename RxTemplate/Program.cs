@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.ResponseCompression;
 using FluentValidation;
 using RxTemplate.Blob;
+using RxTemplate.Components.Error;
+using RxTemplate.Components.Layout;
 using RxTemplate.Components.Rx;
-using RxTemplate.Router;
 using RxTemplate.Rx;
 
 // Asset fingerprinting and pre-compression is part of .NET 9 with the new MapStaticAssets middleware, however 
@@ -98,10 +99,8 @@ app.UseAntiforgery();
 // Use cookie for antiforgery token - this is custom middleware to support using cookies to transport the antiforgery token
 app.UseAntiforgeryCookie();
 
-// Map routes
-app.MapRoot()
-    .WithAuthRoutes()
-    .WithExamplesRoutes();
+// Use router
+app.UseRouter<App, ErrorPage>();
 
 // Go!
 app.Run();

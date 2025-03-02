@@ -1,8 +1,20 @@
-﻿using RxTemplate.Rx;
+﻿using RxTemplate.Components.Layout;
+using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Counter;
 
 public class CounterHandler : IRequestHandler {
+
+    public void MapRoutes(IEndpointRouteBuilder router) {
+        router.AddRoutePath(RequestType.GET, "/examples/counter", Get)
+            .AllowAnonymous()
+            .WithRxRootComponent<App>();
+
+        router.AddRoutePath(RequestType.POST, "/examples/counter/update", UpdateCounter)
+            .WithRxValidation<CounterValidator>()
+            .AllowAnonymous();
+    }
+
     public static IResult Get(HttpResponse response, ILogger<CounterHandler> logger) {
         return response.RenderComponent<CounterPage>(logger);
     }

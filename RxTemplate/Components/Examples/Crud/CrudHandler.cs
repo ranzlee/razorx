@@ -1,7 +1,8 @@
-﻿using RxTemplate.Components.Rx.Headless.Grid;
-using RxTemplate.Rx;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Web;
+using RxTemplate.Components.Layout;
+using RxTemplate.Components.Rx.Headless.Grid;
+using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Crud;
 
@@ -12,6 +13,40 @@ public class CrudHandler : IRequestHandler {
     /// </summary>
     private readonly static MockCrudService Service = new();
     public static bool IsBlockingExample { get; set; }
+
+    public void MapRoutes(IEndpointRouteBuilder router) {
+
+        router.AddRoutePath(RequestType.GET, "/examples/crud/blocking", GetBlocking)
+            .AllowAnonymous()
+            .WithRxRootComponent<App>();
+
+        router.AddRoutePath(RequestType.GET, "/examples/crud/non-blocking", GetNonBlocking)
+            .AllowAnonymous()
+            .WithRxRootComponent<App>();
+
+        router.AddRoutePath(RequestType.GET, "/examples/crud/filter", GetFilter)
+            .AllowAnonymous();
+
+        router.AddRoutePath(RequestType.GET, "/examples/crud/delete-modal/{id:int}", GetDeleteModal)
+            .RequireAuthorization();
+
+        router.AddRoutePath(RequestType.GET, "/examples/crud/save-modal/{id:int}", GetSaveModal)
+            .RequireAuthorization();
+
+        router.AddRoutePath(RequestType.GET, "/examples/crud/grid", GetGrid)
+            .AllowAnonymous();
+
+        router.AddRoutePath(RequestType.DELETE, "/examples/crud/{id:int}", DeleteItem)
+            .RequireAuthorization();
+
+        router.AddRoutePath(RequestType.PUT, "/examples/crud/{id:int}", SaveItem)
+            .WithRxValidation<ItemValidator>()
+            .RequireAuthorization();
+
+        router.AddRoutePath(RequestType.POST, "/examples/crud", SaveItem)
+            .WithRxValidation<ItemValidator>()
+            .RequireAuthorization();
+    }
 
     public async static Task<IResult> GetBlocking(
         HttpResponse response,

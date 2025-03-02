@@ -1,8 +1,9 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using RxTemplate.Components.Layout;
 using RxTemplate.Rx;
-using System.Security.Claims;
 
 namespace RxTemplate.Components.Auth;
 
@@ -13,6 +14,29 @@ namespace RxTemplate.Components.Auth;
 /// with authentication / authorization.
 /// </summary>
 public class AuthHandler : IRequestHandler {
+
+    public void MapRoutes(IEndpointRouteBuilder router) {
+        router.AddRoutePath(RequestType.POST, "/auth/sign-in", SignIn)
+            .AllowAnonymous();
+
+        // The Identity Provider's (IDP) "Redirect URI" back to the app
+        router.AddRoutePath(RequestType.POST, "/signin-oidc", SignInCallback)
+            .AllowAnonymous()
+            // This will be a POST from the IDP, so Antiforgery validation must be skipped
+            // The token will be validated after the redirect from the IDP
+            .WithRxSkipAntiforgeryValidation();
+
+        // Post-authentication processing to sync the app state with the cookie
+        // and perhaps request the "ReturnUrl" if the user was attempting to reach 
+        // protected route that triggered the authentication.
+        router.AddRoutePath(RequestType.GET, "/auth/complete", SignInComplete)
+            .AllowAnonymous()
+            .WithRxRootComponent<App>();
+
+        router.AddRoutePath(RequestType.POST, "/auth/sign-out", SignOut)
+            .RequireAuthorization();
+
+    }
 
     // Example sign in - must be replaced with OIDC identity provider
     public static async Task<IResult> SignIn(

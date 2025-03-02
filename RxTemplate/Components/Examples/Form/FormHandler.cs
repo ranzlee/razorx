@@ -1,8 +1,24 @@
-﻿using RxTemplate.Rx;
+﻿using RxTemplate.Components.Layout;
+using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Form;
 
 public class FormHandler : IRequestHandler {
+
+    public void MapRoutes(IEndpointRouteBuilder router) {
+        router.AddRoutePath(RequestType.GET, "/examples/form", Get)
+            .AllowAnonymous()
+            .WithRxRootComponent<App>();
+
+        router.AddRoutePath(RequestType.PATCH, "/examples/form/validate", ValidateForm)
+            .WithRxValidation<FormValidator>()
+            .AllowAnonymous();
+
+        router.AddRoutePath(RequestType.POST, "/examples/form/submit", SubmitForm)
+            .WithRxValidation<FormValidator>()
+            .AllowAnonymous();
+    }
+
     public static IResult Get(HttpResponse response, ILogger<FormHandler> logger) {
         return response.RenderComponent<FormPage>(logger);
     }
