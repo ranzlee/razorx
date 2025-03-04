@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.Mvc;
 using RxTemplate.Blob;
-using RxTemplate.Components.Layout;
 using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Blob;
@@ -11,7 +10,7 @@ public class BlobHandler : IRequestHandler {
     public void MapRoutes(IEndpointRouteBuilder router) {
         router.AddRoutePath(RequestType.GET, "/examples/blob", Get)
             .AllowAnonymous()
-            .WithRxRootComponent<App>();
+            .WithRxRootComponent();
 
         // single file upload
         router.AddRoutePath(RequestType.POST, "/examples/blob", PostFile)

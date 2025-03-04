@@ -1,5 +1,4 @@
-﻿using RxTemplate.Components.Layout;
-using RxTemplate.Rx;
+﻿using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Form;
 
@@ -8,7 +7,7 @@ public class FormHandler : IRequestHandler {
     public void MapRoutes(IEndpointRouteBuilder router) {
         router.AddRoutePath(RequestType.GET, "/examples/form", Get)
             .AllowAnonymous()
-            .WithRxRootComponent<App>();
+            .WithRxRootComponent();
 
         router.AddRoutePath(RequestType.PATCH, "/examples/form/validate", ValidateForm)
             .WithRxValidation<FormValidator>()

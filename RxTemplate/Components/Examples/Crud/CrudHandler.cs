@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using System.Web;
-using RxTemplate.Components.Layout;
 using RxTemplate.Components.Rx.Headless.Grid;
 using RxTemplate.Rx;
 
@@ -18,11 +17,11 @@ public class CrudHandler : IRequestHandler {
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/blocking", GetBlocking)
             .AllowAnonymous()
-            .WithRxRootComponent<App>();
+            .WithRxRootComponent();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/non-blocking", GetNonBlocking)
             .AllowAnonymous()
-            .WithRxRootComponent<App>();
+            .WithRxRootComponent();
 
         router.AddRoutePath(RequestType.GET, "/examples/crud/filter", GetFilter)
             .AllowAnonymous();

@@ -2,7 +2,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using RxTemplate.Components.Layout;
 using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Auth;
@@ -31,7 +30,7 @@ public class AuthHandler : IRequestHandler {
         // protected route that triggered the authentication.
         router.AddRoutePath(RequestType.GET, "/auth/complete", SignInComplete)
             .AllowAnonymous()
-            .WithRxRootComponent<App>();
+            .WithRxRootComponent();
 
         router.AddRoutePath(RequestType.POST, "/auth/sign-out", SignOut)
             .RequireAuthorization();

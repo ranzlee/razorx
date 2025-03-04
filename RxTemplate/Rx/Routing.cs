@@ -16,11 +16,28 @@ public enum RequestType {
     DELETE,
 }
 
+file sealed class DefaultRootComponent {
+    private static Type RootComponentType = null!;
+
+    public static void Set<TRootComponent>() where TRootComponent : IRootComponent {
+        if (RootComponentType != null) {
+            throw new InvalidOperationException("Router already initialized");
+        }
+        RootComponentType = typeof(TRootComponent);
+    }
+
+    public static Type Get() {
+        return RootComponentType;
+    }
+}
+
 public static class RoutingExtensions {
 
     public static void UseRouter<TRootComponent, TErrorPage>(this WebApplication app, string routePrefix = "")
         where TRootComponent : IRootComponent
         where TErrorPage : IComponent, IComponentModel<ErrorModel> {
+
+        DefaultRootComponent.Set<TRootComponent>();
 
         var router = app.MapGroup(routePrefix)
             .WithRxRouteHandling()
@@ -90,6 +107,12 @@ public static class RoutingExtensions {
         return routeBuilder
             .AddEndpointFilter<WithRxRootComponent>()
             .WithMetadata(new WithRxRootComponentAttribute<TRootComponent>());
+    }
+
+    public static RouteHandlerBuilder WithRxRootComponent(this RouteHandlerBuilder routeBuilder) {
+        return routeBuilder
+            .AddEndpointFilter<WithRxRootComponent>()
+            .WithMetadata(new WithRxRootComponentAttribute());
     }
 
     public static RouteHandlerBuilder WithRxSkipRouteHandling(this RouteHandlerBuilder routeBuilder) {
@@ -175,6 +198,13 @@ public class WithRxRootComponentAttribute<TRootComponent> : Attribute, IWithRxRo
 where TRootComponent : IRootComponent {
     public Type GetRootComponentType() {
         return typeof(TRootComponent);
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+public class WithRxRootComponentAttribute() : Attribute, IWithRxRootComponentAttribute {
+    public Type GetRootComponentType() {
+        return DefaultRootComponent.Get();
     }
 }
 
