@@ -5,15 +5,15 @@ namespace RxTemplate.Components.Examples.Form;
 public class FormHandler : IRequestHandler {
 
     public void MapRoutes(IEndpointRouteBuilder router) {
-        router.AddRoutePath(RequestType.GET, "/examples/form", Get)
+        router.MapGet("/examples/form", Get)
             .AllowAnonymous()
             .WithRxRootComponent();
 
-        router.AddRoutePath(RequestType.PATCH, "/examples/form/validate", ValidateForm)
+        router.MapPatch("/examples/form/validate", ValidateForm)
             .WithRxValidation<FormValidator>()
             .AllowAnonymous();
 
-        router.AddRoutePath(RequestType.POST, "/examples/form/submit", SubmitForm)
+        router.MapPost("/examples/form/submit", SubmitForm)
             .WithRxValidation<FormValidator>()
             .AllowAnonymous();
     }

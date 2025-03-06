@@ -5,7 +5,7 @@ namespace RxTemplate.Components.Examples;
 public class ExamplesHandler : IRequestHandler {
 
     public void MapRoutes(IEndpointRouteBuilder router) {
-        router.AddRoutePath(RequestType.GET, "/examples", Get)
+        router.MapGet("/examples", Get)
             .AllowAnonymous()
             .WithRxRootComponent();
     }

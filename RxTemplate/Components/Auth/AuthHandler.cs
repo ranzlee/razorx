@@ -15,11 +15,11 @@ namespace RxTemplate.Components.Auth;
 public class AuthHandler : IRequestHandler {
 
     public void MapRoutes(IEndpointRouteBuilder router) {
-        router.AddRoutePath(RequestType.POST, "/auth/sign-in", SignIn)
+        router.MapPost("/auth/sign-in", SignIn)
             .AllowAnonymous();
 
         // The Identity Provider's (IDP) "Redirect URI" back to the app
-        router.AddRoutePath(RequestType.POST, "/signin-oidc", SignInCallback)
+        router.MapPost("/signin-oidc", SignInCallback)
             .AllowAnonymous()
             // This will be a POST from the IDP, so Antiforgery validation must be skipped
             // The token will be validated after the redirect from the IDP
@@ -28,11 +28,11 @@ public class AuthHandler : IRequestHandler {
         // Post-authentication processing to sync the app state with the cookie
         // and perhaps request the "ReturnUrl" if the user was attempting to reach 
         // protected route that triggered the authentication.
-        router.AddRoutePath(RequestType.GET, "/auth/complete", SignInComplete)
+        router.MapGet("/auth/complete", SignInComplete)
             .AllowAnonymous()
             .WithRxRootComponent();
 
-        router.AddRoutePath(RequestType.POST, "/auth/sign-out", SignOut)
+        router.MapPost("/auth/sign-out", SignOut)
             .RequireAuthorization();
 
     }

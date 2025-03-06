@@ -5,7 +5,7 @@ namespace RxTemplate.Components.Home;
 public class HomeHandler : IRequestHandler {
 
     public void MapRoutes(IEndpointRouteBuilder router) {
-        router.AddRoutePath(RequestType.GET, "/", Get)
+        router.MapGet("/", Get)
             .AllowAnonymous()
             .WithRxRootComponent();
     }

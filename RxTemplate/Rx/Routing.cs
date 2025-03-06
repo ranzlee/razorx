@@ -5,22 +5,11 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace RxTemplate.Rx;
 
-/// <summary>
-/// Enumerated HTTP methods.
-/// </summary>
-public enum RequestType {
-    GET,
-    POST,
-    PUT,
-    PATCH,
-    DELETE,
-}
-
 file sealed class DefaultRootComponent {
     private static Type RootComponentType = null!;
 
     public static void Set<TRootComponent>() where TRootComponent : IRootComponent {
-        if (RootComponentType != null) {
+        if (RootComponentType is not null) {
             throw new InvalidOperationException("Router already initialized");
         }
         RootComponentType = typeof(TRootComponent);
@@ -54,30 +43,6 @@ public static class RoutingExtensions {
         foreach (var routeGroup in routeGroups) {
             routeGroup?.MapRoutes(router);
         }
-    }
-
-    /// <summary>
-    /// Helper to define a route handler endpoint delegate.
-    /// </summary>
-    /// <param name="routeBuilder">IEndpointRouteBuilder</param>
-    /// <param name="requestType">Http enum</param>
-    /// <param name="routePath">Route path</param>
-    /// <param name="endpointHandler">Delegate handler</param>
-    /// <returns>RouteHandlerBuilder</returns>
-    /// <exception cref="NotSupportedException">Unsupported HTTP method</exception>
-    public static RouteHandlerBuilder AddRoutePath(
-        this IEndpointRouteBuilder routeBuilder,
-        RequestType requestType,
-        string routePath,
-        Delegate endpointHandler) {
-        return requestType switch {
-            RequestType.GET => routeBuilder.MapGet(routePath, endpointHandler),
-            RequestType.POST => routeBuilder.MapPost(routePath, endpointHandler),
-            RequestType.PUT => routeBuilder.MapPut(routePath, endpointHandler),
-            RequestType.PATCH => routeBuilder.MapPatch(routePath, endpointHandler),
-            RequestType.DELETE => routeBuilder.MapDelete(routePath, endpointHandler),
-            _ => throw new NotSupportedException($"HTTP method '{requestType}' is not supported")
-        };
     }
 
     public static RouteGroupBuilder WithRxRouteHandling(this RouteGroupBuilder routeBuilder) {
@@ -125,7 +90,7 @@ public static class RoutingExtensions {
 public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         // Verify is GET request.
-        if (context.HttpContext.Request.Method != RequestType.GET.ToString()) {
+        if (context.HttpContext.Request.Method != "GET") {
             logger.LogTrace("Skip pre-route processing for non-get request {method}:{request}.",
                 context.HttpContext.Request.Method,
                 context.HttpContext.Request.GetDisplayUrl());

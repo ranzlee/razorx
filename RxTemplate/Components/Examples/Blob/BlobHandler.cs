@@ -8,23 +8,23 @@ namespace RxTemplate.Components.Examples.Blob;
 public class BlobHandler : IRequestHandler {
 
     public void MapRoutes(IEndpointRouteBuilder router) {
-        router.AddRoutePath(RequestType.GET, "/examples/blob", Get)
+        router.MapGet("/examples/blob", Get)
             .AllowAnonymous()
             .WithRxRootComponent();
 
         // single file upload
-        router.AddRoutePath(RequestType.POST, "/examples/blob", PostFile)
+        router.MapPost("/examples/blob", PostFile)
             .AllowAnonymous();
 
         // multiple files upload
-        router.AddRoutePath(RequestType.POST, "/examples/blobs", PostFiles)
+        router.MapPost("/examples/blobs", PostFiles)
             .AllowAnonymous();
 
-        router.AddRoutePath(RequestType.DELETE, "/examples/blob/{path}/{id}", Delete)
+        router.MapDelete("/examples/blob/{path}/{id}", Delete)
             .AllowAnonymous();
 
         // download
-        router.AddRoutePath(RequestType.GET, "/examples/blob/{path}/{id}", Download)
+        router.MapGet("/examples/blob/{path}/{id}", Download)
             .AllowAnonymous()
             // This is a [download] href, so we need to skip route handling
             .WithRxSkipRouteHandling();

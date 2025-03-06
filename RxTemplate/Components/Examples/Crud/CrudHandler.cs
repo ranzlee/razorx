@@ -15,34 +15,34 @@ public class CrudHandler : IRequestHandler {
 
     public void MapRoutes(IEndpointRouteBuilder router) {
 
-        router.AddRoutePath(RequestType.GET, "/examples/crud/blocking", GetBlocking)
+        router.MapGet("/examples/crud/blocking", GetBlocking)
             .AllowAnonymous()
             .WithRxRootComponent();
 
-        router.AddRoutePath(RequestType.GET, "/examples/crud/non-blocking", GetNonBlocking)
+        router.MapGet("/examples/crud/non-blocking", GetNonBlocking)
             .AllowAnonymous()
             .WithRxRootComponent();
 
-        router.AddRoutePath(RequestType.GET, "/examples/crud/filter", GetFilter)
+        router.MapGet("/examples/crud/filter", GetFilter)
             .AllowAnonymous();
 
-        router.AddRoutePath(RequestType.GET, "/examples/crud/delete-modal/{id:int}", GetDeleteModal)
+        router.MapGet("/examples/crud/delete-modal/{id:int}", GetDeleteModal)
             .RequireAuthorization();
 
-        router.AddRoutePath(RequestType.GET, "/examples/crud/save-modal/{id:int}", GetSaveModal)
+        router.MapGet("/examples/crud/save-modal/{id:int}", GetSaveModal)
             .RequireAuthorization();
 
-        router.AddRoutePath(RequestType.GET, "/examples/crud/grid", GetGrid)
+        router.MapGet("/examples/crud/grid", GetGrid)
             .AllowAnonymous();
 
-        router.AddRoutePath(RequestType.DELETE, "/examples/crud/{id:int}", DeleteItem)
+        router.MapDelete("/examples/crud/{id:int}", DeleteItem)
             .RequireAuthorization();
 
-        router.AddRoutePath(RequestType.PUT, "/examples/crud/{id:int}", SaveItem)
+        router.MapPut("/examples/crud/{id:int}", SaveItem)
             .WithRxValidation<ItemValidator>()
             .RequireAuthorization();
 
-        router.AddRoutePath(RequestType.POST, "/examples/crud", SaveItem)
+        router.MapPost("/examples/crud", SaveItem)
             .WithRxValidation<ItemValidator>()
             .RequireAuthorization();
     }
