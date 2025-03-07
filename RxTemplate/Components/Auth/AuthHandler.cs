@@ -18,13 +18,6 @@ public class AuthHandler : IRequestHandler {
         router.MapPost("/auth/sign-in", SignIn)
             .AllowAnonymous();
 
-        // The Identity Provider's (IDP) "Redirect URI" back to the app
-        router.MapPost("/signin-oidc", SignInCallback)
-            .AllowAnonymous()
-            // This will be a POST from the IDP, so Antiforgery validation must be skipped
-            // The token will be validated after the redirect from the IDP
-            .WithRxSkipAntiforgeryValidation();
-
         // Post-authentication processing to sync the app state with the cookie
         // and perhaps request the "ReturnUrl" if the user was attempting to reach 
         // protected route that triggered the authentication.
@@ -48,11 +41,6 @@ public class AuthHandler : IRequestHandler {
         identity.AddClaim(new Claim("Role", "Admin"));
         await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
         return TypedResults.Redirect("/auth/complete");
-    }
-
-    // OIDC callback - With a real identity provider, there will need to be a callback post configured
-    public static IResult SignInCallback() {
-        return Results.NoContent();
     }
 
     // Signin complete - provides the client the opportunity to request a route and sync cookie state
