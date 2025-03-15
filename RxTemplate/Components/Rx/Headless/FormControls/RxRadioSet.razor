@@ -33,7 +33,7 @@
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public string Value { get; set; } = null!;
     [Parameter] public bool AllowValidateOnChange { get; set; }
-    [Parameter] public Dictionary<string, string> Options { get; set; } = [];
+    [Parameter] public IEnumerable<KeyValuePair<string, string>> Options { get; set; } = [];
     [Parameter] public Type? EnumType { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;
@@ -49,10 +49,11 @@
 
     protected override void OnParametersSet() {
         if (EnumType is not null) {
+            Options = new List<KeyValuePair<string, string>>(Options);
             var enumNames = Enum.GetNames(EnumType);
             foreach (var en in enumNames) {
                 var e = Enum.Parse(EnumType, en) as Enum;
-                Options.Add(e!.GetDescription(), en);
+                ((List<KeyValuePair<string, string>>)Options).Add(new KeyValuePair<string, string>(e!.GetDescription(), en));
             }
         }
         if (ValidationContext.TryGetError(Property, out var _)) {
