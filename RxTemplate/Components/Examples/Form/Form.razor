@@ -139,6 +139,21 @@
                 </div>
             </div>
             <div class="flex max-w-[650px]">
+                <!-- Widget AutoComplete Field -->
+                <div class="w-full">
+                    <AutoComplete 
+                        Id="@(nameof(Model.Widget))"
+                        Property="@(nameof(Model.Widget))" 
+                        Value="@(Model.Widget)" 
+                        DelayMilliseconds="@(500)"
+                        MinimumLengthToTrigger="@(4)"
+                        Label="Select Widget (e.g., CNT, INV, RFQ, PO)" 
+                        GetListFromRoute="/examples/form/widgets"
+                        placeholder="CNT-, INV-, RFQ-, or PO- (minimum 4 characters required)">
+                    </AutoComplete>
+                </div>
+            </div>
+            <div class="flex max-w-[650px]">
                 <!-- Notes Memo Field -->
                 <div class="w-full">
                     <MemoField 
@@ -153,7 +168,6 @@
                 </div>
             </div>
         </div>
-        
         <div class="mt-3">
             <!-- Submit Button -->
             <button id="form-submit" type="submit" class="btn btn-primary">

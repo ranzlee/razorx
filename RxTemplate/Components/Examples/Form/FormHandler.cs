@@ -1,4 +1,5 @@
-﻿using RxTemplate.Rx;
+﻿using RxTemplate.Components.Rx.Headless.AutoComplete;
+using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Form;
 
@@ -8,6 +9,12 @@ public class FormHandler : IRequestHandler {
         router.MapGet("/examples/form", Get)
             .AllowAnonymous()
             .WithRxRootComponent();
+
+        router.MapGet("/examples/form/widgets", GetWidgets)
+            .AllowAnonymous();
+
+        router.MapPost("/examples/form/widget/{id}", PostWidget)
+            .AllowAnonymous();
 
         router.MapPatch("/examples/form/validate", ValidateForm)
             .WithRxValidation<FormValidator>()
@@ -20,6 +27,31 @@ public class FormHandler : IRequestHandler {
 
     public static IResult Get(HttpResponse response, ILogger<FormHandler> logger) {
         return response.RenderComponent<FormPage>(logger);
+    }
+
+    public static IResult GetWidgets(
+        HttpResponse response,
+        string widget,
+        ILogger<FormHandler> logger) {
+        var widgets = MockWidgetService.Find(widget);
+        var m = new RxAutoCompleteModel {
+            OnSelectedHttpMethod = HttpMethod.Post,
+            OnSelectedEndpoint = "/examples/form/widget/",
+            OnSelectedResponseTarget = $"#{nameof(FormModel.Widget)}",
+            OnSelectedResponseSwap = "outerHTML",
+            Items = widgets
+        };
+        return response.RenderComponent<RxAutoCompleteList, RxAutoCompleteModel>(m, logger);
+    }
+
+    public static IResult PostWidget(
+        HttpResponse response,
+        string id,
+        ILogger<FormHandler> logger
+    ) {
+        // On selection, you could return a fragment that is not editable to display the selected value
+        // along with a hidden input for the ID value. 
+        return TypedResults.NoContent();
     }
 
     public static IResult ValidateForm(

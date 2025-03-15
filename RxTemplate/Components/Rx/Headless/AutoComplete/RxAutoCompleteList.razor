@@ -1,0 +1,129 @@
+@implements IComponentModel<RxAutoCompleteModel>
+
+@{
+    if (!Model.Items.Any()) {
+        return;
+    }
+    var itemListId = $"Rx-{Guid.NewGuid():N}"; 
+}
+<ul id="@(itemListId)" tabindex="-1" role="listbox">
+    @foreach (var item in Model.Items)
+    {
+        var itemId = $"Rx-{Guid.NewGuid():N}";   
+        <li tabindex="-1"
+            id="@(itemId)-item" 
+            role="option" 
+            aria-selected="false">
+            <button id="@(itemId)"
+                    type="button"
+                    hx-get="@(Model.OnSelectedHttpMethod == HttpMethod.Get ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
+                    hx-post="@(Model.OnSelectedHttpMethod == HttpMethod.Post ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
+                    hx-put="@(Model.OnSelectedHttpMethod == HttpMethod.Put ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
+                    hx-patch="@(Model.OnSelectedHttpMethod == HttpMethod.Patch ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
+                    hx-delete="@(Model.OnSelectedHttpMethod == HttpMethod.Delete ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)" 
+                    hx-target="@(Model.OnSelectedResponseTarget)"
+                    hx-swap="@(Model.OnSelectedResponseSwap)"
+                    tabindex="-1"
+                    title="@($"Select {item.DisplayName}")"
+                    aria-label="@($"Select {item.DisplayName}")">
+                <span>@(item.DisplayName)</span>
+            </button>
+            <script>
+                (function(){
+                    var xhrTriggered = false;
+                    var item = document.getElementById('@(itemId)');
+                    // btn->li->ul->div->div.id
+                    var componentId = item.parentElement.parentElement.parentElement.parentElement.id;
+                    item.onclick = function() {
+                        var input = document.getElementById(`${componentId}-autocomplete-input`);
+                        input.value = '@(item.DisplayName)';
+                        input.focus();
+                    }
+                    item.addEventListener("htmx:xhr:loadstart", (evt) => {
+                        if (!xhrTriggered) {
+                            xhrTriggered = true;
+                            document.getElementById(`${componentId}-autocomplete-list`).replaceChildren([]);
+                        }
+                    });
+                })()
+            </script>
+        </li>
+    }
+</ul>
+<script>
+    (function(){
+        var itemList = document.getElementById('@(itemListId)'); 
+        // ul->div->div.id
+        var componentId = itemList.parentElement.parentElement.id;
+        var listClassList = document.getElementById(`${componentId}-autocomplete-list-style`).value; 
+        var container = document.getElementById(componentId);
+        itemList.style.width = `${container.clientWidth}px`;
+        itemList.style.maxHeight = '@(Model.ListMaxPixelHeight <= 0 ? 250 : Model.ListMaxPixelHeight)px';
+        itemList.classList.value = listClassList;
+        var input = document.getElementById(`${componentId}-autocomplete-input`);
+        input.setAttribute("aria-expanded", "true");
+        var list = document.getElementById(`${componentId}-autocomplete-list`);
+        var liSelected;
+        function cancelEvent(evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+        }
+        function setListItem(ele) {
+            if (!ele) {
+                return;
+            }
+            if (liSelected) {
+                liSelected.setAttribute("aria-selected", "false");
+            }
+            liSelected = ele;
+            liSelected.setAttribute("aria-selected", "true");
+            liSelected.firstChild.focus();
+        }
+        input.onkeydown = function(evt) {
+            if (evt.key === 'ArrowUp' || evt.code === 'ArrowUp' || evt.keyCode === 38) {
+                cancelEvent(evt);
+                if (!list.firstChild) {
+                    return;
+                }
+                setListItem(list.firstChild.lastChild);    
+            }
+            if (evt.key === 'ArrowDown' || evt.code === 'ArrowDown' || evt.keyCode === 40) {
+                cancelEvent(evt);
+                if (!list.firstChild) {
+                    return;
+                }
+                setListItem(list.firstChild.firstChild);
+            }
+            if (evt.key === 'Escape' || evt.code === 'Escape' || evt.keyCode === 27) {
+                input.focus();
+                input.setAttribute("aria-expanded", "false");
+                list.replaceChildren([]);
+            }
+        }
+        list.onkeydown = function(evt) {
+            if (evt.key === 'ArrowUp' || evt.code === 'ArrowUp' || evt.keyCode === 38) {
+                cancelEvent(evt);
+                if (!liSelected) {
+                    return;
+                }
+                setListItem(liSelected.previousSibling);
+            }
+            if (evt.key === 'ArrowDown' || evt.code === 'ArrowDown' || evt.keyCode === 40) {
+                cancelEvent(evt);
+                if (!liSelected) {
+                    return;
+                }
+                setListItem(liSelected.nextSibling);
+            }
+            if (evt.key === 'Escape' || evt.code === 'Escape' || evt.keyCode === 27) {
+                input.focus();
+                input.setAttribute("aria-expanded", "false");
+                list.replaceChildren([]);
+            }
+        }
+    })()
+</script>
+
+@code {
+    [Parameter] public RxAutoCompleteModel Model { get; set; } = null!;
+}

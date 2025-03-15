@@ -61,6 +61,10 @@ public class FormValidator : Validator<FormModel> {
             .When(x => x.Cost >= 30)
             .WithMessage("Renewal subscription required when cost >= 30");
 
+        RuleFor(x => x.Widget)
+            .NotEmpty()
+            .WithMessage("Widget must be selected");
+
         RuleFor(x => x.Notes)
             .NotEmpty()
             .When(x => x.ReportingStatus == ReportingStatusType.Completed)

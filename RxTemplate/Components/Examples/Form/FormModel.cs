@@ -1,4 +1,5 @@
 using RxTemplate.Components.Rx;
+using RxTemplate.Components.Rx.Headless.AutoComplete;
 
 namespace RxTemplate.Components.Examples.Form;
 
@@ -14,10 +15,17 @@ public record FormModel {
     public SubscriptionType Subscription { get; set; }
     public ReportingStatusType ReportingStatus { get; set; }
     public string? Notes { get; set; }
+    public string? Widget { get; set; }
 
     public DateTime? GetAppointmentTimeAsUtc(ILogger? logger) {
         return Utilities.GetUtcDateFromTimeZone(AppointmentTime, AppointmentTimeTimeZone, logger);
     }
+}
+
+public record WidgetItem : IRxAutoCompleteItem {
+    public string Id { get; set; } = null!;
+    public string DisplayName { get; set; } = null!;
+
 }
 
 public enum ReportingStatusType {
