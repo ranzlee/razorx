@@ -68,7 +68,7 @@
         }
         if (string.IsNullOrWhiteSpace(Id)) {
             if (AllowValidateOnChange) {
-                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned. {nameof(AllowValidateOnChange)} has been reset to false");    
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned.");    
             }
             Id = Utilities.GenerateElementId();
         }
