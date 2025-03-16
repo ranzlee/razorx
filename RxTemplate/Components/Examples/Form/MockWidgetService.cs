@@ -22,10 +22,6 @@ public static class MockWidgetService {
         Data = data;
     }
 
-    public static WidgetItem? Get(string id) {
-        return Data.FirstOrDefault(x => x.Id == id);
-    }
-
     public static IEnumerable<WidgetItem> Find(string name) {
         return [.. Data.Where(x => x.DisplayName.Contains(name, StringComparison.CurrentCultureIgnoreCase)).OrderBy(x => x.DisplayName)];
     }

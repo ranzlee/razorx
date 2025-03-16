@@ -51,15 +51,6 @@ public class FormHandler : IRequestHandler {
         ILogger<FormHandler> logger
     ) {
         return TypedResults.NoContent();
-        /*
-            On selection, you could return a fragment that is not editable to display the selected value
-            along with a hidden input for the ID value.
-        */
-        // var widget = MockWidgetService.Get(id);
-        // if (widget == null) {
-        //     return TypedResults.NotFound();
-        // }
-        // return response.RenderComponent<SelectedWidget, WidgetItem>(widget);
     }
 
     public static IResult ValidateForm(
