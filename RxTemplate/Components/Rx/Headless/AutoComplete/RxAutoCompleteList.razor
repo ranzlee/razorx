@@ -5,13 +5,13 @@
         return;
     }
     var itemListId = $"Rx-{Guid.NewGuid():N}"; 
-    var strong = "<strong class='text-secondary'>";
+    var strong = $"<strong>";
 }
 <ul id="@(itemListId)" tabindex="-1" role="listbox" style="display: none;">
     @foreach (var item in Model.Items)
     {
         var itemId = $"Rx-{Guid.NewGuid():N}";
-        // Apply <strong> to the exact matches for pattern
+        // Apply <strong> to pattern matches
         var li = item.DisplayName;
         var i = item.DisplayName.ToLower().IndexOf(Model.SearchPattern.ToLower());
         if (i >= 0) {
@@ -42,6 +42,11 @@
                     var item = document.getElementById('@(itemId)');
                     // btn -> li -> ul -> div -> div.id
                     var componentId = item.parentElement.parentElement.parentElement.parentElement.id;
+                    var matchClass = document.getElementById(`${componentId}-autocomplete-pattern-match-class`).value ?? '';
+                    if (matchClass !== '') {
+                        var strong = item.querySelector("span strong");
+                        strong.classList.value = matchClass;
+                    }
                     item.onclick = function() {
                         var selected = document.getElementById(`${componentId}-autocomplete-selected-id`);
                         var input = document.getElementById(`${componentId}-autocomplete-input`);
@@ -70,7 +75,7 @@
         var itemList = document.getElementById('@(itemListId)'); 
         // ul -> div -> div.id
         var componentId = itemList.parentElement.parentElement.id;
-        var listClassList = document.getElementById(`${componentId}-autocomplete-list-style`).value; 
+        var listClassList = document.getElementById(`${componentId}-autocomplete-list-class`).value; 
         var listMaxPixelHeight = document.getElementById(`${componentId}-autocomplete-list-max-height`).value; 
         var container = document.getElementById(componentId);
         itemList.style.width = `${container.clientWidth}px`;

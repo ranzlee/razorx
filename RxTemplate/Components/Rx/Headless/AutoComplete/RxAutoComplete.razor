@@ -47,7 +47,8 @@
         }
     </label>
     <input id="@(Id)-autocomplete-list-max-height" type="hidden" value="@(ListMaxPixelHeight)">
-    <input id="@(Id)-autocomplete-list-style" type="hidden" value="@(ListClass)">
+    <input id="@(Id)-autocomplete-list-class" type="hidden" value="@(ListClass)">
+    <input id="@(Id)-autocomplete-pattern-match-class" type="hidden" value="@(PatternMatchClass)">
     <input id="@(Id)-autocomplete-skip-selected-validation" type="hidden" value="@(SkipOnSelectedValidateOnChange.ToString().ToLower())">
     <div tabindex="-1" id="@(Id)-autocomplete-list" class="@(ListContainerClass)"></div>
 </div>
@@ -75,6 +76,7 @@
     [Parameter] public string LabelClass { get; set; } = null!;
     [Parameter] public string ListContainerClass { get; set; } = null!;
     [Parameter] public string ListClass { get; set; } = null!;
+    [Parameter] public string PatternMatchClass { get; set; } = null!;
       
     private bool isInvalid { get; set; }
     protected override void OnParametersSet() {

@@ -17,6 +17,7 @@
     LabelClass="label-text"
     ListContainerClass="dropdown dropdown-open"
     ListClass="-mt-2 dropdown-content menu menu-compact flex-nowrap bg-base-100 rounded-box z-[1] p-2 shadow overflow-auto"
+    PatternMatchClass="@(PatternMatchClass)"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
@@ -39,4 +40,5 @@
     [Parameter] public int ListMaxPixelHeight { get; set; } = 250;  
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public bool SkipOnSelectedValidateOnChange { get; set; }
+    [Parameter] public string PatternMatchClass { get; set; } = string.Empty;
 }
