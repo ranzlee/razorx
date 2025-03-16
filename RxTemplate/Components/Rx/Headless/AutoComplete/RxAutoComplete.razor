@@ -14,6 +14,7 @@
             hx-swap="innerHTML"
             class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
             autocomplete="off"
+            role="combobox"
             aria-invalid="@(isInvalid ? "true" : false)"
             aria-describedby="@(isInvalid ? $"{Id}-error" : false)"
             aria-expanded="false"
