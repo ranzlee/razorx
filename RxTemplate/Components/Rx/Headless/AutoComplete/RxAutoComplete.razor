@@ -1,10 +1,10 @@
 <div id="@(Id)">
-    <label class="@(ContainerClass)">
+    <label id="@(Id)-autocomplete-input-container" class="@(ContainerClass)">
         <div class="@(LabelContainerClass)">
             <span class="@(LabelClass)">@(Label)</span>
         </div>
         <input
-            Id="@(Id)-autocomplete-input"
+            id="@(Id)-autocomplete-input"
             name="@(Property)" 
             value="@(Value)" 
             type="search"
@@ -20,23 +20,35 @@
             aria-autocomplete="list" 
             aria-controls="@(Id)-autocomplete-list-items"
             @attributes=@(AdditionalAttributes)>
-            <script>
-                (function(){
-                    var input = document.getElementById('@(Id)-autocomplete-input');
-                    input.addEventListener('htmx:beforeRequest', (evt) => {
-                        if (evt.target.value.length < @(MinimumLengthToTrigger)) {
-                            evt.preventDefault();
-                        }
-                    });
-                })()
-            </script>
+        <input 
+            data-id="@(Id)-autocomplete-input-container" 
+            data-validate-on-change="@(AllowValidateOnChange)"
+            id="@(Id)-autocomplete-selected-id" 
+            type="hidden" name="@(Property)Id" 
+            value="@(SelectedId)">
+        <script>
+            (function(){
+                var input = document.getElementById('@(Id)-autocomplete-input');
+                input.addEventListener('htmx:beforeRequest', (evt) => {
+                    var selected = document.getElementById('@(Id)-autocomplete-selected-id');
+                    var validateEvt = new Event('input', { bubbles: true });
+                    if ((selected.value ?? '') !== '') {
+                        selected.value = '';
+                        selected.dispatchEvent(validateEvt);
+                    }
+                    if ((evt.target.value?.length ?? 0) < @(MinimumLengthToTrigger)) {
+                        evt.preventDefault();
+                    }
+                });
+            })()
+        </script>
         @if (isInvalid) {
             @(ValidationContainer)
         }
     </label>
-    <input id="@(Id)-autocomplete-list-style" 
-        type="hidden" 
-        value="@(ListClass)">
+    <input id="@(Id)-autocomplete-list-max-height" type="hidden" value="@(ListMaxPixelHeight)">
+    <input id="@(Id)-autocomplete-list-style" type="hidden" value="@(ListClass)">
+    <input id="@(Id)-autocomplete-skip-selected-validation" type="hidden" value="@(SkipOnSelectedValidateOnChange.ToString().ToLower())">
     <div tabindex="-1" id="@(Id)-autocomplete-list" class="@(ListContainerClass)"></div>
 </div>
 
@@ -48,9 +60,13 @@
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter, EditorRequired] public string GetListFromRoute { get; set; } = null!;
-    [Parameter] public object? Value { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public string? SelectedId { get; set; }
     [Parameter] public int DelayMilliseconds { get; set; } = 500;
     [Parameter] public int MinimumLengthToTrigger { get; set; } = 3;
+    [Parameter] public int ListMaxPixelHeight { get; set; } = 250;  
+    [Parameter] public bool AllowValidateOnChange { get; set; }
+    [Parameter] public bool SkipOnSelectedValidateOnChange { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string InvalidClass { get; set; } = null!;
@@ -59,13 +75,16 @@
     [Parameter] public string LabelClass { get; set; } = null!;
     [Parameter] public string ListContainerClass { get; set; } = null!;
     [Parameter] public string ListClass { get; set; } = null!;
-    
+      
     private bool isInvalid { get; set; }
     protected override void OnParametersSet() {
         if (ValidationContext.TryGetError(Property, out var _)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {
+            if (AllowValidateOnChange) {
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned.");    
+            }
             Id = Utilities.GenerateElementId();
         }
     }

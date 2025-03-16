@@ -16,6 +16,7 @@ public record FormModel {
     public ReportingStatusType ReportingStatus { get; set; }
     public string? Notes { get; set; }
     public string? Widget { get; set; }
+    public string? WidgetId { get; set; }
 
     public DateTime? GetAppointmentTimeAsUtc(ILogger? logger) {
         return Utilities.GetUtcDateFromTimeZone(AppointmentTime, AppointmentTimeTimeZone, logger);

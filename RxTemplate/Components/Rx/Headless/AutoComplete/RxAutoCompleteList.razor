@@ -5,11 +5,19 @@
         return;
     }
     var itemListId = $"Rx-{Guid.NewGuid():N}"; 
+    var strong = "<strong class='text-secondary'>";
 }
-<ul id="@(itemListId)" tabindex="-1" role="listbox">
+<ul id="@(itemListId)" tabindex="-1" role="listbox" style="display: none;">
     @foreach (var item in Model.Items)
     {
-        var itemId = $"Rx-{Guid.NewGuid():N}";   
+        var itemId = $"Rx-{Guid.NewGuid():N}";
+        // Apply <strong> to the exact matches for pattern
+        var li = item.DisplayName;
+        var i = item.DisplayName.ToLower().IndexOf(Model.SearchPattern.ToLower());
+        if (i >= 0) {
+            li = li.Insert(i, strong);
+            li = li.Insert(Math.Min(i + strong.Length + Model.SearchPattern.Length, li.Length), "</strong>");
+        }
         <li tabindex="-1"
             id="@(itemId)-item" 
             role="option" 
@@ -21,23 +29,30 @@
                     hx-put="@(Model.OnSelectedHttpMethod == HttpMethod.Put ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
                     hx-patch="@(Model.OnSelectedHttpMethod == HttpMethod.Patch ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
                     hx-delete="@(Model.OnSelectedHttpMethod == HttpMethod.Delete ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)" 
-                    hx-target="@(Model.OnSelectedResponseTarget)"
-                    hx-swap="@(Model.OnSelectedResponseSwap)"
+                    hx-target="@(string.IsNullOrWhiteSpace(Model.OnSelectedResponseTarget) ? false : Model.OnSelectedResponseTarget)"
+                    hx-swap="@(string.IsNullOrWhiteSpace(Model.OnSelectedResponseSwap) ? false : Model.OnSelectedResponseSwap)"
                     tabindex="-1"
                     title="@($"Select {item.DisplayName}")"
                     aria-label="@($"Select {item.DisplayName}")">
-                <span>@(item.DisplayName)</span>
+                <span>@((MarkupString)li)</span>
             </button>
             <script>
                 (function(){
                     var xhrTriggered = false;
                     var item = document.getElementById('@(itemId)');
-                    // btn->li->ul->div->div.id
+                    // btn -> li -> ul -> div -> div.id
                     var componentId = item.parentElement.parentElement.parentElement.parentElement.id;
                     item.onclick = function() {
+                        var selected = document.getElementById(`${componentId}-autocomplete-selected-id`);
                         var input = document.getElementById(`${componentId}-autocomplete-input`);
+                        var validateEvt = new Event('input', { bubbles: true });
+                        selected.value = '@(item.Id)';
                         input.value = '@(item.DisplayName)';
                         input.focus();
+                        var skipSelectedValidation = document.getElementById(`${componentId}-autocomplete-skip-selected-validation`).value;
+                        if (skipSelectedValidation === 'false') {
+                            selected.dispatchEvent(validateEvt);
+                        }
                     }
                     item.addEventListener("htmx:xhr:loadstart", (evt) => {
                         if (!xhrTriggered) {
@@ -53,13 +68,17 @@
 <script>
     (function(){
         var itemList = document.getElementById('@(itemListId)'); 
-        // ul->div->div.id
+        // ul -> div -> div.id
         var componentId = itemList.parentElement.parentElement.id;
         var listClassList = document.getElementById(`${componentId}-autocomplete-list-style`).value; 
+        var listMaxPixelHeight = document.getElementById(`${componentId}-autocomplete-list-max-height`).value; 
         var container = document.getElementById(componentId);
         itemList.style.width = `${container.clientWidth}px`;
-        itemList.style.maxHeight = '@(Model.ListMaxPixelHeight <= 0 ? 250 : Model.ListMaxPixelHeight)px';
+        itemList.style.maxHeight = listMaxPixelHeight && parseInt(listMaxPixelHeight) > 0 
+            ? `${listMaxPixelHeight}px` 
+            : '250px';
         itemList.classList.value = listClassList;
+        itemList.style.display = "block";
         var input = document.getElementById(`${componentId}-autocomplete-input`);
         input.setAttribute("aria-expanded", "true");
         var list = document.getElementById(`${componentId}-autocomplete-list`);
@@ -125,5 +144,11 @@
 </script>
 
 @code {
-    [Parameter] public RxAutoCompleteModel Model { get; set; } = null!;
+    [Parameter] public RxAutoCompleteModel Model { get; set; } = new();
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Model.OnSelectedEndpoint)) {
+            Model.OnSelectedEndpoint = string.Empty;
+        }
+    }
 }

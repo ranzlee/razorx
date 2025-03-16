@@ -2,10 +2,14 @@
     Id="@(Id)"
     Property="@(Property)" 
     Value="@(Value)" 
+    SelectedId="@(SelectedId)"
     Label="@(Label)" 
     GetListFromRoute="@(GetListFromRoute)"
     DelayMilliseconds="@(DelayMilliseconds)"
     MinimumLengthToTrigger="@(MinimumLengthToTrigger)"
+    ListMaxPixelHeight="@(ListMaxPixelHeight)"
+    AllowValidateOnChange="@(AllowValidateOnChange)"
+    SkipOnSelectedValidateOnChange="@(SkipOnSelectedValidateOnChange)"
     ContainerClass="form-control w-full"
     InvalidClass="input-error"
     ControlClass="input input-bordered w-full"
@@ -28,7 +32,11 @@
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string GetListFromRoute { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
-    [Parameter] public object? Value { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public string? SelectedId { get; set; }
     [Parameter] public int DelayMilliseconds { get; set; } = 500;
     [Parameter] public int MinimumLengthToTrigger { get; set; } = 3;
+    [Parameter] public int ListMaxPixelHeight { get; set; } = 250;  
+    [Parameter] public bool AllowValidateOnChange { get; set; }
+    [Parameter] public bool SkipOnSelectedValidateOnChange { get; set; }
 }

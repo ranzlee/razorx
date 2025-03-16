@@ -145,12 +145,36 @@
                         Id="@(nameof(Model.Widget))"
                         Property="@(nameof(Model.Widget))" 
                         Value="@(Model.Widget)" 
+                        SelectedId="@(Model.WidgetId)"
                         DelayMilliseconds="@(500)"
                         MinimumLengthToTrigger="@(4)"
-                        Label="Select Widget (e.g., CNT, INV, RFQ, PO)" 
+                        ListMaxPixelHeight="@(250)"
                         GetListFromRoute="/examples/form/widgets"
-                        placeholder="CNT-, INV-, RFQ-, or PO- (minimum 4 characters required)">
+                        Label="Select Widget (e.g., CNT, INV, RFQ, PO)" 
+                        AllowValidateOnChange="@(true)"
+                        placeholder="CNT-0, INV-0, RFQ-0, or PO-11 (minimum 4 characters required)">
                     </AutoComplete>
+                    @* Example for replacing the AutoComplete with a readonly component on  selection *@
+                    @* 
+                    @if (!string.IsNullOrWhiteSpace(Model.WidgetId)) {
+                        <SelectedWidget Model="@(new WidgetItem { Id = Model.WidgetId, DisplayName = Model.Widget ?? "" })" />
+                    } else {
+                        <AutoComplete 
+                            Id="@(nameof(Model.Widget))"
+                            Property="@(nameof(Model.Widget))" 
+                            Value="@(Model.Widget)" 
+                            SelectedId="@(Model.WidgetId)"
+                            DelayMilliseconds="@(500)"
+                            MinimumLengthToTrigger="@(4)"
+                            ListMaxPixelHeight="@(250)"
+                            GetListFromRoute="/examples/form/widgets"
+                            Label="Select Widget (e.g., CNT, INV, RFQ, PO)" 
+                            AllowValidateOnChange="@(true)"
+                            SkipOnSelectedValidateOnChange="@(true)"
+                            placeholder="CNT-0, INV-0, RFQ-0, or PO-11 (minimum 4 characters required)">
+                        </AutoComplete>
+                    } 
+                    *@
                 </div>
             </div>
             <div class="flex max-w-[650px]">

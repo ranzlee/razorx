@@ -5,7 +5,7 @@ public record RxAutoCompleteModel {
     public string OnSelectedEndpoint { get; set; } = null!;
     public string OnSelectedResponseTarget { get; set; } = null!;
     public string OnSelectedResponseSwap { get; set; } = null!;
-    public int ListMaxPixelHeight { get; set; } = 250;
+    public string SearchPattern { get; set; } = null!;
     public IEnumerable<IRxAutoCompleteItem> Items { get; set; } = [];
 }
 

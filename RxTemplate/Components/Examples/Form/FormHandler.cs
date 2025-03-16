@@ -39,6 +39,7 @@ public class FormHandler : IRequestHandler {
             OnSelectedEndpoint = "/examples/form/widget/",
             OnSelectedResponseTarget = $"#{nameof(FormModel.Widget)}",
             OnSelectedResponseSwap = "outerHTML",
+            SearchPattern = widget,
             Items = widgets
         };
         return response.RenderComponent<RxAutoCompleteList, RxAutoCompleteModel>(m, logger);
@@ -49,9 +50,16 @@ public class FormHandler : IRequestHandler {
         string id,
         ILogger<FormHandler> logger
     ) {
-        // On selection, you could return a fragment that is not editable to display the selected value
-        // along with a hidden input for the ID value. 
         return TypedResults.NoContent();
+        /*
+            On selection, you could return a fragment that is not editable to display the selected value
+            along with a hidden input for the ID value.
+        */
+        // var widget = MockWidgetService.Get(id);
+        // if (widget == null) {
+        //     return TypedResults.NotFound();
+        // }
+        // return response.RenderComponent<SelectedWidget, WidgetItem>(widget);
     }
 
     public static IResult ValidateForm(
