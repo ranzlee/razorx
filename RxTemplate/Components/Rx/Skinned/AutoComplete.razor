@@ -2,7 +2,8 @@
     Id="@(Id)"
     Property="@(Property)" 
     Value="@(Value)" 
-    SelectedId="@(SelectedId)"
+    SelectedIdProperty="@(SelectedIdProperty)"
+    SelectedIdValue="@(SelectedIdValue)"
     Label="@(Label)" 
     GetListFromRoute="@(GetListFromRoute)"
     DelayMilliseconds="@(DelayMilliseconds)"
@@ -30,11 +31,12 @@
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string? SelectedIdProperty { get; set; } = null!;
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string GetListFromRoute { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public string? Value { get; set; }
-    [Parameter] public string? SelectedId { get; set; }
+    [Parameter] public string? SelectedIdValue { get; set; }
     [Parameter] public int DelayMilliseconds { get; set; } = 500;
     [Parameter] public int MinimumLengthToTrigger { get; set; } = 3;
     [Parameter] public int ListMaxPixelHeight { get; set; } = 250;  

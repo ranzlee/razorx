@@ -7,7 +7,10 @@
     var itemListId = $"Rx-{Guid.NewGuid():N}"; 
     var strong = $"<strong>";
 }
-<ul id="@(itemListId)" tabindex="-1" role="listbox" style="display: none;">
+<ul tabindex="-1" 
+    id="@(itemListId)" 
+    role="listbox" 
+    style="display: none;">
     @foreach (var item in Model.Items)
     {
         var itemId = $"Rx-{Guid.NewGuid():N}";
@@ -21,16 +24,16 @@
             id="@(itemId)-item" 
             role="option" 
             aria-selected="false">
-            <button id="@(itemId)"
+            <button tabindex="-1"
+                    id="@(itemId)"
                     type="button"
                     hx-get="@(Model.OnSelectedHttpMethod == HttpMethod.Get ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
                     hx-post="@(Model.OnSelectedHttpMethod == HttpMethod.Post ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
                     hx-put="@(Model.OnSelectedHttpMethod == HttpMethod.Put ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
                     hx-patch="@(Model.OnSelectedHttpMethod == HttpMethod.Patch ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
                     hx-delete="@(Model.OnSelectedHttpMethod == HttpMethod.Delete ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)" 
-                    hx-target="@(string.IsNullOrWhiteSpace(Model.OnSelectedResponseTarget) ? false : Model.OnSelectedResponseTarget)"
-                    hx-swap="@(string.IsNullOrWhiteSpace(Model.OnSelectedResponseSwap) ? false : Model.OnSelectedResponseSwap)"
-                    tabindex="-1"
+                    hx-target="@(!string.IsNullOrWhiteSpace(Model.OnSelectedResponseTarget) ? Model.OnSelectedResponseTarget : false)"
+                    hx-swap="@(!string.IsNullOrWhiteSpace(Model.OnSelectedResponseSwap) ? Model.OnSelectedResponseSwap : false)"
                     title="@($"Select {item.DisplayName}")"
                     aria-label="@($"Select {item.DisplayName}")">
                 <span>@((MarkupString)li)</span>
@@ -44,7 +47,9 @@
                     var matchClass = document.getElementById(`${componentId}-autocomplete-pattern-match-class`).value ?? '';
                     if (matchClass !== '') {
                         var strong = item.querySelector("span strong");
-                        strong.classList.value = matchClass;
+                        if (strong) {
+                            strong.classList.value = matchClass;
+                        }
                     }
                     var list = document.getElementById(`${componentId}-autocomplete-list`);
                     item.onclick = function() {

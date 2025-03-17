@@ -2,6 +2,7 @@
     <label id="@(Id)-autocomplete-input-container" class="@(ContainerClass)">
         <div class="@(LabelContainerClass)">
             <span class="@(LabelClass)">@(Label)</span>
+            <Spinner Id="@($"{Id}-autocomplete-indicator")" />
         </div>
         <input
             id="@(Id)-autocomplete-input"
@@ -12,6 +13,7 @@
             hx-trigger="input changed delay:@(DelayMilliseconds)ms"
             hx-target="#@(Id)-autocomplete-list"
             hx-swap="innerHTML"
+            hx-indicator="#@(Id)-autocomplete-indicator"
             class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
             autocomplete="off"
             role="combobox"
@@ -25,8 +27,9 @@
             data-id="@(Id)-autocomplete-input-container" 
             data-validate-on-change="@(AllowValidateOnChange)"
             id="@(Id)-autocomplete-selected-id" 
-            type="hidden" name="@(Property)Id" 
-            value="@(SelectedId)">
+            type="hidden" 
+            name="@(SelectedIdProperty)" 
+            value="@(SelectedIdValue)">
         <script>
             (function(){
                 var input = document.getElementById('@(Id)-autocomplete-input');
@@ -38,6 +41,7 @@
                         selected.dispatchEvent(validateEvt);
                     }
                     if ((evt.target.value?.length ?? 0) < @(MinimumLengthToTrigger)) {
+                        document.getElementById('@(Id)-autocomplete-list').replaceChildren([]);
                         evt.preventDefault();
                     }
                 });
@@ -61,9 +65,10 @@
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string SelectedIdProperty { get; set; } = null!;
     [Parameter, EditorRequired] public string GetListFromRoute { get; set; } = null!;
     [Parameter] public string? Value { get; set; }
-    [Parameter] public string? SelectedId { get; set; }
+    [Parameter] public string? SelectedIdValue { get; set; }
     [Parameter] public int DelayMilliseconds { get; set; } = 500;
     [Parameter] public int MinimumLengthToTrigger { get; set; } = 3;
     [Parameter] public int ListMaxPixelHeight { get; set; } = 250;  
@@ -86,7 +91,7 @@
         }
         if (string.IsNullOrWhiteSpace(Id)) {
             if (AllowValidateOnChange) {
-                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned.");    
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} requires the {nameof(Id)} property to be set to a unique value.");   
             }
             Id = Utilities.GenerateElementId();
         }
