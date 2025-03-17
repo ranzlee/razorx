@@ -46,6 +46,7 @@
                         var strong = item.querySelector("span strong");
                         strong.classList.value = matchClass;
                     }
+                    var list = document.getElementById(`${componentId}-autocomplete-list`);
                     item.onclick = function() {
                         var selected = document.getElementById(`${componentId}-autocomplete-selected-id`);
                         var input = document.getElementById(`${componentId}-autocomplete-input`);
@@ -53,6 +54,7 @@
                         selected.value = '@(item.Id)';
                         input.value = '@(item.DisplayName)';
                         input.focus();
+                        list.replaceChildren([]);
                         var skipSelectedValidation = document.getElementById(`${componentId}-autocomplete-skip-selected-validation`).value;
                         if (skipSelectedValidation === 'false') {
                             selected.dispatchEvent(validateEvt);
@@ -61,7 +63,7 @@
                     item.addEventListener("htmx:xhr:loadstart", (evt) => {
                         if (!xhrTriggered) {
                             xhrTriggered = true;
-                            document.getElementById(`${componentId}-autocomplete-list`).replaceChildren([]);
+                            list.replaceChildren([]);
                         }
                     });
                 })()
