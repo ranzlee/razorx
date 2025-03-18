@@ -36,7 +36,7 @@ public class FormHandler : IRequestHandler {
         var widgets = MockWidgetService.Find(widget);
         var m = new RxAutoCompleteModel {
             OnSelectedHttpMethod = HttpMethod.Post,
-            OnSelectedEndpoint = "/examples/form/widget/",
+            OnSelectedRoute = "/examples/form/widget/",
             OnSelectedResponseTarget = $"#{nameof(FormModel.Widget)}",
             OnSelectedResponseSwap = "outerHTML",
             SearchPattern = widget,

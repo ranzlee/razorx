@@ -27,11 +27,11 @@
             <button tabindex="-1"
                     id="@(itemId)"
                     type="button"
-                    hx-get="@(Model.OnSelectedHttpMethod == HttpMethod.Get ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
-                    hx-post="@(Model.OnSelectedHttpMethod == HttpMethod.Post ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
-                    hx-put="@(Model.OnSelectedHttpMethod == HttpMethod.Put ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
-                    hx-patch="@(Model.OnSelectedHttpMethod == HttpMethod.Patch ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)"
-                    hx-delete="@(Model.OnSelectedHttpMethod == HttpMethod.Delete ? $"{Model.OnSelectedEndpoint.TrimEnd('/')}/{item.Id}" : false)" 
+                    hx-get="@(Model.OnSelectedHttpMethod == HttpMethod.Get ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)"
+                    hx-post="@(Model.OnSelectedHttpMethod == HttpMethod.Post ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)"
+                    hx-put="@(Model.OnSelectedHttpMethod == HttpMethod.Put ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)"
+                    hx-patch="@(Model.OnSelectedHttpMethod == HttpMethod.Patch ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)"
+                    hx-delete="@(Model.OnSelectedHttpMethod == HttpMethod.Delete ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)" 
                     hx-target="@(!string.IsNullOrWhiteSpace(Model.OnSelectedResponseTarget) ? Model.OnSelectedResponseTarget : false)"
                     hx-swap="@(!string.IsNullOrWhiteSpace(Model.OnSelectedResponseSwap) ? Model.OnSelectedResponseSwap : false)"
                     title="@($"Select {item.DisplayName}")"
@@ -158,8 +158,8 @@
     [Parameter] public RxAutoCompleteModel Model { get; set; } = new();
 
     protected override void OnParametersSet() {
-        if (string.IsNullOrWhiteSpace(Model.OnSelectedEndpoint)) {
-            Model.OnSelectedEndpoint = string.Empty;
+        if (string.IsNullOrWhiteSpace(Model.OnSelectedRoute)) {
+            Model.OnSelectedRoute = string.Empty;
         }
     }
 }
