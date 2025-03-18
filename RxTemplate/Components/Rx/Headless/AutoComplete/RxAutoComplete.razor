@@ -2,7 +2,7 @@
     <label id="@(Id)-autocomplete-input-container" class="@(ContainerClass)">
         <div class="@(LabelContainerClass)">
             <span class="@(LabelClass)">@(Label)</span>
-            <Spinner Id="@($"{Id}-autocomplete-indicator")" />
+            <Spinner Id="@($"{Id}-autocomplete-indicator")" Transition="@(TransitionType.Display)" />
         </div>
         <input
             id="@(Id)-autocomplete-input"
