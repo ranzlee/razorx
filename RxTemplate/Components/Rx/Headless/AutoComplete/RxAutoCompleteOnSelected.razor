@@ -1,0 +1,28 @@
+<div 
+    id="@($"{AutoCompleteId}-autocomplete-on-selected-listener")" 
+    hx-trigger="@($"{AutoCompleteId}-autocomplete-on-selected")"
+    @attributes=@(AdditionalAttributes)>
+    @(ChildContent)
+</div>
+<script>
+    (function(){
+        var listener = document.getElementById('@($"{AutoCompleteId}-autocomplete-on-selected-listener")');
+        listener.addEventListener('htmx:config-request', function(evt) {
+            if (evt.target !== listener) {
+                return;
+            }
+            var list = document.getElementById('@($"{AutoCompleteId}-autocomplete-list")');
+            list.replaceChildren([]);
+            var path = evt.detail.path;
+            path = path.endsWith('/') ? path.slice(0, -1) : path;
+            var selected = document.getElementById('@($"{AutoCompleteId}-autocomplete-selected-id")');
+            evt.detail.path = `${path}/${selected.value}`;
+        });
+    })()
+</script>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter, EditorRequired] public string AutoCompleteId { get; set; } = null!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

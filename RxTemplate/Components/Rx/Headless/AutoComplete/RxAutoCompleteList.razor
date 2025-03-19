@@ -27,20 +27,13 @@
             <button tabindex="-1"
                     id="@(itemId)"
                     type="button"
-                    hx-get="@(Model.OnSelectedHttpMethod == HttpMethod.Get ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)"
-                    hx-post="@(Model.OnSelectedHttpMethod == HttpMethod.Post ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)"
-                    hx-put="@(Model.OnSelectedHttpMethod == HttpMethod.Put ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)"
-                    hx-patch="@(Model.OnSelectedHttpMethod == HttpMethod.Patch ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)"
-                    hx-delete="@(Model.OnSelectedHttpMethod == HttpMethod.Delete ? $"{Model.OnSelectedRoute.TrimEnd('/')}/{item.Id}" : false)" 
-                    hx-target="@(!string.IsNullOrWhiteSpace(Model.OnSelectedResponseTarget) ? Model.OnSelectedResponseTarget : false)"
-                    hx-swap="@(!string.IsNullOrWhiteSpace(Model.OnSelectedResponseSwap) ? Model.OnSelectedResponseSwap : false)"
                     title="@($"Select {item.DisplayName}")"
                     aria-label="@($"Select {item.DisplayName}")">
                 <span>@((MarkupString)li)</span>
             </button>
             <script>
                 (function(){
-                    var xhrTriggered = false;
+                    //var xhrTriggered = false;
                     var item = document.getElementById('@(itemId)');
                     // btn -> li -> ul -> div -> div.id
                     var componentId = item.parentElement.parentElement.parentElement.parentElement.id;
@@ -54,23 +47,19 @@
                     var list = document.getElementById(`${componentId}-autocomplete-list`);
                     item.onclick = function() {
                         var selected = document.getElementById(`${componentId}-autocomplete-selected-id`);
-                        var input = document.getElementById(`${componentId}-autocomplete-input`);
-                        var validateEvt = new Event('input', { bubbles: true });
                         selected.value = '@(item.Id)';
+                        var input = document.getElementById(`${componentId}-autocomplete-input`);
                         input.value = '@(item.DisplayName)';
                         input.focus();
-                        list.replaceChildren([]);
+                        var onSelectedEvt = new Event(`${componentId}-autocomplete-on-selected`, { bubbles: true });
+                        selected.dispatchEvent(onSelectedEvt);
                         var skipSelectedValidation = document.getElementById(`${componentId}-autocomplete-skip-selected-validation`).value;
                         if (skipSelectedValidation === 'false') {
+                            var validateEvt = new Event('input', { bubbles: true });
                             selected.dispatchEvent(validateEvt);
                         }
+                        list.replaceChildren([]);
                     }
-                    item.addEventListener("htmx:xhr:loadstart", (evt) => {
-                        if (!xhrTriggered) {
-                            xhrTriggered = true;
-                            list.replaceChildren([]);
-                        }
-                    });
                 })()
             </script>
         </li>
@@ -156,10 +145,4 @@
 
 @code {
     [Parameter] public RxAutoCompleteModel Model { get; set; } = new();
-
-    protected override void OnParametersSet() {
-        if (string.IsNullOrWhiteSpace(Model.OnSelectedRoute)) {
-            Model.OnSelectedRoute = string.Empty;
-        }
-    }
 }
