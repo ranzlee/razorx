@@ -7,5 +7,5 @@ public record RxAutoCompleteModel {
 
 public interface IRxAutoCompleteItem {
     public string Id { get; }
-    public string DisplayName { get; }
+    public string DisplayValue { get; }
 }

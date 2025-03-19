@@ -14,8 +14,8 @@
     @foreach (var item in Model.Items)
     {
         var itemId = $"Rx-{Guid.NewGuid():N}";
-        var li = item.DisplayName;
-        var i = item.DisplayName.ToLower().IndexOf(Model.SearchPattern.ToLower());
+        var li = item.DisplayValue;
+        var i = item.DisplayValue.ToLower().IndexOf(Model.SearchPattern.ToLower());
         if (i >= 0) {
             li = li.Insert(i, strong);
             li = li.Insert(Math.Min(i + strong.Length + Model.SearchPattern.Length, li.Length), "</strong>");
@@ -27,8 +27,8 @@
             <button tabindex="-1"
                     id="@(itemId)"
                     type="button"
-                    title="@($"Select {item.DisplayName}")"
-                    aria-label="@($"Select {item.DisplayName}")">
+                    title="@($"Select {item.DisplayValue}")"
+                    aria-label="@($"Select {item.DisplayValue}")">
                 <span>@((MarkupString)li)</span>
             </button>
             <script>
@@ -49,7 +49,7 @@
                         var selected = document.getElementById(`${componentId}-autocomplete-selected-id`);
                         selected.value = '@(item.Id)';
                         var input = document.getElementById(`${componentId}-autocomplete-input`);
-                        input.value = '@(item.DisplayName)';
+                        input.value = '@(item.DisplayValue)';
                         input.focus();
                         var onSelectedEvt = new Event(`${componentId}-autocomplete-on-selected`, { bubbles: true });
                         selected.dispatchEvent(onSelectedEvt);

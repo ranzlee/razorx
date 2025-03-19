@@ -9,7 +9,7 @@ public static class MockWidgetService {
         for (var i = 0; i < 1024; i++) {
             var d = new WidgetItem {
                 Id = (i + 1).ToString(),
-                DisplayName = Random.Shared.Next(1, 100) switch {
+                DisplayValue = Random.Shared.Next(1, 100) switch {
                     < 26 => $"CNT-{Random.Shared.Next(1, 999999999).ToString().PadLeft(9, '0')}",
                     < 51 => $"INV-{Random.Shared.Next(1, 999999999).ToString().PadLeft(9, '0')}",
                     < 76 => $"RFQ-{Random.Shared.Next(1, 999999999).ToString().PadLeft(9, '0')}",
@@ -23,6 +23,6 @@ public static class MockWidgetService {
     }
 
     public static IEnumerable<WidgetItem> Find(string name) {
-        return [.. Data.Where(x => x.DisplayName.Contains(name, StringComparison.CurrentCultureIgnoreCase)).OrderBy(x => x.DisplayName)];
+        return [.. Data.Where(x => x.DisplayValue.Contains(name, StringComparison.CurrentCultureIgnoreCase)).OrderBy(x => x.DisplayValue)];
     }
 }
