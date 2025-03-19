@@ -51,8 +51,9 @@
             memo.onkeydown = calcAfterTick;
             calc();
             skipResize = false;
-            document.getElementById("@(Id)").addEventListener("validationChange", () => {
+            document.getElementById("@(Id)").addEventListener("validationChange", (evt) => {
                 calc();
+                evt.stopPropagation();
             });
         })();
     </script>

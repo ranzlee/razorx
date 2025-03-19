@@ -28,8 +28,9 @@
                     input.value = `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}T${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}`;
                 }
                 setTimeZone();
-                document.getElementById("@(Id)").addEventListener("validationChange", () => {
+                document.getElementById("@(Id)").addEventListener("validationChange", (evt) => {
                     setTimeZone();
+                    evt.stopPropagation();
                 });
             })()
         </script> 

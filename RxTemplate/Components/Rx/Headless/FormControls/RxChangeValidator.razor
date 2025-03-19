@@ -3,6 +3,7 @@
     <script>
         (function() {
             var validate = function(evt) {
+                evt.stopPropagation();
                 if (!evt.srcElement.hasAttribute("data-validate-on-change")) {
                     return;
                 }
