@@ -33,10 +33,11 @@ public class BlobHandler : IRequestHandler {
     public static async Task<IResult> Get(
         HttpResponse response,
         IBlobProvider blobProvider,
-        ILogger<BlobHandler> logger) {
+        ILogger<BlobHandler> logger,
+        CancellationToken cancellationToken) {
         var m = new BlobPageModel {
-            SingleBlob = (await blobProvider.ListAsync("single")).FirstOrDefault(),
-            ListBlobs = [.. await blobProvider.ListAsync("multi")]
+            SingleBlob = (await blobProvider.ListAsync("single", cancellationToken)).FirstOrDefault(),
+            ListBlobs = [.. await blobProvider.ListAsync("multi", cancellationToken)]
         };
         return response.RenderComponent<BlobPage, BlobPageModel>(m, logger);
     }
@@ -49,9 +50,10 @@ public class BlobHandler : IRequestHandler {
         IBlobProvider blobProvider,
         IFormFile file,
         IHxTriggers hxTriggers,
-        ILogger<BlobHandler> logger) {
+        ILogger<BlobHandler> logger,
+        CancellationToken cancellationToken) {
         await using var stream = file.OpenReadStream();
-        var m = await blobProvider.UploadAsync(stream, "single", file.FileName);
+        var m = await blobProvider.UploadAsync(stream, "single", file.FileName, cancellationToken);
         hxTriggers
             .With(response)
             .Add(new HxFocusTrigger("#example-blob-link"))
@@ -68,11 +70,12 @@ public class BlobHandler : IRequestHandler {
         IBlobProvider blobProvider,
         IFormFileCollection files,
         IHxTriggers hxTriggers,
-        ILogger<BlobHandler> logger) {
+        ILogger<BlobHandler> logger,
+        CancellationToken cancellationToken) {
         var m = new List<BlobModel>();
         foreach (var file in files) {
             await using var stream = file.OpenReadStream();
-            m.Add(await blobProvider.UploadAsync(stream, "multi", file.FileName));
+            m.Add(await blobProvider.UploadAsync(stream, "multi", file.FileName, cancellationToken));
         }
         hxTriggers
             .With(response)
@@ -88,8 +91,9 @@ public class BlobHandler : IRequestHandler {
         string id,
         IBlobProvider blobProvider,
         IHxTriggers hxTriggers,
-        ILogger<BlobHandler> logger) {
-        await blobProvider.DeleteAsync($"{path}/{id}");
+        ILogger<BlobHandler> logger,
+        CancellationToken cancellationToken) {
+        await blobProvider.DeleteAsync($"{path}/{id}", cancellationToken);
         var triggerBuilder = hxTriggers.With(response);
         triggerBuilder.Add(new HxCloseModalTrigger("#delete-modal"));
         triggerBuilder.Add(new HxToastTrigger("#blob-toast", "BLOB removed"));
@@ -100,7 +104,7 @@ public class BlobHandler : IRequestHandler {
             response.HxRetarget("#example-blob");
             return response.RenderComponent<SingleBlob>(logger);
         }
-        var l = await blobProvider.ListAsync("multi");
+        var l = await blobProvider.ListAsync("multi", cancellationToken);
         triggerBuilder.Add(new HxFocusTrigger("#example-blobs-input"));
         triggerBuilder.Build();
         response.HxRetarget("#blob-list");
@@ -111,8 +115,9 @@ public class BlobHandler : IRequestHandler {
         HttpResponse response,
         string path,
         string id,
-        IBlobProvider blobProvider) {
-        var blobResult = await blobProvider.GetAsync($"{path}/{id}");
+        IBlobProvider blobProvider,
+        CancellationToken cancellationToken) {
+        var blobResult = await blobProvider.GetAsync($"{path}/{id}", cancellationToken);
         if (blobResult is null) {
             return TypedResults.NotFound();
         }

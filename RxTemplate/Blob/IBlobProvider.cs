@@ -11,10 +11,10 @@ namespace RxTemplate.Blob;
 /// you choose.
 /// </summary>
 public interface IBlobProvider {
-    Task<BlobModel> UploadAsync(Stream stream, string prefix, string fileName);
-    Task<IEnumerable<BlobModel>> ListAsync(string prefix);
-    Task<BlobDownloadStreamingResult?> GetAsync(string id);
-    Task<bool> DeleteAsync(string id);
+    Task<BlobModel> UploadAsync(Stream stream, string prefix, string fileName, CancellationToken cancellationToken = default);
+    Task<IEnumerable<BlobModel>> ListAsync(string prefix, CancellationToken cancellationToken = default);
+    Task<BlobDownloadStreamingResult?> GetAsync(string id, CancellationToken cancellationToken = default);
+    Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default);
 }
 
 public static class ProviderConfig {
@@ -31,7 +31,7 @@ file sealed class BlobProvider : IBlobProvider {
         _container.CreateIfNotExists();
     }
 
-    public async Task<BlobModel> UploadAsync(Stream stream, string prefix, string fileName) {
+    public async Task<BlobModel> UploadAsync(Stream stream, string prefix, string fileName, CancellationToken cancellationToken = default) {
         var name = Guid.NewGuid().ToString();
         var blobName = string.IsNullOrWhiteSpace(prefix) ? name : $"{prefix.Replace("\\", "/").TrimEnd('/').ToLower().Trim()}/{name}";
         var length = stream.Length;
@@ -47,7 +47,7 @@ file sealed class BlobProvider : IBlobProvider {
         };
         stream.Position = 0;
         var blobClient = _container.GetBlobClient(blobName);
-        await blobClient.UploadAsync(stream, options);
+        await blobClient.UploadAsync(stream, options, cancellationToken);
         return new BlobModel {
             FileName = fileName,
             FileSize = length,
@@ -56,12 +56,14 @@ file sealed class BlobProvider : IBlobProvider {
         };
     }
 
-    public async Task<IEnumerable<BlobModel>> ListAsync(string? prefix) {
+    public async Task<IEnumerable<BlobModel>> ListAsync(string? prefix, CancellationToken cancellationToken = default) {
         prefix = prefix is null
             ? ""
             : prefix.Replace("\\", "/").ToLower().Trim();
         var list = new List<BlobItem>();
-        var resultSegment = _container.GetBlobsByHierarchyAsync(BlobTraits.Metadata, BlobStates.None, null, string.IsNullOrWhiteSpace(prefix) ? null : prefix).AsPages();
+        var resultSegment = _container.GetBlobsByHierarchyAsync(BlobTraits.Metadata, BlobStates.None, null, string.IsNullOrWhiteSpace(prefix)
+            ? null
+            : prefix, cancellationToken).AsPages();
         await foreach (var blobHierarchyItemPage in resultSegment) {
             foreach (var blobHierarchyItem in blobHierarchyItemPage.Values) {
                 if (blobHierarchyItem.IsBlob) {
@@ -77,16 +79,16 @@ file sealed class BlobProvider : IBlobProvider {
         }).OrderBy(x => x.Uploaded);
     }
 
-    public async Task<BlobDownloadStreamingResult?> GetAsync(string id) {
+    public async Task<BlobDownloadStreamingResult?> GetAsync(string id, CancellationToken cancellationToken = default) {
         var blobClient = _container.GetBlobClient(id);
-        if (!await blobClient.ExistsAsync()) {
+        if (!await blobClient.ExistsAsync(cancellationToken)) {
             return null;
         }
-        return await blobClient.DownloadStreamingAsync();
+        return await blobClient.DownloadStreamingAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task<bool> DeleteAsync(string id) {
+    public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default) {
         var blobClient = _container.GetBlobClient(id);
-        return await blobClient.DeleteIfExistsAsync();
+        return await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 }

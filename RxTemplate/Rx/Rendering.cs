@@ -14,7 +14,7 @@ public static class RazorComponentRenderer {
     /// <param name="model">Model instance</param>
     /// <param name="logger">ILogger</param>
     /// <returns>RazorComponentResult</returns>
-    public static RazorComponentResult RenderComponent<TComponent, TModel>(this HttpResponse response, TModel model, ILogger<IRequestHandler>? logger = null)
+    public static RazorComponentResult RenderComponent<TComponent, TModel>(this HttpResponse response, TModel model, ILogger<IRequestHandler>? logger = default)
     where TComponent : IComponent, IComponentModel<TModel> {
         var root = response.HttpContext.GetRootComponent();
         if (root is not null) {
@@ -41,7 +41,7 @@ public static class RazorComponentRenderer {
     /// <param name="response">HttpResponse</param>
     /// <param name="logger">ILogger</param>
     /// <returns>RazorComponentResult</returns>
-    public static RazorComponentResult RenderComponent<TComponent>(this HttpResponse response, ILogger<IRequestHandler>? logger = null)
+    public static RazorComponentResult RenderComponent<TComponent>(this HttpResponse response, ILogger<IRequestHandler>? logger = default)
     where TComponent : IComponent {
         var root = response.HttpContext.GetRootComponent();
         if (root is not null) {

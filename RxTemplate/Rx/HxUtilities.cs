@@ -26,17 +26,17 @@ public static class HxUtilities {
     /// <param name="response">HttpResponse</param>
     /// <param name="targetSelector">The ID of the HTML element to re-target for swapping.</param>
     /// <param name="logger">ILogger</param>
-    public static void HxRetarget(this HttpResponse response, string targetSelector, ILogger? logger = null) {
+    public static void HxRetarget(this HttpResponse response, string targetSelector, ILogger? logger = default) {
         logger?.LogInformation("HX-Retarget {target}.", targetSelector);
         response.Headers.Append("HX-Retarget", targetSelector);
     }
 
-    public static void HxReswap(this HttpResponse response, string strategy, ILogger? logger = null) {
+    public static void HxReswap(this HttpResponse response, string strategy, ILogger? logger = default) {
         logger?.LogInformation("HX-Reswap {strategy}.", strategy);
         response.Headers.Append("HX-Reswap", strategy);
     }
 
-    public static void HxReplaceUrl(this HttpResponse response, string url, ILogger? logger = null) {
+    public static void HxReplaceUrl(this HttpResponse response, string url, ILogger? logger = default) {
         logger?.LogInformation("HX-Replace-Url {url}.", url);
         response.Headers.Append("HX-Replace-Url", url);
     }

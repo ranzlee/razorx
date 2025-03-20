@@ -82,7 +82,7 @@ public record ItemModel {
     public bool IsVerified { get; set; }
     public TimeOfDay TemperatureTaken { get; set; }
 
-    public DateTime? GetDateAsUtc(ILogger? logger = null) {
+    public DateTime? GetDateAsUtc(ILogger? logger = default) {
         return Utilities.GetUtcDateFromTimeZone(Date, DateTimeZone, logger);
     }
 
