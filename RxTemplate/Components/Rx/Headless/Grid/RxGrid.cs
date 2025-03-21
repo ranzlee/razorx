@@ -33,8 +33,8 @@ public record GridState {
     public List<GridFilter> Filters { get; set; } = [];
 
     public void Update(
-        string? page,
-        string? sortProperty,
+        string? page = null,
+        string? sortProperty = null,
         string? filterId = null,
         string? filterProperty = null,
         string? filterOperation = null,
