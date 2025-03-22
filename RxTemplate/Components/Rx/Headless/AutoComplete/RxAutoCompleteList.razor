@@ -11,7 +11,7 @@
     id="@(itemListId)" 
     role="listbox" 
     style="display: none;">
-    @foreach (var item in Model.Items)
+    @foreach (var item in sortedItems)
     {
         var itemId = $"Rx-{Guid.NewGuid():N}";
         var li = item.DisplayValue;
@@ -144,5 +144,19 @@
 </script>
 
 @code {
+    private IEnumerable<IRxAutoCompleteItem> sortedItems = [];
     [Parameter] public RxAutoCompleteModel Model { get; set; } = new();
+
+    protected override void OnParametersSet() {
+        if (!Model.Items.Any()) {
+            return;
+        }
+        if (Model.SortExactMatchesFirst) {
+            var exactMatches = Model.Items.Where(x => x.DisplayValue.ToLower().IndexOf(Model.SearchPattern.ToLower()) >= 0);
+            var fuzzyMatches = Model.Items.Where(x => x.DisplayValue.ToLower().IndexOf(Model.SearchPattern.ToLower()) < 0);
+            sortedItems = [..exactMatches.OrderBy(x => x.DisplayValue), ..fuzzyMatches.OrderBy(x => x.DisplayValue)];
+            return;
+        }
+        sortedItems = Model.Items.OrderBy(x => x.DisplayValue);
+    }
 }

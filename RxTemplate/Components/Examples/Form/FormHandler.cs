@@ -35,6 +35,7 @@ public class FormHandler : IRequestHandler {
         ILogger<FormHandler> logger) {
         var widgets = MockWidgetService.Find(widget);
         var m = new RxAutoCompleteModel {
+            SortExactMatchesFirst = true,
             SearchPattern = widget,
             Items = widgets
         };
