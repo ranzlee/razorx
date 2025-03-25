@@ -3,8 +3,6 @@
     <div class="@(GroupClass)">
         @foreach (var option in Options) {
             <label class="@(LabelContainerClass)">
-                <span class="@($"{LabelClass} {(isInvalid ? InvalidLabelClass : "")}")">@(option.Key)</span>
-                &nbsp;&nbsp;
                 <input
                     data-id="@(Id)"
                     data-validate-on-change="@(AllowValidateOnChange)"
@@ -14,8 +12,8 @@
                     value="@(option.Value)" 
                     checked="@(option.Value == Value)"
                     class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
-                    @attributes=@(AdditionalAttributes)
-                    />
+                    @attributes=@(AdditionalAttributes)>
+                <span class="@($"{(isInvalid ? InvalidLabelClass : "")}")">@(option.Key)</span>
             </label>
         }
     </div>
@@ -23,7 +21,6 @@
         @(ValidationContainer)
     }
 </fieldset>
-
 
 @code {
     [Inject] public ValidationContext ValidationContext { get; set; } = null!;
@@ -41,7 +38,6 @@
     [Parameter] public string ControlClass { get; set; } = null!;
     [Parameter] public string LegendClass { get; set; } = null!;
     [Parameter] public string LabelContainerClass { get; set; } = null!;
-    [Parameter] public string LabelClass { get; set; } = null!;
     [Parameter] public string InvalidLabelClass { get; set; } = null!;
     [Parameter] public string GroupClass { get; set; } = null!;
 

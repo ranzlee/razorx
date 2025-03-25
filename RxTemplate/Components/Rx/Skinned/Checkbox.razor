@@ -4,17 +4,17 @@
     IsChecked="@(IsChecked)" 
     Label="@(Label)"
     AllowValidateOnChange="@(AllowValidateOnChange)"
-    ContainerClass="form-control w-full"
+    ContainerClass="fieldset w-full"
     InvalidClass="checkbox-error"
     ControlClass="checkbox"
-    LabelContainerClass="label cursor-pointer"
-    LabelClass="label-text"
+    LabelContainerClass="fieldset-legend cursor-pointer"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(Property)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxCheckbox>
 

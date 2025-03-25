@@ -8,18 +8,18 @@
     Options="@(Options)"
     InvalidClass="radio-error"
     ControlClass="radio"
-    LegendClass="label label-text"
-    ContainerClass="w-full"
-    LabelContainerClass="label cursor-pointer"
-    LabelClass="label-text"
+    LegendClass="fieldset-legend"
+    ContainerClass="fieldset w-full"
+    LabelContainerClass="label fieldset-label cursor-pointer"
     InvalidLabelClass="text-error"
-    GroupClass="@($"flex justify-between {(Direction == DirectionType.Vertical ? "flex-col" : "max-sm:flex-col")}")"
+    GroupClass="@($"flex justify-between {(Direction == DirectionType.Vertical ? "flex-col gap-y-2" : "max-md:flex-col max-md:gap-y-2")}")"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(Property)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxRadioSet>
 

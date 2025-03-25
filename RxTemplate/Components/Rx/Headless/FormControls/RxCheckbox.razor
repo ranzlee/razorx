@@ -1,6 +1,6 @@
 <div id="@(Id)" class="@(ContainerClass)">
     <label class="@(LabelContainerClass)">
-        <span class="@(LabelClass)">@(Label)</span>
+        <span>@(Label)</span>
         <input
             data-id="@(Id)" 
             data-validate-on-change="@(AllowValidateOnChange)"
@@ -11,7 +11,7 @@
             class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
             aria-invalid="@(isInvalid ? "true" : false)"
             aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
-            @attributes=@(AdditionalAttributes)>
+            @attributes=@(AdditionalAttributes)>            
     </label>
     @if (isInvalid) {
         @(ValidationContainer)
@@ -31,7 +31,6 @@
     [Parameter] public string InvalidClass { get; set; } = null!;
     [Parameter] public string ControlClass { get; set; } = null!;
     [Parameter] public string LabelContainerClass { get; set; } = null!;
-    [Parameter] public string LabelClass { get; set; } = null!;
 
     private bool isInvalid { get; set; }
     

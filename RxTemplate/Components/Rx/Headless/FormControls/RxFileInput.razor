@@ -1,23 +1,18 @@
 <div id="@(Id)" hx-ext="ignore:json-enc" class="@(ContainerClass)">
-    <div>
-        <label class="@(LabelContainerClass)">
-            <div class="@(LabelClass)">@(Label)</div>
-            <input 
-                data-id="@(Id)"
-                id="@(Id)-input" 
-                type="file" 
-                name="@(Property)"
-                multiple="@(AllowMultiple)"
-                accept="@(Accept)"
-                aria-invalid="@(isInvalid ? "true" : false)"
-                aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
-                class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
-                />
-            @if (isInvalid) {
-                @(ValidationContainer)
-            }
-        </label>
-    </div>
+    <label class="@(LabelClass)" for="@(Id)-input">@(Label)</label>
+    <input 
+        data-id="@(Id)"
+        id="@(Id)-input" 
+        type="file" 
+        name="@(Property)"
+        multiple="@(AllowMultiple)"
+        accept="@(Accept)"
+        aria-invalid="@(isInvalid ? "true" : false)"
+        aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
+        class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")">
+    @if (isInvalid) {
+        @(ValidationContainer)
+    }
     <div>
         <progress id="@(Id)-progress" class="@(ProgressClass)" value="0" max="100"></progress>
     </div>
@@ -108,7 +103,6 @@
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string InvalidClass { get; set; } = null!;
     [Parameter] public string ControlClass { get; set; } = null!;
-    [Parameter] public string LabelContainerClass { get; set; } = null!;
     [Parameter] public string LabelClass { get; set; } = null!;
     [Parameter] public string ProgressClass { get; set; } = null!;
     [Parameter] public string ButtonContainerClass { get; set; } = null!;

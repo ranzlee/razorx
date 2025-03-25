@@ -204,24 +204,10 @@
                                 Total Records: @(Model.State.TotalRecords)
                             </div>
                             <div class="sm:w-1/3 flex justify-center">
-                                <RxGridPageSelector 
+                                <GridPager
                                     Model="@(Model)" 
-                                    PageSelectorId="example-grid-page-selector" 
-                                    ContainerClass="bg-base-300 p-5 rounded shadow w-80"
-                                    ControlClass="range range-xs range-primary w-full"
-                                    LabelContainerClass="form-control w-full"
-                                    LabelClass="label justify-center label-text font-semibold" >
-                                    <div class="mt-2 flex justify-end">
-                                        <button type="submit" class="btn btn-sm btn-primary">Go</button>
-                                    </div>
-                                </RxGridPageSelector>
-                                <RxGridPager
-                                    Model="@(Model)" 
-                                    TriggerOnMouseDown="@(true)"
-                                    PageSelectorId="example-grid-page-selector"
-                                    class="join-item btn btn-sm">
-                                    Page @(Model.State.Page) of @(Model.State.GetTotalPages())
-                                </RxGridPager>
+                                    TriggerOnMouseDown="@(true)">
+                                </GridPager>
                             </div>
                             <div class="sm:w-1/3 flex justify-end">
                                 <Spinner Id="@(Model.SpinnerId)" />

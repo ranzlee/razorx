@@ -10,7 +10,7 @@
 <ul tabindex="-1" 
     id="@(itemListId)" 
     role="listbox" 
-    style="display: none;">
+    style="display: none; pointer-events: all">
     @foreach (var item in sortedItems)
     {
         var itemId = $"Rx-{Guid.NewGuid():N}";

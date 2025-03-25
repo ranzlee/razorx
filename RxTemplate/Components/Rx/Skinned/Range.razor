@@ -4,18 +4,19 @@
     Value="@(Value)" 
     Label="@(Label)" 
     AllowValidateOnChange="@(AllowValidateOnChange)"
-    ContainerClass="form-control w-full"
+    ContainerClass="fieldset w-full"
     InvalidClass="range-error"
     ControlClass="range w-full"
-    LabelContainerClass="label"
-    LabelClass="label-text"
-    ValueClass="label-text font-semibold"
+    LabelContainerClass="label flex justify-between"
+    LabelClass="fieldset-legend"
+    ValueClass="font-semibold"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(Property)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxRange>
 

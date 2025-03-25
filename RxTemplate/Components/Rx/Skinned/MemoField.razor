@@ -5,18 +5,19 @@
     Label="@(Label)" 
     MaxLength="@(MaxLength)" 
     AllowValidateOnChange="@(AllowValidateOnChange)"
-    ContainerClass="form-control w-full"
+    ContainerClass="fieldset w-full"
     InvalidClass="textarea-error"
-    ControlClass="textarea textarea-bordered"
-    LabelContainerClass="label"
-    LabelClass="label-text"
-    CounterClass="label-text-alt"
+    ControlClass="textarea w-full"
+    LabelContainerClass="label flex justify-between"
+    LabelClass="fieldset-legend"
+    CounterClass=""
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(Property)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxMemoField>
 

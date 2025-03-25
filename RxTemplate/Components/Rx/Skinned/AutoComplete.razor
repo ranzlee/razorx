@@ -11,20 +11,21 @@
     ListMaxPixelHeight="@(ListMaxPixelHeight)"
     AllowValidateOnChange="@(AllowValidateOnChange)"
     SkipOnSelectedValidateOnChange="@(SkipOnSelectedValidateOnChange)"
-    ContainerClass="form-control w-full"
+    ContainerClass="fieldset w-full"
     InvalidClass="input-error"
-    ControlClass="input input-bordered w-full"
-    LabelContainerClass="label"
-    LabelClass="label-text"
+    ControlClass="input w-full mb-1"
+    LabelContainerClass="label flex justify-between"
+    LabelClass="fieldset-legend"
     ListContainerClass="dropdown dropdown-open"
-    ListClass="-mt-2 dropdown-content menu menu-compact flex-nowrap bg-base-100 rounded-box z-[1] p-2 shadow overflow-auto"
+    ListClass="dropdown-content menu menu-compact flex-nowrap bg-base-100 rounded-box z-1 p-2 shadow-sm overflow-auto"
     PatternMatchClass="@(PatternMatchClass)"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(Property)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxAutoComplete>
 
