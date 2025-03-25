@@ -6,4 +6,10 @@
 @code {
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
     [Parameter] public bool IsError { get; set; }
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }

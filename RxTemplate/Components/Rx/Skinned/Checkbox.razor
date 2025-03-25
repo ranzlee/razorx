@@ -25,4 +25,13 @@
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public string Label { get; set; } = null!;
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            if (AllowValidateOnChange) {
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned.");    
+            }
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }

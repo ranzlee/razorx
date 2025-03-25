@@ -33,4 +33,10 @@
     [Parameter] public bool AllowMultiple { get; set; }
     [Parameter] public string Accept { get; set; } = string.Empty;
     [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }

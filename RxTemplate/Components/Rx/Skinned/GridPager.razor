@@ -17,4 +17,10 @@
     [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!; 
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public bool TriggerOnMouseDown { get; set; }
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }
