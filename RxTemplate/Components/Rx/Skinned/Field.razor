@@ -5,17 +5,17 @@
     Label="@(Label)" 
     InputType="@(InputType)"
     AllowValidateOnChange="@(AllowValidateOnChange)"
-    ContainerClass="form-control w-full"
+    ContainerClass="fieldset w-full"
     InvalidClass="input-error"
-    ControlClass="input input-bordered w-full"
-    LabelContainerClass="label"
-    LabelClass="label-text"
+    ControlClass="input w-full"
+    LabelClass="fieldset-legend"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(Property)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxField>
 
@@ -27,4 +27,13 @@
     [Parameter] public object? Value { get; set; }
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public string InputType { get; set; } = null!;
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            if (AllowValidateOnChange) {
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned.");    
+            }
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }

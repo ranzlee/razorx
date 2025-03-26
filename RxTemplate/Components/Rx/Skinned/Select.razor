@@ -5,18 +5,18 @@
     Label="@(Label)" 
     AllowValidateOnChange="@(AllowValidateOnChange)"
     EnumType="@(EnumType)"
-    ContainerClass="form-control w-full"
+    ContainerClass="fieldset w-full"
     InvalidClass="select-error"
-    ControlClass="select select-bordered"
-    LabelContainerClass="label"
-    LabelClass="label-text"
+    ControlClass="select w-full"
+    LabelClass="fieldset-legend"
     Options="@(Options)"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(Property)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxSelect>
 
@@ -29,4 +29,13 @@
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public Type? EnumType { get; set; }
     [Parameter] public Dictionary<string, string> Options { get; set; } = [];
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            if (AllowValidateOnChange) {
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned.");    
+            }
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }

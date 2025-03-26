@@ -1,0 +1,26 @@
+@implements IComponentModel<IGridModel<T>>
+@typeparam T
+
+<RxGridPager
+    Id="@(Id)"
+    Model="@(Model)" 
+    TriggerOnMouseDown="@(true)"
+    ContainerClass="flex flex-col justify-center items-center"
+    LabelClass="text-xs text-primary"
+    ControlClass="join"
+    ButtonClass="join-item btn btn-sm"
+    RangeContainerClass="join-item flex justify-center items-center px-2"
+    RangeClass="range range-xs">
+</RxGridPager>
+
+@code {
+    [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!; 
+    [Parameter] public string Id { get; set; } = null!;
+    [Parameter] public bool TriggerOnMouseDown { get; set; }
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
+}

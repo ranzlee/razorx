@@ -1,8 +1,7 @@
 <RxFileInput
-    ContainerClass="flex flex-col w-full gap-y-2"
-    LabelContainerClass="form-control w-full"
-    LabelClass="label label-text"
-    ControlClass="file-input file-input-bordered w-full"
+    ContainerClass="fieldset w-full"
+    LabelClass="fieldset-legend"
+    ControlClass="file-input w-full"
     InvalidClass="file-input-error"
     ProgressClass="progress progress-success w-full"
     ButtonContainerClass="flex justify-end gap-x-2"
@@ -18,9 +17,10 @@
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(ValidationProperty)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxFileInput>
 
@@ -33,4 +33,10 @@
     [Parameter] public bool AllowMultiple { get; set; }
     [Parameter] public string Accept { get; set; } = string.Empty;
     [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }

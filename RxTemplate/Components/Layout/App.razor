@@ -36,7 +36,7 @@
 <body hx-ext="json-enc">
   <div id="aria-live-region" aria-live="polite" class="sr-only"></div>
   <div class="drawer">
-    <input id="site-drawer" type="checkbox" class="drawer-toggle" />
+    <input id="site-drawer" type="checkbox" class="drawer-toggle" aria-label="menu-toggle-state" />
     <div class="drawer-content flex flex-col">
       <div class="flex flex-col h-screen justify-between">
         <div class="mb-auto">
@@ -67,8 +67,9 @@
                       });
                       menuToggle.onclick = function() {
                         drawerState.checked = true;
-                        var drawer = document.getElementById("drawer");
-                        drawer.querySelector("#close-sidebar").focus();
+                        setTimeout(() => {
+                          document.getElementById("close-sidebar").focus();
+                        }, 200);
                       }
                     })()
                   </script>

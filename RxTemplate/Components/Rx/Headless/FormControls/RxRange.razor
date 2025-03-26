@@ -1,8 +1,8 @@
-<label id="@(Id)" class="@(ContainerClass)">
-    <div class="@(LabelContainerClass)">
+<div id="@(Id)" class="@(ContainerClass)">
+    <label class="@(LabelContainerClass)" for="@(Id)-input">
         <span class="@(LabelClass)">@(Label)</span>
         <span id="@(Id)-value" class="@(ValueClass)">@(Value)</span>
-    </div>
+    </label>
     <input 
         data-id="@(Id)"
         data-validate-on-change="@(AllowValidateOnChange)"
@@ -27,7 +27,7 @@
     @if (isInvalid) {
         @(ValidationContainer)
     }
-</label>
+</div>
 
 @code {
     [Inject] public ValidationContext ValidationContext { get; set; } = null!;

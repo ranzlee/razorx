@@ -1,9 +1,9 @@
-<div id="@(Id)">
-    <label id="@(Id)-autocomplete-input-container" class="@(ContainerClass)">
-        <div class="@(LabelContainerClass)">
-            <span class="@(LabelClass)">@(Label)</span>
-            <Spinner Id="@($"{Id}-autocomplete-indicator")" Transition="@(TransitionType.Opacity)" />
-        </div>
+<div id="@(Id)" class="@(ContainerClass)">
+    <label class="@(LabelContainerClass)" for="@(Id)-autocomplete-input">
+        <span class="@(LabelClass)">@(Label)</span>
+        <Spinner Id="@($"{Id}-autocomplete-indicator")" Transition="@(TransitionType.Opacity)" />
+    </label>
+    <div id="@(Id)-autocomplete-input-container">
         <input
             id="@(Id)-autocomplete-input"
             name="@(Property)" 
@@ -12,7 +12,7 @@
             hx-get="@(GetListFromRoute)"
             hx-trigger="input changed delay:@(DelayMilliseconds)ms"
             hx-target="#@(Id)-autocomplete-list"
-            hx-swap="innerHTML"
+            hx-swap="innerHTML transition:true settle:0ms"
             hx-indicator="#@(Id)-autocomplete-indicator"
             class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
             autocomplete="off"
@@ -50,14 +50,13 @@
         @if (isInvalid) {
             @(ValidationContainer)
         }
-    </label>
+    </div>
     <input id="@(Id)-autocomplete-list-max-height" type="hidden" value="@(ListMaxPixelHeight)">
     <input id="@(Id)-autocomplete-list-class" type="hidden" value="@(ListClass)">
     <input id="@(Id)-autocomplete-pattern-match-class" type="hidden" value="@(PatternMatchClass)">
     <input id="@(Id)-autocomplete-skip-selected-validation" type="hidden" value="@(SkipOnSelectedValidateOnChange.ToString().ToLower())">
     <div tabindex="-1" id="@(Id)-autocomplete-list" class="@(ListContainerClass)"></div>
 </div>
-
 
 @code {
     [Inject] public ValidationContext ValidationContext { get; set; } = null!;

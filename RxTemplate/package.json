@@ -3,18 +3,19 @@
   "version": "1.0.0",
   "description": "A .NET Minimal API/Razor and htmx meta-framework",
   "scripts": {
-    "build-css": "npx tailwindcss -i app.css -o wwwroot/css/app.css --minify"
+    "build-css": "npx @tailwindcss/cli -i app.css -o wwwroot/css/app.css --minify"
   },
   "author": "anonymous",
   "license": "0BSD",
   "dependencies": {
+    "@tailwindcss/cli": "^4.0.15",
     "htmx-ext-json-enc": "^2.0.2",
     "htmx.org": "^2.0.4",
     "idiomorph": "^0.7.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
-    "daisyui": "^4.12.23",
-    "tailwindcss": "^3.4.17"
+    "daisyui": "^5.0.9",
+    "tailwindcss": "^4.0.15"
   }
 }

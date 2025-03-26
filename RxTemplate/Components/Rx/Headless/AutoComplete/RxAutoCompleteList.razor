@@ -4,16 +4,16 @@
     if (!Model.Items.Any()) {
         return;
     }
-    var itemListId = $"Rx-{Guid.NewGuid():N}"; 
+    var itemListId = Utilities.GenerateElementId(); 
     var strong = $"<strong>";
 }
 <ul tabindex="-1" 
     id="@(itemListId)" 
     role="listbox" 
-    style="display: none;">
+    style="display: none; pointer-events: all">
     @foreach (var item in sortedItems)
     {
-        var itemId = $"Rx-{Guid.NewGuid():N}";
+        var itemId = Utilities.GenerateElementId();
         var li = item.DisplayValue;
         var i = item.DisplayValue.ToLower().IndexOf(Model.SearchPattern.ToLower());
         if (i >= 0) {

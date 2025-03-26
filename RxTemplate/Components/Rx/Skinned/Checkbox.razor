@@ -4,17 +4,17 @@
     IsChecked="@(IsChecked)" 
     Label="@(Label)"
     AllowValidateOnChange="@(AllowValidateOnChange)"
-    ContainerClass="form-control w-full"
+    ContainerClass="fieldset w-full"
     InvalidClass="checkbox-error"
     ControlClass="checkbox"
-    LabelContainerClass="label cursor-pointer"
-    LabelClass="label-text"
+    LabelContainerClass="fieldset-legend cursor-pointer"
     @attributes=@(AdditionalAttributes)>
     <ValidationContainer>
         <RxFormError 
+            FormControlId="@(Id)"
             Property="@(Property)" 
             ContainerClass="label" 
-            ErrorMessageClass="label-text text-error" />
+            ErrorMessageClass="text-error" />
     </ValidationContainer>
 </RxCheckbox>
 
@@ -25,4 +25,13 @@
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public string Label { get; set; } = null!;
+
+    protected override void OnParametersSet() {
+        if (string.IsNullOrWhiteSpace(Id)) {
+            if (AllowValidateOnChange) {
+                throw new InvalidOperationException($"{nameof(AllowValidateOnChange)} must have a unique {nameof(Id)} assigned.");    
+            }
+            Id = Utilities.GenerateElementId();
+        }
+    }
 }

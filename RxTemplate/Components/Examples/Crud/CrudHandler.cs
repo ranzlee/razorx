@@ -268,7 +268,11 @@ public class CrudHandler : IRequestHandler {
                 "previous" => state.HasPreviousPage() ? "previous" : "next",
                 _ => "range"
             };
-            triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][value=\"{page}\"]"));
+            if (page == "range") {
+                triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][type=\"range\"]"));
+            } else {
+                triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][value=\"{page}\"]"));
+            }
         }
         if (!string.IsNullOrWhiteSpace(sortProperty)) {
             // Trigger focus on the sort button

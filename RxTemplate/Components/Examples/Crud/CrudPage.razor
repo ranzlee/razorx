@@ -17,7 +17,7 @@
         *@
         <dialog id="delete-modal" class="modal modal-bottom sm:modal-middle">
             <div class="modal-box">
-                <div class="flex justify-between items-center bg-base-300 p-5 rounded">
+                <div class="flex justify-between items-center bg-base-300 p-5 rounded-sm">
                     <div class="text-lg font-bold">
                         <RxModalTextNode ModalId="delete-modal" />
                     </div>
@@ -49,7 +49,7 @@
         *@
         <dialog id="save-modal" class="modal modal-bottom sm:modal-middle">
             <div class="modal-box">
-                <div class="flex justify-between items-center bg-base-300 p-5 rounded">
+                <div class="flex justify-between items-center bg-base-300 p-5 rounded-sm">
                     <div class="text-lg font-bold">
                         <RxModalTextNode ModalId="save-modal" />
                     </div>
@@ -114,18 +114,20 @@
     </div>
     <AuthorizeView>
         <Authorized>
-            <RxModalTrigger 
-                Id="new-btn"
-                ModalId="save-modal" 
-                TriggerOnMouseDown=@(true)
-                RouteValue="0"
-                TextNodeValue="New Item"
-                class="btn btn-primary" 
-                aria-label="Add a new item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                </svg>
-            </RxModalTrigger>
+            <div class="pb-1">
+                <RxModalTrigger 
+                    Id="new-btn"
+                    ModalId="save-modal" 
+                    TriggerOnMouseDown=@(true)
+                    RouteValue="0"
+                    TextNodeValue="New Item"
+                    class="btn btn-primary" 
+                    aria-label="Add a new item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                </RxModalTrigger>
+            </div>
         </Authorized>
     </AuthorizeView>
 </div>

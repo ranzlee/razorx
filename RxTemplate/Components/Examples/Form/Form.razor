@@ -145,7 +145,7 @@
                         AutoCompleteId="@(nameof(Model.Widget))"
                         hx-post="/examples/form/widget"
                         hx-target="@($"#{nameof(Model.Widget)}")"
-                        hx-swap="outerHTML">
+                        hx-swap="outerHTML transition:true">
                         <AutoComplete 
                             Id="@(nameof(Model.Widget))"
                             Property="@(nameof(Model.Widget))" 
