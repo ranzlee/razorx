@@ -6,6 +6,7 @@ public static partial class Utilities {
 
     [GeneratedRegex(@"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])")]
     private static partial Regex _splitEnumName();
+    private static readonly Random _rnd = new();
 
     public static string SplitCamelCaseWords(string? val, ILogger? logger = default) {
         if (string.IsNullOrWhiteSpace(val)) {
@@ -22,7 +23,7 @@ public static partial class Utilities {
 
     public static string GenerateElementId(ILogger? logger = default) {
         // Fun fact: Ids that are valid JS variable names automatically create DOM objects, so we add the "Rx-" to avoid pollution.
-        var id = $"Rx-{Guid.NewGuid():N}";
+        var id = $"Rx{_rnd.Next():x}";
         logger?.LogTrace("{method} generated {id}.", nameof(GenerateElementId), id);
         return id;
     }

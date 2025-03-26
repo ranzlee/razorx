@@ -12,7 +12,7 @@
             hx-get="@(GetListFromRoute)"
             hx-trigger="input changed delay:@(DelayMilliseconds)ms"
             hx-target="#@(Id)-autocomplete-list"
-            hx-swap="innerHTML transition:true"
+            hx-swap="innerHTML transition:true settle:0ms"
             hx-indicator="#@(Id)-autocomplete-indicator"
             class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
             autocomplete="off"
