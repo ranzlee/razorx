@@ -12,11 +12,10 @@
                 if (evt.target !== listener) {
                     return;
                 }
-                var list = document.getElementById('@($"{AutoCompleteId}-autocomplete-list")');
-                var path = evt.detail.path;
-                path = path.endsWith('/') ? path.slice(0, -1) : path;
+                var path = evt.detail.path ?? '';
+                path = path.trimEnd().endsWith('/') ? path.slice(0, -1) : path;
                 var selected = document.getElementById('@($"{AutoCompleteId}-autocomplete-selected-id")');
-                evt.detail.path = `${path}/${selected.value}`;
+                evt.detail.path = `${path}/${selected.value ?? ''}`;
             });
         })()
     </script>
