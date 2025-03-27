@@ -237,7 +237,7 @@ public class CrudHandler : IRequestHandler {
             ? new()
             : JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
         // Update the state based on the grid action (sort, page, filter) sent in the request.
-        state.Update(page, sortProperty, filterId, filterProperty, filterOperation, filterValue);
+        state = state.Update(page, sortProperty, filterId, filterProperty, filterOperation, filterValue);
         // Get the page data and total count based on the new state
         var model = Service.GetModel(state);
         if (!model.Data.Any() && state.Page > 1) {

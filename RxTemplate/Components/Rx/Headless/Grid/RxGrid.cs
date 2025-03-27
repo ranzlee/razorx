@@ -8,14 +8,13 @@ public interface IGrid : IAsyncComponent {
 
 public interface IGridModel<T> : IGrid {
     IEnumerable<T> Data { get; set; }
-    GridState State { get; set; }
+    IGridState State { get; set; }
 }
 
 public interface IGridFilterModel : IGrid {
     Type? FilterType { get; set; }
     string FilterProperty { get; set; }
 }
-
 
 public record GridFilter {
     public string FilterId { get; set; } = null!;
@@ -24,72 +23,75 @@ public record GridFilter {
     public string FilterValue { get; set; } = null!;
 }
 
-public record GridState {
-    public int Page { get; set; } = 1;
-    public int PageSize { get; set; } = 50;
-    public int TotalRecords { get; set; } = 0;
-    public string SortProperty { get; set; } = null!;
-    public bool SortedDescending { get; set; } = false;
-    public List<GridFilter> Filters { get; set; } = [];
+public interface IGridState {
+    int Page { get; set; }
+    int PageSize { get; set; }
+    int TotalRecords { get; set; }
+    string SortProperty { get; set; }
+    bool SortedDescending { get; set; }
+    IList<GridFilter> Filters { get; set; }
+}
 
-    public void Update(
+public static class GridStateExtensions {
+    public static T Update<T>(
+        this T gridState,
         string? page = null,
         string? sortProperty = null,
         string? filterId = null,
         string? filterProperty = null,
         string? filterOperation = null,
-        string? filterValue = null) {
+        string? filterValue = null) where T : IGridState {
         if (!string.IsNullOrWhiteSpace(page)) {
             if (int.TryParse(page, out var p)) {
-                Page = p;
-                return;
+                gridState.Page = p;
+                return gridState;
             }
             if (page == "previous") {
-                Page -= 1;
-                return;
+                gridState.Page -= 1;
+                return gridState;
             }
             if (page == "next") {
-                Page += 1;
-                return;
+                gridState.Page += 1;
+                return gridState;
             }
         }
         if (!string.IsNullOrWhiteSpace(sortProperty)) {
-            if (SortProperty == sortProperty) {
-                SortedDescending = !SortedDescending;
-                return;
+            if (gridState.SortProperty == sortProperty) {
+                gridState.SortedDescending = !gridState.SortedDescending;
+                return gridState;
             }
-            SortProperty = sortProperty;
-            SortedDescending = false;
-            return;
+            gridState.SortProperty = sortProperty;
+            gridState.SortedDescending = false;
+            return gridState;
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
-            Filters = [.. Filters.Where(x => x.FilterId != filterId)];
-            return;
+            gridState.Filters = [.. gridState.Filters.Where(x => x.FilterId != filterId)];
+            return gridState;
         }
         if (!string.IsNullOrWhiteSpace(filterProperty)) {
-            Filters.Add(new GridFilter {
+            gridState.Filters.Add(new GridFilter {
                 FilterId = Guid.NewGuid().ToString(),
                 FilterProperty = filterProperty,
                 FilterOperation = filterOperation ?? "",
                 FilterValue = filterValue ?? ""
             });
-            return;
+            return gridState;
         }
+        return gridState;
     }
 
-    public bool HasPreviousPage() {
-        return Page > 1;
+    public static bool HasPreviousPage(this IGridState gridState) {
+        return gridState.Page > 1;
     }
 
-    public bool HasNextPage() {
-        return Page * PageSize < TotalRecords;
+    public static bool HasNextPage(this IGridState gridState) {
+        return gridState.Page * gridState.PageSize < gridState.TotalRecords;
     }
 
-    public int GetTotalPages() {
-        if (TotalRecords == 0 || PageSize == 0) {
+    public static int GetTotalPages(this IGridState gridState) {
+        if (gridState.TotalRecords == 0 || gridState.PageSize == 0) {
             return 1;
         }
-        return Convert.ToInt32(Math.Ceiling((decimal)TotalRecords / PageSize));
+        return Convert.ToInt32(Math.Ceiling((decimal)gridState.TotalRecords / gridState.PageSize));
     }
 }
-
