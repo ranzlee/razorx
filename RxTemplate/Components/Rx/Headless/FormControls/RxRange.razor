@@ -13,8 +13,7 @@
         aria-invalid="@(isInvalid ? "true" : false)"
         aria-describedby="@(isInvalid ? $"{Id}-error" : false)"
         class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")" 
-        @attributes=@(AdditionalAttributes)
-        />
+        @attributes=@(AdditionalAttributes)>
     <script>
         (function() {
             var range = document.getElementById("@(Id)-input");

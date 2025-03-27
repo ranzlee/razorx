@@ -2,7 +2,7 @@
 
 @if (Model.IsAsync) {
     <div id="@(Model.Id)" >
-        <input id="@(Model.StateKey)" type="hidden" /> 
+        <input id="@(Model.StateKey)" type="hidden"> 
         @if (!string.IsNullOrWhiteSpace(Model.InitialState)) {
             <script>
                 razorx.metadata.set(
@@ -30,7 +30,7 @@
     return;
 }
 <div id="@(Model.Id)">
-    <input id="@(Model.StateKey)" type="hidden" /> 
+    <input id="@(Model.StateKey)" type="hidden"> 
     @(AwaitContent)    
 </div>
 

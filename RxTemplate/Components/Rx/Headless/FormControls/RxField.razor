@@ -13,7 +13,7 @@
         autocomplete="off"
         @attributes=@(AdditionalAttributes)>
     @if (InputType.Trim().ToLower() == "datetime-local") {
-        <input id="@(Id)-time-zone" name="@(Property)TimeZone" type="hidden" />
+        <input id="@(Id)-time-zone" name="@(Property)TimeZone" type="hidden">
         <script>
             (function() {
                 function setTimeZone() {

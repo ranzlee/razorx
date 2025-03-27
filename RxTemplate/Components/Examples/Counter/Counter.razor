@@ -25,12 +25,12 @@
                 id="@(nameof(Model.Count))" 
                 name="@(nameof(Model.Count))" 
                 type="hidden" 
-                value="@(Model.Count)" />
+                value="@(Model.Count)">
             <input 
                 id="@(nameof(Model.IsAdd))" 
                 name="@(nameof(Model.IsAdd))" 
                 type="hidden" 
-                value="true" />
+                value="true">
             <div class="min-w-64 flex justify-center">
                 <div>
                     <strong class="text-9xl font-mono @(ValidationContext.TryGetError(nameof(Model.Count), out _) ? "text-error" : "")">
