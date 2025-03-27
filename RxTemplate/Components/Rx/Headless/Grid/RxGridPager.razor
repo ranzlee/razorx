@@ -22,22 +22,20 @@
             hx-swap="outerHTML transition:true" 
             hx-target="#@(Model.Id)">«</button>
         <div class="@(RangeContainerClass)">
-            <div>
-                <input id="@($"{Model.Id}-page-selector")" 
-                    type="range"
-                    name="@(nameof(GridState.Page))" 
-                    hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
-                    hx-disabled-elt="this"
-                    hx-get="@(Model.RenderFromRoute)" 
-                    hx-swap="outerHTML transition:true" 
-                    hx-target="#@(Model.Id)"
-                    hx-trigger="change delay:400ms"
-                    aria-label="Page slider"
-                    min="1" 
-                    max="@(Model.State.GetTotalPages())" 
-                    value="@(Model.State.Page)" 
-                    class="@(RangeClass)" />
-            </div>
+            <input id="@($"{Model.Id}-page-selector")" 
+                type="range"
+                name="@(nameof(GridState.Page))" 
+                hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
+                hx-disabled-elt="this"
+                hx-get="@(Model.RenderFromRoute)" 
+                hx-swap="outerHTML transition:true" 
+                hx-target="#@(Model.Id)"
+                hx-trigger="change delay:400ms"
+                aria-label="Page slider"
+                min="1" 
+                max="@(Model.State.GetTotalPages())" 
+                value="@(Model.State.Page)" 
+                class="@(RangeClass)" />
         </div>
         <script>
             (function() {
