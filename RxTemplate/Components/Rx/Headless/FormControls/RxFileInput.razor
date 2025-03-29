@@ -14,7 +14,7 @@
         @(ValidationContainer)
     }
     <div>
-        <progress id="@(Id)-progress" class="@(ProgressClass)" value="0" max="100"></progress>
+        <progress id="@(Id)-progress" class="@(ProgressClass)" value="0" max="100" style="opacity: 0"></progress>
     </div>
     <div class="@(ButtonContainerClass)">
         <button
@@ -45,6 +45,7 @@
             var uploadStatus = { isUploading: false };
             var reset = function() {
                 progress.value = 0;
+                progress.style.opacity = '0';
                 uploadStatus.isUploading = false;
                 submit.setAttribute("disabled", "");
                 cancel.setAttribute("disabled", "");
@@ -53,6 +54,7 @@
             }
             submit.onclick = function () {
                 uploadStatus.isUploading = false;
+                progress.style.opacity = '1';
                 htmx.on(submit, "htmx:xhr:progress", (evt) => {    
                     if (!uploadStatus.isUploading) {
                         uploadStatus.isUploading = true;
