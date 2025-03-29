@@ -47,9 +47,7 @@
                 });
             })()
         </script>
-        @if (isInvalid) {
-            @(ValidationContainer)
-        }
+        @(ValidationContainer)
     </div>
     <input id="@(Id)-autocomplete-list-max-height" type="hidden" value="@(ListMaxPixelHeight)">
     <input id="@(Id)-autocomplete-list-class" type="hidden" value="@(ListClass)">

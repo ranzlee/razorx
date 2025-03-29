@@ -13,9 +13,7 @@
             aria-describedby="@(isInvalid ? $"{Id}-error" : false)" 
             @attributes=@(AdditionalAttributes)>            
     </label>
-    @if (isInvalid) {
-        @(ValidationContainer)
-    }
+    @(ValidationContainer)
 </div>
 
 @code {

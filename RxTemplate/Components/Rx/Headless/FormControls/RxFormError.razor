@@ -1,21 +1,36 @@
-<div id="@(FormControlId)-error-container" class="@(ContainerClass)">
-    <span id="@(FormControlId)-error" 
-        class="@(ErrorMessageClass)"
-        @attributes=@(AdditionalAttributes)>
-        @(errorMessage)
-    </span>
-</div>
+@if (UseOpacityForValidationErrors) {
+    <div id="@(FormControlId)-error-container" class="@(ContainerClass)" style="@($"opacity: {(isInvalid ? "1" : "0")}")">
+        <span id="@(FormControlId)-error" 
+            class="@(ErrorMessageClass)"
+            @attributes=@(AdditionalAttributes)>
+            @(string.IsNullOrWhiteSpace(errorMessage) ? "-" : errorMessage)
+        </span>
+    </div>
+    return;
+}
+@if (isInvalid) {
+    <div id="@(FormControlId)-error-container" class="@(ContainerClass)">
+        <span id="@(FormControlId)-error" 
+            class="@(ErrorMessageClass)"
+            @attributes=@(AdditionalAttributes)>
+            @(errorMessage)
+        </span>
+    </div>
+}
 
 @code {
     [Inject] public ValidationContext ValidationContext { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Property { get; set; } = null!;
     [Parameter, EditorRequired] public string FormControlId { get; set; } = null!;
+    [Parameter] public bool UseOpacityForValidationErrors { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string ErrorMessageClass { get; set; } = null!;
+    private bool isInvalid { get; set; }
     private string errorMessage { get; set; } = null!;
     protected override void OnParametersSet() {
         if (ValidationContext.TryGetError(Property, out var error)) {
+            isInvalid = true;
             errorMessage = error.ErrorMessage;
         }
     }

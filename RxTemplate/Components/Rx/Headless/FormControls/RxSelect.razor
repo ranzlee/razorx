@@ -13,9 +13,7 @@
             <option selected="@(Value == kv.Value)" value="@(kv.Value)">@(kv.Key)</option>
         }
     </select>
-    @if (isInvalid) {
-        @(ValidationContainer)
-    }
+    @(ValidationContainer)
 </div>
 
 @code {

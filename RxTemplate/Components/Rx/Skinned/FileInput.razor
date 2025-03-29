@@ -19,6 +19,7 @@
         <RxFormError 
             FormControlId="@(Id)"
             Property="@(ValidationProperty)" 
+            UseOpacityForValidationErrors="@(UseOpacityForValidationErrors)"
             ContainerClass="label" 
             ErrorMessageClass="text-error" />
     </ValidationContainer>
@@ -33,6 +34,7 @@
     [Parameter] public bool AllowMultiple { get; set; }
     [Parameter] public string Accept { get; set; } = string.Empty;
     [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
+    [Parameter] public bool UseOpacityForValidationErrors { get; set; }
 
     protected override void OnParametersSet() {
         if (string.IsNullOrWhiteSpace(Id)) {

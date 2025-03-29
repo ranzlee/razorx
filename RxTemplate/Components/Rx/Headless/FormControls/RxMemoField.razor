@@ -21,9 +21,7 @@
         class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
         @attributes=@(AdditionalAttributes)>
     </textarea>
-    @if (isInvalid) {
-        @(ValidationContainer)
-    }
+    @(ValidationContainer)
     <script>
         (function() {
             var memo = document.getElementById("@(Id)-input");

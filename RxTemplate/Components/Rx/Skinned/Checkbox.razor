@@ -13,6 +13,7 @@
         <RxFormError 
             FormControlId="@(Id)"
             Property="@(Property)" 
+            UseOpacityForValidationErrors="@(UseOpacityForValidationErrors)"
             ContainerClass="label" 
             ErrorMessageClass="text-error" />
     </ValidationContainer>
@@ -25,6 +26,7 @@
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public string Label { get; set; } = null!;
+    [Parameter] public bool UseOpacityForValidationErrors { get; set; }
 
     protected override void OnParametersSet() {
         if (string.IsNullOrWhiteSpace(Id)) {
