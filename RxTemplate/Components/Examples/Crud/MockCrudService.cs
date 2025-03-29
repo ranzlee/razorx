@@ -1,5 +1,4 @@
 using RxTemplate.Components.Rx;
-using RxTemplate.Components.Rx.Headless.Grid;
 
 namespace RxTemplate.Components.Examples.Crud;
 
@@ -95,8 +94,8 @@ public class MockCrudService {
     /// IMPORTANT: Execute exactly 2 queries per request; 1 count and 1 data.
     /// </summary>
     /// <param name="state">The GridState object</param>
-    /// <returns>IGridModel</returns>
-    public IGridModel<ItemModel> GetModel(GridState state) {
+    /// <returns>GridModel</returns>
+    public GridModel GetModel(GridState state) {
         // Create IQueryable to data source
         var data = Data;
         // Apply filters

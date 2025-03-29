@@ -1,4 +1,4 @@
-@implements IComponentModel<IGridModel<T>>
+@implements IComponentModel<IDataSetModel<T>>
 @typeparam T
 
 @if (Model is null) {
@@ -14,7 +14,7 @@
     <AwaitContent>
         @(FilterContent)
         <div @attributes="@(AdditionalAttributes)">
-            @(TableContent)
+            @(DataSetContent)
         </div>
     </AwaitContent>
 </RxAsyncComponent>
@@ -23,8 +23,8 @@
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
-    [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!;
+    [Parameter, EditorRequired] public IDataSetModel<T> Model { get; set; } = null!;
     [Parameter] public RenderFragment? FallbackContent { get; set; }
     [Parameter] public RenderFragment? FilterContent { get; set; }
-    [Parameter] public RenderFragment? TableContent { get; set; }
+    [Parameter] public RenderFragment? DataSetContent { get; set; }
 }

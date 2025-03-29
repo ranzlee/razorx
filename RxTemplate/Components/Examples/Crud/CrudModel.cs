@@ -1,7 +1,7 @@
-using RxTemplate.Components.Rx;
-using RxTemplate.Components.Rx.Headless.Grid;
-using RxTemplate.Rx;
 using System.ComponentModel;
+using RxTemplate.Components.Rx;
+using RxTemplate.Components.Rx.Headless.DataSet;
+using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Crud;
 
@@ -20,7 +20,7 @@ public static class GridProperties {
 /// <summary>
 /// The IGridFilterModel for the example grid.
 /// </summary>
-public record GridFilterModel : IGridFilterModel {
+public record GridFilterModel : IDataSetFilterModel {
     public string Id { get; set; } = GridProperties.Id;
     public string StateKey { get; set; } = GridProperties.StateKey;
     public HxMetadataScope StateScope { get; set; } = GridProperties.StateScope;
@@ -44,30 +44,29 @@ public enum FilterOperationType {
     Contains = 5,
 }
 
+public record GridState : IDataSetState {
+    public int Page { get; set; } = 1;
+    public int PageSize { get; set; } = 50;
+    public int TotalRecords { get; set; } = 0;
+    public string SortProperty { get; set; } = null!;
+    public bool SortedDescending { get; set; } = false;
+    public IList<DataSetFilter> Filters { get; set; } = [];
+}
+
 /// <summary>
 /// The IGridModel that binds to the RxGrid.
 /// </summary>
-public record GridModel : IGridModel<ItemModel> {
+public record GridModel : IDataSetModel<ItemModel> {
     public string Id { get; set; } = GridProperties.Id;
     public string StateKey { get; set; } = GridProperties.StateKey;
     public HxMetadataScope StateScope { get; set; } = GridProperties.StateScope;
     public string RenderFromRoute { get; set; } = GridProperties.RenderFromRoute;
     public string SpinnerId { get; set; } = GridProperties.SpinnerId;
     public IEnumerable<ItemModel> Data { get; set; } = [];
-    public IGridState State { get; set; } = new GridState();
+    public IDataSetState State { get; set; } = new GridState();
     public bool IsAsync { get; set; }
     public string InitialState { get; set; } = string.Empty;
 }
-
-public record GridState : IGridState {
-    public int Page { get; set; } = 1;
-    public int PageSize { get; set; } = 50;
-    public int TotalRecords { get; set; } = 0;
-    public string SortProperty { get; set; } = null!;
-    public bool SortedDescending { get; set; } = false;
-    public IList<GridFilter> Filters { get; set; } = [];
-}
-
 
 /// <summary>
 /// The model that defines a single row in the grid.

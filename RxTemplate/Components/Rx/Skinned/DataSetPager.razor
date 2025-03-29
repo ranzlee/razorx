@@ -1,7 +1,7 @@
-@implements IComponentModel<IGridModel<T>>
+@implements IComponentModel<IDataSetModel<T>>
 @typeparam T
 
-<RxGridPager
+<RxDataSetPager
     Id="@(Id)"
     Model="@(Model)" 
     TriggerOnMouseDown="@(true)"
@@ -11,10 +11,10 @@
     ButtonClass="join-item btn btn-sm rounded-full"
     RangeContainerClass="join-item flex justify-center items-center px-2 w-full"
     RangeClass="range range-xs w-full">
-</RxGridPager>
+</RxDataSetPager>
 
 @code {
-    [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!; 
+    [Parameter, EditorRequired] public IDataSetModel<T> Model { get; set; } = null!; 
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public bool TriggerOnMouseDown { get; set; }
 

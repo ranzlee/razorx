@@ -5,7 +5,7 @@
         <input type="hidden" name="@(nameof(Model.FilterProperty))" value="@(Model.FilterProperty)">
         <div class="max-w-40">
             <Select
-                Property="@(nameof(GridFilter.FilterOperation))" 
+                Property="@(nameof(DataSetFilter.FilterOperation))" 
                 Label="Operation" 
                 Options="@(OperationOptions)">
             </Select>
@@ -13,35 +13,35 @@
         <div class="max-w-56">
             @if (Model.FilterType == typeof(int)) {
                 <Field 
-                    Property="@(nameof(GridFilter.FilterValue))" 
+                    Property="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     InputType="number">
                 </Field>
             }
             @if (Model.FilterType == typeof(bool)) {
                 <Select 
-                    Property="@(nameof(GridFilter.FilterValue))" 
+                    Property="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     Options="@(YesNoOptions)">
                 </Select>
             }
             @if (Model.FilterType == typeof(DateOnly)) {
                 <Field 
-                    Property="@(nameof(GridFilter.FilterValue))" 
+                    Property="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     InputType="date">
                 </Field>
             }
             @if (Model.FilterType == typeof(TimeOfDay)) {
                 <Select 
-                    Property="@(nameof(GridFilter.FilterValue))" 
+                    Property="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     EnumType="typeof(TimeOfDay)">
                 </Select>
             }
             @if (Model.FilterType == typeof(string)) {
                 <Field 
-                    Property="@(nameof(GridFilter.FilterValue))" 
+                    Property="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     InputType="text"
                     maxlength="65">
@@ -49,14 +49,14 @@
             }
         </div>
         <div class="pb-1">
-            <RxGridAction 
+            <RxDataSetAction 
                 Model="@(Model)"
                 hx-get="@(Model.RenderFromRoute)"
                 hx-include="#grid-filter"
                 type="button"
                 class="btn btn-primary max-w-20">
                 Apply
-            </RxGridAction>
+            </RxDataSetAction>
         </div>
     }
 </div>

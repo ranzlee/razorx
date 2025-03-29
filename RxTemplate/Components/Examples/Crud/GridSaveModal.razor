@@ -65,12 +65,12 @@
             </div>
         </div>
     </div>
-    <input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)">
+    <input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)" />
     <div class="modal-action">
         <RxModalDismiss ModalId="save-modal" class="btn btn-neutral">
             Cancel
         </RxModalDismiss>
-        <RxGridAction 
+        <RxDataSetAction 
             Id="save-item"
             Model="@(gridModel)"
             hx-put="@(Model.Id > 0 ? $"/examples/crud/{Model.Id}" : false)"
@@ -79,12 +79,11 @@
             hx-disabled-elt="this"
             class="btn btn-primary">
             Save
-        </RxGridAction>
+        </RxDataSetAction>
     </div>
 </div>
 
 @code {
     private readonly GridModel gridModel = new();
     [Parameter] public ItemModel? Model { get; set; }
-
 }

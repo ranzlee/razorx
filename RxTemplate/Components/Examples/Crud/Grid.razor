@@ -1,6 +1,6 @@
-@implements IComponentModel<IGridModel<ItemModel>>
+@implements IComponentModel<GridModel>
 
-<RxGrid 
+<RxDataSet 
     Model="@(Model)"
     class="w-full h-[500px] overflow-x-auto">
     <FallbackContent>
@@ -10,7 +10,7 @@
         <div class="flex flex-wrap max-sm:flex-col gap-2 my-2">
             @foreach (var filter in Model.State.Filters) {
                 <div class="badge badge-warning gap-2">
-                    <RxGridAction 
+                    <RxDataSetAction 
                         Model="@(Model)"
                         hx-get="@(Model.RenderFromRoute)"
                         name="@(nameof(filter.FilterId))"
@@ -22,13 +22,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </div>
-                    </RxGridAction>
+                    </RxDataSetAction>
                     @($"{GetFilterString(filter)}")
                 </div>
             }
         </div>
     </FilterContent>
-    <TableContent>
+    <DataSetContent>
         <table class="table table-sm table-zebra max-md:table-xs table-pin-rows">
             <thead>
                 <tr>
@@ -49,7 +49,7 @@
                     <th>
                         <div class="flex justify-between items-center gap-x-1">
                             <div class="flex w-full justify-center text-primary">ID</div>
-                            <RxGridSortButton 
+                            <RxDataSetSortButton 
                                 Model="@(Model)"
                                 PropertyName="@nameof(ItemModel.Id)" 
                                 DisplayName="ID"
@@ -61,7 +61,7 @@
                     <th>
                         <div class="flex justify-between items-center gap-x-1">
                             <div class="flex w-full justify-center text-primary">Date</div>
-                            <RxGridSortButton 
+                            <RxDataSetSortButton 
                                 Model="@(Model)"
                                 PropertyName="@nameof(ItemModel.Date)" 
                                 DisplayName="Date"
@@ -73,7 +73,7 @@
                     <th>
                         <div class="flex justify-between items-center gap-x-1">
                             <div class="flex w-full justify-center text-primary">Temp. C</div>
-                            <RxGridSortButton 
+                            <RxDataSetSortButton 
                                 Model="@(Model)"
                                 PropertyName="@nameof(ItemModel.TemperatureC)" 
                                 DisplayName="Temp. C"
@@ -85,7 +85,7 @@
                     <th>
                         <div class="flex justify-between items-center gap-x-1">
                             <div class="flex w-full justify-center text-primary">Temp. F</div>
-                            <RxGridSortButton 
+                            <RxDataSetSortButton 
                                 Model="@(Model)"
                                 PropertyName="@nameof(ItemModel.TemperatureF)"
                                 DisplayName="Temp. F" 
@@ -97,7 +97,7 @@
                     <th>
                         <div class="flex justify-between items-center gap-x-1">
                             <div class="flex w-full justify-center text-primary">Summary</div>
-                            <RxGridSortButton 
+                            <RxDataSetSortButton 
                                 Model="@(Model)"
                                 PropertyName="@nameof(ItemModel.Summary)"
                                 DisplayName="Summary" 
@@ -108,7 +108,7 @@
                     <th>
                         <div class="flex justify-between items-center gap-x-1">
                             <div class="flex w-full justify-center text-primary">Verified</div>
-                            <RxGridSortButton 
+                            <RxDataSetSortButton 
                                 Model="@(Model)"
                                 PropertyName="@nameof(ItemModel.IsVerified)"
                                 DisplayName="Verified"
@@ -119,7 +119,7 @@
                     <th>
                         <div class="flex justify-between items-center gap-x-1">
                             <div class="flex w-full justify-center text-primary">Observed</div>
-                            <RxGridSortButton 
+                            <RxDataSetSortButton 
                                 Model="@(Model)"
                                 PropertyName="@nameof(ItemModel.TemperatureTaken)"
                                 DisplayName="Observed" 
@@ -205,10 +205,10 @@
                             </div>
                             <div class="sm:w-1/3 flex justify-center">
                                 <div class="w-96">
-                                    <GridPager
+                                    <DataSetPager
                                         Model="@(Model)" 
                                         TriggerOnMouseDown="@(true)">
-                                    </GridPager>
+                                    </DataSetPager>
                                 </div>
                             </div>
                             <div class="sm:w-1/3 flex justify-end">
@@ -219,20 +219,22 @@
                 </tr>
             </tfoot>
         </table>
-    </TableContent>
-</RxGrid>
+    </DataSetContent>
+</RxDataSet>
 
 @code {
     [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
+
     private bool CanEdit;
-    [Parameter] public IGridModel<ItemModel> Model { get; set; } = null!;
+    [Parameter] public GridModel Model { get; set; } = new GridModel() { IsAsync = true };
+    
     protected override void OnInitialized() {
         if (HttpContextAccessor.HttpContext!.User.IsInRole("Admin")) {
             CanEdit = true;
         }
     }
 
-    private string GetFilterString(GridFilter? filter) {
+    private string GetFilterString(DataSetFilter? filter) {
         if (filter is null) {
             return string.Empty;
         }

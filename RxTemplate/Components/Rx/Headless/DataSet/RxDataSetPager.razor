@@ -1,4 +1,4 @@
-@implements IComponentModel<IGridModel<T>>
+@implements IComponentModel<IDataSetModel<T>>
 @typeparam T
 
 @if (Model is null) {
@@ -10,7 +10,7 @@
     <div class="@(ControlClass)">
         <button id="@($"{Model.Id}-page-previous")" 
             type="button" 
-            name="@nameof(GridState.Page)"
+            name="@nameof(IDataSetState.Page)"
             value="previous" 
             disabled="@(!Model.State.HasPreviousPage())"
             aria-label="@(Model.State.HasPreviousPage() ? $"Go to page {Model.State.Page - 1}" : "No previous page")"
@@ -24,7 +24,7 @@
         <div class="@(RangeContainerClass)">
             <input id="@($"{Model.Id}-page-selector")" 
                 type="range"
-                name="@(nameof(GridState.Page))" 
+                name="@(nameof(IDataSetState.Page))" 
                 hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
                 hx-disabled-elt="this"
                 hx-get="@(Model.RenderFromRoute)" 
@@ -35,7 +35,7 @@
                 min="1" 
                 max="@(Model.State.GetTotalPages())" 
                 value="@(Model.State.Page)" 
-                class="@(RangeClass)">
+                class="@(RangeClass)" />
         </div>
         <script>
             (function() {
@@ -50,7 +50,7 @@
         </script>
         <button id="@($"{Model.Id}-page-next")" 
             type="button" 
-            name="@nameof(GridState.Page)"
+            name="@nameof(IDataSetState.Page)"
             value="next" 
             disabled="@(!Model.State.HasNextPage())"
             aria-label="@(Model.State.HasNextPage() ? $"Go to page {Model.State.Page + 1}" : "No next page")"
@@ -79,7 +79,7 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!; 
+    [Parameter, EditorRequired] public IDataSetModel<T> Model { get; set; } = null!; 
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public bool TriggerOnMouseDown { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using System.Web;
-using RxTemplate.Components.Rx.Headless.Grid;
+using RxTemplate.Components.Rx.Headless.DataSet;
 using RxTemplate.Rx;
 
 namespace RxTemplate.Components.Examples.Crud;
@@ -11,15 +11,11 @@ public class CrudHandler : IRequestHandler {
     /// A mock service/repository that would be replaced with a real implementation and injected in.
     /// </summary>
     private readonly static MockCrudService Service = new();
-    public static bool IsBlockingExample { get; set; }
 
     public void MapRoutes(IEndpointRouteBuilder router) {
 
-        router.MapGet("/examples/crud/blocking", GetBlocking)
-            .AllowAnonymous()
-            .WithRxRootComponent();
 
-        router.MapGet("/examples/crud/non-blocking", GetNonBlocking)
+        router.MapGet("/examples/crud", GetNonBlocking)
             .AllowAnonymous()
             .WithRxRootComponent();
 
@@ -27,10 +23,10 @@ public class CrudHandler : IRequestHandler {
             .AllowAnonymous();
 
         router.MapGet("/examples/crud/delete-modal/{id:int}", GetDeleteModal)
-            .RequireAuthorization();
+            .AllowAnonymous();
 
         router.MapGet("/examples/crud/save-modal/{id:int}", GetSaveModal)
-            .RequireAuthorization();
+            .AllowAnonymous();
 
         router.MapGet("/examples/crud/grid", GetGrid)
             .AllowAnonymous();
@@ -51,20 +47,19 @@ public class CrudHandler : IRequestHandler {
         HttpResponse response,
         string? demoGridState,
         ILogger<CrudHandler> logger) {
-        // just a test flag to demonstrate blocking versus non-blocking
         GridState? state = string.IsNullOrWhiteSpace(demoGridState)
             ? new()
             : JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
         // Simulate a DB latency
         await Task.Delay(200);
         // Get the model
-        var model = (GridModel)Service.GetModel(state);
+        var model = Service.GetModel(state);
         if (!model.Data.Any() && state.Page > 1) {
             state.Page = 1;
-            model = (GridModel)Service.GetModel(state);
+            model = Service.GetModel(state);
         }
         // Render the page
-        return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
+        return response.RenderComponent<CrudPage, GridModel>(model, logger);
     }
 
     public static IResult GetNonBlocking(
@@ -76,7 +71,7 @@ public class CrudHandler : IRequestHandler {
             InitialState = demoGridState ?? string.Empty
         };
         // Render the page
-        return response.RenderComponent<CrudPage, IGridModel<ItemModel>>(model, logger);
+        return response.RenderComponent<CrudPage, GridModel>(model, logger);
     }
 
     public static IResult GetFilter(
@@ -174,7 +169,7 @@ public class CrudHandler : IRequestHandler {
         var state = JsonSerializer.Deserialize<GridState>(demoGridState)!;
         var gridModel = Service.GetModel(state);
         if (!gridModel.Data.Any() && state.Page > 1) {
-            //reset page back 1 if the delete was for the last item on the current page
+            //reset page back 1 if the save removed the last item on the current page due to filters used
             state.Page -= 1;
             gridModel = Service.GetModel(state);
         }
@@ -182,7 +177,7 @@ public class CrudHandler : IRequestHandler {
         triggerBuilder.Add(new HxCloseModalTrigger("#save-modal"));
         triggerBuilder.Add(new HxToastTrigger("#crud-toast", $"Item ID: {model.Id} was {(id.HasValue ? "updated" : "created")}"));
         triggerBuilder.Build();
-        return response.RenderComponent<Grid, IGridModel<ItemModel>>(gridModel, logger);
+        return response.RenderComponent<Grid, GridModel>(gridModel, logger);
     }
 
     public async static Task<IResult> DeleteItem(
@@ -216,7 +211,7 @@ public class CrudHandler : IRequestHandler {
             .Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, JsonSerializer.Serialize(state)))
             .Build();
         // Render
-        return response.RenderComponent<Grid, IGridModel<ItemModel>>(model, logger);
+        return response.RenderComponent<Grid, GridModel>(model, logger);
     }
 
     public async static Task<IResult> GetGrid(
@@ -251,11 +246,11 @@ public class CrudHandler : IRequestHandler {
         triggerBuilder.Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, serializedState));
         // Optionally add the state to the URL - useful for allowing the state to be transferred to another client by copying the link
         // You may remove this and everything will continue function as expected, only with a "clean" URL
-        response.HxReplaceUrl($"/examples/crud/{(IsBlockingExample ? "blocking" : "non-blocking")}?{nameof(demoGridState)}={HttpUtility.UrlEncode(serializedState)}");
+        response.HxReplaceUrl($"/examples/crud?{nameof(demoGridState)}={HttpUtility.UrlEncode(serializedState)}");
         // Pop toast for filter change
         if (!string.IsNullOrWhiteSpace(filterProperty)) {
-            triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]"));
             triggerBuilder.Add(new HxToastTrigger("#crud-toast", "Filter added"));
+            triggerBuilder.Add(new HxFocusTrigger("#filter-selector"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
             triggerBuilder.Add(new HxToastTrigger("#crud-toast", "Filter removed"));
@@ -281,13 +276,13 @@ public class CrudHandler : IRequestHandler {
         if (!string.IsNullOrWhiteSpace(filterId)) {
             // Trigger focus on filter removal
             triggerBuilder.Add(state.Filters.Count == 0
-                ? new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterProperty)}\"]")
-                : new HxFocusTrigger($"[name=\"{nameof(GridFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
+                ? new HxFocusTrigger("#filter-selector")
+                : new HxFocusTrigger($"[name=\"{nameof(DataSetFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
         }
         // Build triggers
         triggerBuilder.Build();
         // Render
-        return response.RenderComponent<Grid, IGridModel<ItemModel>>(model, logger);
+        return response.RenderComponent<Grid, GridModel>(model, logger);
     }
 
 }

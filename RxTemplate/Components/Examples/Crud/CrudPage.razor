@@ -1,4 +1,4 @@
-@implements IComponentModel<IGridModel<ItemModel>>
+@implements IComponentModel<GridModel>
 
 <HeadContent>
     <title>Examples: The Kitchen Sync</title>
@@ -33,7 +33,7 @@
                                 <Spinner AlwaysVisible="@(true)" />    
                             </div>
                             <div class="modal-action">
-                                <RxModalDismiss ModalId="delete-modal" class="btn btn-neutral" autofocus>
+                                <RxModalDismiss Id="delete-modal-dismiss-action" ModalId="delete-modal" class="btn btn-neutral" autofocus>
                                     Cancel
                                 </RxModalDismiss>
                             </div>
@@ -77,7 +77,7 @@
     </Authorized>
 </AuthorizeView>
 
-<div id="crud-page" class="flex justify-center">
+<div id="form-page" class="flex justify-center">
     <article class="prose">
         <div class="flex justify-center">
             <h2>The Kitchen Sync</h2>
@@ -100,8 +100,9 @@
         we'll issue a request to get the form elements specific to the filter property chosen.
         *@
         <div class="max-w-40">
-            <Select 
-                Property="@(nameof(GridFilter.FilterProperty))" 
+            <Select
+                Id="filter-selector" 
+                Property="@(nameof(DataSetFilter.FilterProperty))" 
                 Label="Filter" 
                 Options="@(Options)"
                 hx-trigger="change"
@@ -132,17 +133,13 @@
     </AuthorizeView>
 </div>
 
-@*
-The component that contains the RxGrid. This is an async component since it will be 
-initially rendered with fallback content (spinner) and then lazy-loaded based on existing state 
-for the last page, sort, and filter options used. 
-*@
+
 <Grid Model="@(Model)" />
 
 
 @code {
     private readonly Dictionary<string, string> Options = [];
-    [Parameter] public IGridModel<ItemModel> Model { get; set; } = null!;
+    [Parameter] public GridModel Model { get; set; } = null!;
     protected override void OnParametersSet() {
         Options.Add("Select...", string.Empty);
         Options.Add("ID", nameof(ItemModel.Id));

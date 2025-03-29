@@ -1,4 +1,4 @@
-@implements IComponentModel<IGridModel<T>>
+@implements IComponentModel<IDataSetModel<T>>
 @typeparam T
 
 @if (Model is null) {
@@ -8,7 +8,7 @@
 <button 
     id="@(Id)"
     type="button"
-    name="@nameof(GridState.SortProperty)"
+    name="@nameof(IDataSetState.SortProperty)"
     value="@(PropertyName)"
     aria-label="@($"Sort {DisplayName} {(Model.State.SortProperty != PropertyName || Model.State.SortedDescending ? "ascending" : "descending")}")"
     @attributes="@(AdditionalAttributes)"
@@ -17,8 +17,7 @@
     hx-disabled-elt="this"
     hx-get="@(Model.RenderFromRoute)" 
     hx-swap="outerHTML transition:true" 
-    hx-target="#@(Model.Id)"
-    > 
+    hx-target="#@(Model.Id)"> 
     @if (Model.State.SortProperty != PropertyName) {
         <div>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -62,7 +61,7 @@
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
-    [Parameter, EditorRequired] public IGridModel<T> Model { get; set; } = null!;
+    [Parameter, EditorRequired] public IDataSetModel<T> Model { get; set; } = null!;
     [Parameter, EditorRequired] public string PropertyName { get; set; } = null!;
     [Parameter, EditorRequired] public string DisplayName { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;

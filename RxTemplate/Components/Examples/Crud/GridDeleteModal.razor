@@ -61,13 +61,13 @@
          <RxModalDismiss Id="delete-modal-dismiss-action" ModalId="delete-modal" class="btn btn-neutral">
             Cancel
         </RxModalDismiss>
-        <RxGridAction 
+        <RxDataSetAction 
             Model="@(gridModel)"
             hx-delete="@($"/examples/crud/{Model.Id}")"
             hx-indicator="#delete-grid-item"
             class="btn btn-error">
             Delete
-        </RxGridAction>
+        </RxDataSetAction>
     </div>
 </div>
 
