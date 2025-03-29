@@ -35,10 +35,9 @@ public class BlobHandler : IRequestHandler {
         IBlobProvider blobProvider,
         ILogger<BlobHandler> logger,
         CancellationToken cancellationToken) {
-        var m = new BlobPageModel {
-            SingleBlob = (await blobProvider.ListAsync("single", cancellationToken)).FirstOrDefault(),
-            ListBlobs = [.. await blobProvider.ListAsync("multi", cancellationToken)]
-        };
+        var m = new BlobPageModel(
+            (await blobProvider.ListAsync("single", cancellationToken)).FirstOrDefault(),
+            [.. await blobProvider.ListAsync("multi", cancellationToken)]);
         return response.RenderComponent<BlobPage, BlobPageModel>(m, logger);
     }
 
@@ -94,19 +93,22 @@ public class BlobHandler : IRequestHandler {
         ILogger<BlobHandler> logger,
         CancellationToken cancellationToken) {
         await blobProvider.DeleteAsync($"{path}/{id}", cancellationToken);
-        var triggerBuilder = hxTriggers.With(response);
-        triggerBuilder.Add(new HxCloseModalTrigger("#delete-modal"));
-        triggerBuilder.Add(new HxToastTrigger("#blob-toast", "BLOB removed"));
+        var triggerBuilder = hxTriggers
+            .With(response)
+            .Add(new HxCloseModalTrigger("#delete-modal"))
+            .Add(new HxToastTrigger("#blob-toast", "BLOB removed"));
         response.HxReswap("outerHTML transition:true");
         if (path == "single") {
-            triggerBuilder.Add(new HxFocusTrigger("#example-blob-input"));
-            triggerBuilder.Build();
+            triggerBuilder
+                .Add(new HxFocusTrigger("#example-blob-input"))
+                .Build();
             response.HxRetarget("#example-blob");
             return response.RenderComponent<SingleBlob>(logger);
         }
         var l = await blobProvider.ListAsync("multi", cancellationToken);
-        triggerBuilder.Add(new HxFocusTrigger("#example-blobs-input"));
-        triggerBuilder.Build();
+        triggerBuilder
+            .Add(new HxFocusTrigger("#example-blobs-input"))
+            .Build();
         response.HxRetarget("#blob-list");
         return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(l, logger);
     }

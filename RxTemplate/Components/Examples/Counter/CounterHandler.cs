@@ -23,7 +23,7 @@ public class CounterHandler : IRequestHandler {
         CounterModel model,
         IHxTriggers hxTriggers,
         ILogger<CounterHandler> logger) {
-        model.Count = model.IsAdd.HasValue ? model.Count + 1 : model.Count - 1;
+        model = model with { Count = model.IsAdd ? model.Count + 1 : model.Count - 1 };
         hxTriggers
             .With(response)
             .Add(new HxFocusTrigger(model.IsAdd == true ? "#increment-btn" : "#decrement-btn"))

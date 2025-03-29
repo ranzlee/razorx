@@ -14,7 +14,6 @@ public class CrudHandler : IRequestHandler {
 
     public void MapRoutes(IEndpointRouteBuilder router) {
 
-
         router.MapGet("/examples/crud", GetNonBlocking)
             .AllowAnonymous()
             .WithRxRootComponent();
@@ -156,13 +155,14 @@ public class CrudHandler : IRequestHandler {
                 .Build();
             return response.RenderComponent<GridSaveModal, ItemModel?>(model, logger);
         }
-        var triggerBuilder = hxTriggers.With(response);
         // Validation passed, so save the item
         Service.Save(model);
         // Focus the new or edit button
-        triggerBuilder.Add((id ?? 0) > 0
-            ? new HxFocusTrigger($"#edit-btn-{id}", true)
-            : new HxFocusTrigger($"#new-btn"));
+        var triggerBuilder = hxTriggers
+            .With(response)
+            .Add((id ?? 0) > 0
+                ? new HxFocusTrigger($"#edit-btn-{id}", true)
+                : new HxFocusTrigger($"#new-btn"));
         // POST, PUT, and PATCH send metadata state as a request header instead of a parameter like GET and DELETE
         // htmx uses proper REST and HTTP semantics
         var demoGridState = request.Headers["DemoGridState"].ToString();
@@ -173,10 +173,11 @@ public class CrudHandler : IRequestHandler {
             state.Page -= 1;
             gridModel = Service.GetModel(state);
         }
-        triggerBuilder.Add(new HxSetMetadataTrigger(gridModel.StateScope, gridModel.StateKey, JsonSerializer.Serialize(state)));
-        triggerBuilder.Add(new HxCloseModalTrigger("#save-modal"));
-        triggerBuilder.Add(new HxToastTrigger("#crud-toast", $"Item ID: {model.Id} was {(id.HasValue ? "updated" : "created")}"));
-        triggerBuilder.Build();
+        triggerBuilder
+            .Add(new HxSetMetadataTrigger(gridModel.StateScope, gridModel.StateKey, JsonSerializer.Serialize(state)))
+            .Add(new HxCloseModalTrigger("#save-modal"))
+            .Add(new HxToastTrigger("#crud-toast", $"Item ID: {model.Id} was {(id.HasValue ? "updated" : "created")}"))
+            .Build();
         return response.RenderComponent<Grid, GridModel>(gridModel, logger);
     }
 
@@ -232,7 +233,7 @@ public class CrudHandler : IRequestHandler {
             ? new()
             : JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
         // Update the state based on the grid action (sort, page, filter) sent in the request.
-        state = state.Update(page, sortProperty, filterId, filterProperty, filterOperation, filterValue);
+        state.Update(page, sortProperty, filterId, filterProperty, filterOperation, filterValue);
         // Get the page data and total count based on the new state
         var model = Service.GetModel(state);
         if (!model.Data.Any() && state.Page > 1) {
@@ -240,20 +241,23 @@ public class CrudHandler : IRequestHandler {
             state.Page = 1;
             model = Service.GetModel(state);
         }
-        var triggerBuilder = hxTriggers.With(response);
         // Trigger the persistence of the state on the client   
         var serializedState = JsonSerializer.Serialize(state);
-        triggerBuilder.Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, serializedState));
+        var triggerBuilder = hxTriggers
+            .With(response)
+            .Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, serializedState));
         // Optionally add the state to the URL - useful for allowing the state to be transferred to another client by copying the link
         // You may remove this and everything will continue function as expected, only with a "clean" URL
         response.HxReplaceUrl($"/examples/crud?{nameof(demoGridState)}={HttpUtility.UrlEncode(serializedState)}");
         // Pop toast for filter change
         if (!string.IsNullOrWhiteSpace(filterProperty)) {
-            triggerBuilder.Add(new HxToastTrigger("#crud-toast", "Filter added"));
-            triggerBuilder.Add(new HxFocusTrigger("#filter-selector"));
+            triggerBuilder
+                .Add(new HxToastTrigger("#crud-toast", "Filter added"))
+                .Add(new HxFocusTrigger("#filter-selector"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
-            triggerBuilder.Add(new HxToastTrigger("#crud-toast", "Filter removed"));
+            triggerBuilder
+                .Add(new HxToastTrigger("#crud-toast", "Filter removed"));
         }
         // Grid focus management - this is optional, but provides a good experience for keyboard users
         if (!string.IsNullOrWhiteSpace(page)) {
@@ -264,20 +268,24 @@ public class CrudHandler : IRequestHandler {
                 _ => "range"
             };
             if (page == "range") {
-                triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][type=\"range\"]"));
+                triggerBuilder
+                    .Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][type=\"range\"]"));
             } else {
-                triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][value=\"{page}\"]"));
+                triggerBuilder
+                    .Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][value=\"{page}\"]"));
             }
         }
         if (!string.IsNullOrWhiteSpace(sortProperty)) {
             // Trigger focus on the sort button
-            triggerBuilder.Add(new HxFocusTrigger($"[name=\"{nameof(GridState.SortProperty)}\"][value=\"{sortProperty}\"]"));
+            triggerBuilder
+                .Add(new HxFocusTrigger($"[name=\"{nameof(GridState.SortProperty)}\"][value=\"{sortProperty}\"]"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
             // Trigger focus on filter removal
-            triggerBuilder.Add(state.Filters.Count == 0
-                ? new HxFocusTrigger("#filter-selector")
-                : new HxFocusTrigger($"[name=\"{nameof(DataSetFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
+            triggerBuilder
+                .Add(state.Filters.Count == 0
+                    ? new HxFocusTrigger("#filter-selector")
+                    : new HxFocusTrigger($"[name=\"{nameof(DataSetFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
         }
         // Build triggers
         triggerBuilder.Build();

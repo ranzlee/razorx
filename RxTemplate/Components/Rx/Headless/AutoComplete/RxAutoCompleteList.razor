@@ -145,7 +145,7 @@
 
 @code {
     private IEnumerable<IRxAutoCompleteItem> sortedItems = [];
-    [Parameter] public RxAutoCompleteModel Model { get; set; } = new();
+    [Parameter] public RxAutoCompleteModel Model { get; set; } = new(true, string.Empty, []);
 
     protected override void OnParametersSet() {
         if (!Model.Items.Any()) {

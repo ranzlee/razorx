@@ -9,12 +9,12 @@ public class CounterValidator : Validator<CounterModel> {
         //validation occurs after model binding and before endpoint handler, so...
         RuleFor(x => x.Count + 1)
             .InclusiveBetween(-5, 5)
-            .When(x => x.IsAdd.HasValue)
+            .When(x => x.IsAdd)
             .WithName(nameof(CounterModel.Count))
             .WithMessage("Value must be between -5 and 5.");
         RuleFor(x => x.Count - 1)
             .InclusiveBetween(-5, 5)
-            .When(x => !x.IsAdd.HasValue)
+            .When(x => !x.IsAdd)
             .WithName(nameof(CounterModel.Count))
             .WithMessage("Value must be between -5 and 5.");
 

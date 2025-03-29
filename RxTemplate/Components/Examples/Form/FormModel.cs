@@ -3,30 +3,27 @@ using RxTemplate.Components.Rx.Headless.AutoComplete;
 
 namespace RxTemplate.Components.Examples.Form;
 
-public record FormModel {
-    public string? Name { get; set; }
-    public string? Email { get; set; }
-    public DateOnly? BirthDate { get; set; }
-    public DateTime? AppointmentTime { get; set; }
-    public string? AppointmentTimeTimeZone { get; set; }
-    public bool IsPublished { get; set; }
-    public int? NumberOfDays { get; set; }
-    public decimal? Cost { get; set; }
-    public SubscriptionType Subscription { get; set; }
-    public ReportingStatusType ReportingStatus { get; set; }
-    public string? Notes { get; set; }
-    public string? Widget { get; set; }
-    public string? WidgetId { get; set; }
+public record FormModel(
+    string? Name = null,
+    string? Email = null,
+    DateOnly? BirthDate = null,
+    DateTime? AppointmentTime = null,
+    string? AppointmentTimeTimeZone = null,
+    bool IsPublished = false,
+    int? NumberOfDays = null,
+    decimal? Cost = null,
+    SubscriptionType Subscription = SubscriptionType.NoRenewal,
+    ReportingStatusType ReportingStatus = ReportingStatusType.NotReported,
+    string? Notes = null,
+    string? Widget = null,
+    string? WidgetId = null);
 
-    public DateTime? GetAppointmentTimeAsUtc(ILogger? logger) {
-        return Utilities.GetUtcDateFromTimeZone(AppointmentTime, AppointmentTimeTimeZone, logger);
+public record WidgetItem(string Id, string DisplayValue) : IRxAutoCompleteItem;
+
+public static class ModelExtensions {
+    public static DateTime? GetAppointmentTimeAsUtc(this FormModel formModel, ILogger? logger) {
+        return Utilities.GetUtcDateFromTimeZone(formModel.AppointmentTime, formModel.AppointmentTimeTimeZone, logger);
     }
-}
-
-public record WidgetItem : IRxAutoCompleteItem {
-    public string Id { get; set; } = null!;
-    public string DisplayValue { get; set; } = null!;
-
 }
 
 public enum ReportingStatusType {

@@ -16,12 +16,7 @@ public interface IDataSetFilterModel : IDataSet {
     string FilterProperty { get; set; }
 }
 
-public record DataSetFilter {
-    public string FilterId { get; set; } = null!;
-    public string FilterProperty { get; set; } = null!;
-    public string FilterOperation { get; set; } = null!;
-    public string FilterValue { get; set; } = null!;
-}
+public record DataSetFilter(string FilterId, string FilterProperty, string FilterOperation, string FilterValue);
 
 public interface IDataSetState {
     int Page { get; set; }
@@ -33,7 +28,7 @@ public interface IDataSetState {
 }
 
 public static class DataSetStateExtensions {
-    public static T Update<T>(
+    public static void Update<T>(
         this T dataSetState,
         string? page = null,
         string? sortProperty = null,
@@ -44,40 +39,55 @@ public static class DataSetStateExtensions {
         if (!string.IsNullOrWhiteSpace(page)) {
             if (int.TryParse(page, out var p)) {
                 dataSetState.Page = p;
-                return dataSetState;
+                dataSetState.AutoCorrect();
+                return;
             }
             if (page == "previous") {
                 dataSetState.Page -= 1;
-                return dataSetState;
+                dataSetState.AutoCorrect();
+                return;
             }
             if (page == "next") {
                 dataSetState.Page += 1;
-                return dataSetState;
+                dataSetState.AutoCorrect();
+                return;
             }
         }
         if (!string.IsNullOrWhiteSpace(sortProperty)) {
             if (dataSetState.SortProperty == sortProperty) {
                 dataSetState.SortedDescending = !dataSetState.SortedDescending;
-                return dataSetState;
+                dataSetState.AutoCorrect();
+                return;
             }
             dataSetState.SortProperty = sortProperty;
             dataSetState.SortedDescending = false;
-            return dataSetState;
+            dataSetState.AutoCorrect();
+            return;
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
             dataSetState.Filters = [.. dataSetState.Filters.Where(x => x.FilterId != filterId)];
-            return dataSetState;
+            dataSetState.AutoCorrect();
+            return;
         }
         if (!string.IsNullOrWhiteSpace(filterProperty)) {
-            dataSetState.Filters.Add(new DataSetFilter {
-                FilterId = Guid.NewGuid().ToString(),
-                FilterProperty = filterProperty,
-                FilterOperation = filterOperation ?? "",
-                FilterValue = filterValue ?? ""
-            });
-            return dataSetState;
+            dataSetState.Filters.Add(new DataSetFilter(Guid.NewGuid().ToString(), filterProperty, filterOperation ?? "", filterValue ?? ""));
+            dataSetState.AutoCorrect();
+            return;
         }
-        return dataSetState;
+    }
+
+    private static void AutoCorrect(this IDataSetState dataSetState) {
+        if (dataSetState.Page < 1) {
+            dataSetState.Page = 1;
+        }
+        if (dataSetState.PageSize < 0) {
+            dataSetState.PageSize = 0;
+        }
+        if (dataSetState.TotalRecords < 0) {
+            dataSetState.TotalRecords = 0;
+        }
+        dataSetState.SortProperty ??= string.Empty;
+        dataSetState.Filters ??= [];
     }
 
     public static bool HasPreviousPage(this IDataSetState dataSetState) {
@@ -85,6 +95,9 @@ public static class DataSetStateExtensions {
     }
 
     public static bool HasNextPage(this IDataSetState dataSetState) {
+        if (dataSetState.PageSize == 0) {
+            return false;
+        }
         return dataSetState.Page * dataSetState.PageSize < dataSetState.TotalRecords;
     }
 

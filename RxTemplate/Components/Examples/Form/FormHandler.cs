@@ -34,11 +34,7 @@ public class FormHandler : IRequestHandler {
         string widget,
         ILogger<FormHandler> logger) {
         var widgets = MockWidgetService.Find(widget);
-        var m = new RxAutoCompleteModel {
-            SortExactMatchesFirst = true,
-            SearchPattern = widget,
-            Items = widgets
-        };
+        var m = new RxAutoCompleteModel(true, widget, widgets);
         return response.RenderComponent<RxAutoCompleteList, RxAutoCompleteModel>(m, logger);
     }
 
@@ -66,7 +62,7 @@ public class FormHandler : IRequestHandler {
         if (validationContext.Errors.Count > 0) {
             // The server must always send back a UTC date for datetime-local form fields
             if (model.AppointmentTime.HasValue) {
-                model.AppointmentTime = model.GetAppointmentTimeAsUtc(logger);
+                model = model with { AppointmentTime = model.GetAppointmentTimeAsUtc(logger) };
             }
             hxTriggers
                 .With(response)

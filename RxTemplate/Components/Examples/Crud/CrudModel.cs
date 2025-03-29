@@ -20,7 +20,7 @@ public static class GridProperties {
 /// <summary>
 /// The IGridFilterModel for the example grid.
 /// </summary>
-public record GridFilterModel : IDataSetFilterModel {
+public class GridFilterModel : IDataSetFilterModel {
     public string Id { get; set; } = GridProperties.Id;
     public string StateKey { get; set; } = GridProperties.StateKey;
     public HxMetadataScope StateScope { get; set; } = GridProperties.StateScope;
@@ -44,7 +44,7 @@ public enum FilterOperationType {
     Contains = 5,
 }
 
-public record GridState : IDataSetState {
+public class GridState : IDataSetState {
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 50;
     public int TotalRecords { get; set; } = 0;
@@ -56,7 +56,7 @@ public record GridState : IDataSetState {
 /// <summary>
 /// The IGridModel that binds to the RxGrid.
 /// </summary>
-public record GridModel : IDataSetModel<ItemModel> {
+public class GridModel : IDataSetModel<ItemModel> {
     public string Id { get; set; } = GridProperties.Id;
     public string StateKey { get; set; } = GridProperties.StateKey;
     public HxMetadataScope StateScope { get; set; } = GridProperties.StateScope;
@@ -77,7 +77,7 @@ public record GridModel : IDataSetModel<ItemModel> {
 /// 3. Booleans must not be nullable since they bind to a checkbox/toggle.
 /// 4. Enums must not be nullable since they are not deserializable by System.Text.Json. Add a null-representative value to the enum if you need it. 
 /// </summary>
-public record ItemModel {
+public class ItemModel {
     public ItemModel() {
         TemperatureTaken = TimeOfDay.Select;
     }

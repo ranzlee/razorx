@@ -2,7 +2,4 @@ using RxTemplate.Blob;
 
 namespace RxTemplate.Components.Examples.Blob;
 
-public record BlobPageModel {
-    public BlobModel? SingleBlob { get; set; }
-    public IEnumerable<BlobModel> ListBlobs { get; set; } = [];
-}
+public record BlobPageModel(BlobModel? SingleBlob, IEnumerable<BlobModel> ListBlobs);

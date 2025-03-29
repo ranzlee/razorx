@@ -5,12 +5,12 @@
     @foreach (var b in Model) {
         <div class="flex justify-between items-center">
             <div>
-                <a href="/examples/blob/@(b.Id)" class="link link-primary" download="@(b.FileName)" title="Download @(b.FileName)">@(b.FileName)</a>
+                <a href="/examples/blob/@(b.BlobName)" class="link link-primary" download="@(b.FileName)" title="Download @(b.FileName)">@(b.FileName)</a>
             </div>
             <div>
                 <RxModalTrigger 
                     ModalId="delete-modal"
-                    RouteValue="@(b.Id)"
+                    RouteValue="@(b.BlobName)"
                     TextNodeValue="@(b.FileName)"
                     class="btn btn-sm btn-error" 
                     aria-label="@($"Delete {b.FileName}?")">

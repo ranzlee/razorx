@@ -1,7 +1,3 @@
 namespace RxTemplate.Components.Examples.Counter;
 
-public record CounterModel {
-    public int Count { get; set; }
-    public bool? IsAdd { get; set; }
-
-}
+public record CounterModel(int Count = 0, bool IsAdd = false);

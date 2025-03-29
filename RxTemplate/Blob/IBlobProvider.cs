@@ -48,12 +48,7 @@ file sealed class BlobProvider : IBlobProvider {
         stream.Position = 0;
         var blobClient = _container.GetBlobClient(blobName);
         await blobClient.UploadAsync(stream, options, cancellationToken);
-        return new BlobModel {
-            FileName = fileName,
-            FileSize = length,
-            Id = blobName,
-            Uploaded = uploaded,
-        };
+        return new BlobModel(blobName, fileName, length, uploaded);
     }
 
     public async Task<IEnumerable<BlobModel>> ListAsync(string? prefix, CancellationToken cancellationToken = default) {
@@ -71,12 +66,13 @@ file sealed class BlobProvider : IBlobProvider {
                 }
             }
         }
-        return list.Select(x => new BlobModel {
-            Id = x.Name,
-            FileName = x.Metadata["filename"],
-            FileSize = long.Parse(x.Metadata["filesize"]),
-            Uploaded = DateTime.SpecifyKind(DateTime.Parse(x.Metadata["uploaded"]), DateTimeKind.Utc)
-        }).OrderBy(x => x.Uploaded);
+        return list.Select(x =>
+            new BlobModel(
+                x.Name,
+                x.Metadata["filename"],
+                long.Parse(x.Metadata["filesize"]),
+                DateTime.SpecifyKind(DateTime.Parse(x.Metadata["uploaded"]), DateTimeKind.Utc)))
+            .OrderBy(x => x.Uploaded);
     }
 
     public async Task<BlobDownloadStreamingResult?> GetAsync(string id, CancellationToken cancellationToken = default) {
