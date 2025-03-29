@@ -28,7 +28,7 @@ public static class HxTriggersService {
     }
 }
 
-public sealed class HxTriggers(ILogger<HxTriggers> logger) : IHxTriggers {
+file sealed class HxTriggers(ILogger<HxTriggers> logger) : IHxTriggers {
     public IHxTriggerBuilder With(HttpResponse response) {
         return new HxTriggerBuilder(response, logger);
     }
@@ -59,29 +59,19 @@ public interface IHxTrigger { }
 /// </summary>
 /// <param name="ToastSelector">The element CSS selector of the toast alert.</param>
 /// <param name="Message">The message for the toast alert.</param>
-/// <param name="IsError">True to show the error alert instead of the default success alert.</param>
-public record HxToastTrigger(string ToastSelector, string Message) : IHxTrigger {
-
-    public string ToastSelector { get; init; } = ToastSelector;
-    public string Message { get; init; } = Message;
-}
+public record HxToastTrigger(string ToastSelector, string Message) : IHxTrigger;
 
 /// <summary>
 /// Triggers the close action of an open modal with the response.
 /// </summary>
 /// <param name="ModalSelector">The element CSS selector of the modal dialog.</param>
-public record HxCloseModalTrigger(string ModalSelector) : IHxTrigger {
-    public string ModalSelector { get; init; } = ModalSelector;
-}
+public record HxCloseModalTrigger(string ModalSelector) : IHxTrigger;
 
 /// <summary>
 /// Triggers the focus of an HTML element with the response.
 /// </summary>
 /// <param name="ElementSelector">The element CSS selector to focus.</param>
-public record HxFocusTrigger(string ElementSelector, bool ScrollIntoView = false) : IHxTrigger {
-    public string ElementSelector { get; init; } = ElementSelector;
-    public bool ScrollIntoView { get; init; } = ScrollIntoView;
-}
+public record HxFocusTrigger(string ElementSelector, bool ScrollIntoView = false) : IHxTrigger;
 
 /// <summary>
 /// The type of storage targeted for add/remove, 
@@ -102,21 +92,14 @@ public enum HxMetadataScope {
 /// <param name="Scope">The type of storage to target.</param>
 /// <param name="Key">The storage key, or hidden field ID if Transient.</param>
 /// <param name="Value">The value to store.</param>
-public record HxSetMetadataTrigger(HxMetadataScope Scope, string Key, string Value) : IHxTrigger {
-    public HxMetadataScope Scope { get; init; } = Scope;
-    public string Key { get; init; } = Key;
-    public string Value { get; init; } = Value;
-}
+public record HxSetMetadataTrigger(HxMetadataScope Scope, string Key, string Value) : IHxTrigger;
 
 /// <summary>
 /// Triggers the removal of a local or session storage item.
 /// </summary>
 /// <param name="Scope">The type of storage to target.</param>
 /// <param name="Key">The storage key, or hidden field ID is Transient.</param>
-public record HxRemoveMetadataTrigger(HxMetadataScope Scope, string Key) : IHxTrigger {
-    public HxMetadataScope Scope { get; init; } = Scope;
-    public string Key { get; init; } = Key;
-}
+public record HxRemoveMetadataTrigger(HxMetadataScope Scope, string Key) : IHxTrigger;
 
 /// <summary>
 /// The type of custom trigger. The order from start to finish is
@@ -134,11 +117,7 @@ public enum HxCustomTriggerType {
 /// <param name="TriggerType">HxCustomTriggerType</param>
 /// <param name="EventId">The JS event name.</param>
 /// <param name="JsonDetail">The JSON payload that is the evt.detail object.</param>
-public record HxCustomTrigger(HxCustomTriggerType TriggerType, string EventId, string JsonDetail) : IHxTrigger {
-    public HxCustomTriggerType TriggerType { get; init; } = TriggerType;
-    public string EventId { get; init; } = EventId;
-    public string JsonDetail { get; init; } = JsonDetail;
-}
+public record HxCustomTrigger(HxCustomTriggerType TriggerType, string EventId, string JsonDetail) : IHxTrigger;
 
 file sealed class HxTriggerBuilder(HttpResponse response, ILogger logger) : IHxTriggerBuilder {
     private readonly List<IHxTrigger> Triggers = [];

@@ -102,5 +102,5 @@ app.UseAntiforgeryCookie();
 // Use router
 app.UseRouter<App, ErrorPage>();
 
-// Go!
+// Let's Go!
 app.Run();

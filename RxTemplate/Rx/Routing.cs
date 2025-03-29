@@ -22,6 +22,15 @@ file sealed class DefaultRootComponent {
 
 public static class RoutingExtensions {
 
+    /// <summary>
+    /// Creates a route group for the application for using ASP.NET Minimal API route handlers with
+    /// RazorComponents and htmx. Typically, an application will have only one route group for the web
+    /// application routes.
+    /// </summary>
+    /// <typeparam name="TRootComponent">The default IRootComponent layout.</typeparam>
+    /// <typeparam name="TErrorPage">The IComponentModel<ErrorModel> component error page.</typeparam>
+    /// <param name="app">WebApplication</param>
+    /// <param name="routePrefix">ASP.NET Minimal API route group prefix, typically an empty string.</param>
     public static void UseRouter<TRootComponent, TErrorPage>(this WebApplication app, string routePrefix = "")
         where TRootComponent : IRootComponent
         where TErrorPage : IComponent, IComponentModel<ErrorModel> {
@@ -45,10 +54,22 @@ public static class RoutingExtensions {
         }
     }
 
+    /// <summary>
+    /// Adds RazorComponent and htmx route handling to the route group.
+    /// </summary>
+    /// <param name="routeBuilder">RouteGroupBuilder</param>
+    /// <returns>RouteGroupBuilder</returns>
     public static RouteGroupBuilder WithRxRouteHandling(this RouteGroupBuilder routeBuilder) {
         return routeBuilder.AddEndpointFilter<RouteHandler>();
     }
 
+    /// <summary>
+    /// Adds RazorComponent and htmx error handling to the route group.
+    /// </summary>
+    /// <typeparam name="TFallbackRootComponent">The default IRootComponent layout for the error page.</typeparam>
+    /// <typeparam name="TComponent">The IComponentModel<ErrorModel> component error page.</typeparam>
+    /// <param name="routeBuilder">RouteGroupBuilder</param>
+    /// <returns>RouteGroupBuilder</returns>
     public static RouteGroupBuilder WithRxErrorHandling<TFallbackRootComponent, TComponent>(this RouteGroupBuilder routeBuilder)
     where TFallbackRootComponent : IRootComponent
     where TComponent : IComponent, IComponentModel<ErrorModel> {
@@ -61,12 +82,11 @@ public static class RoutingExtensions {
 
 
     /// <summary>
-    /// Adds the WithAttribute to the endpoint via the RouteHandlerBuilder if the preference is not to 
-    /// declare the attribute on the endpoint explicitly.
+    /// Adds a layout for a page-level component route.
     /// </summary>
-    /// <typeparam name="TRootComponent"></typeparam>
-    /// <param name="routeBuilder"></param>
-    /// <returns></returns>
+    /// <typeparam name="TRootComponent">The IRootComponent that is the layout for the page.</typeparam>
+    /// <param name="routeBuilder">RouteHandlerBuilder</param>
+    /// <returns>RouteHandlerBuilder</returns>
     public static RouteHandlerBuilder WithRxRootComponent<TRootComponent>(this RouteHandlerBuilder routeBuilder)
     where TRootComponent : IRootComponent {
         return routeBuilder
@@ -74,12 +94,22 @@ public static class RoutingExtensions {
             .WithMetadata(new WithRxRootComponentAttribute<TRootComponent>());
     }
 
+    /// <summary>
+    /// Adds the UseRouter default IRootComponent layout for a page-level component route.
+    /// </summary>
+    /// <param name="routeBuilder">RouteHandlerBuilder</param>
+    /// <returns>RouteHandlerBuilder</returns>
     public static RouteHandlerBuilder WithRxRootComponent(this RouteHandlerBuilder routeBuilder) {
         return routeBuilder
             .AddEndpointFilter<WithRxRootComponent>()
             .WithMetadata(new WithRxRootComponentAttribute());
     }
 
+    /// <summary>
+    /// Skips route handling for the configured route. Useful for things like file downloads.
+    /// </summary>
+    /// <param name="routeBuilder">RouteHandlerBuilder</param>
+    /// <returns>RouteHandlerBuilder</returns>
     public static RouteHandlerBuilder WithRxSkipRouteHandling(this RouteHandlerBuilder routeBuilder) {
         return routeBuilder
             .AddEndpointFilter<WithRxSkipRouteHandling>()
@@ -87,7 +117,7 @@ public static class RoutingExtensions {
     }
 }
 
-public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
+file sealed class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         // Verify is GET request.
         if (context.HttpContext.Request.Method != "GET") {
@@ -150,14 +180,17 @@ public class RouteHandler(ILogger<RouteHandler> logger) : IEndpointFilter {
     }
 }
 
+/// <summary>
+/// Common interface for the WithRxRootComponentAttributes
+/// </summary>
 public interface IWithRxRootComponentAttribute {
     public Type GetRootComponentType();
 }
 
 /// <summary>
-/// Identifies an endpoint as a route that should return a complete page.
+/// Adds the IRootComponent layout for a page-level component route.
 /// </summary>
-/// <typeparam name="TRootComponent">The root component that is the layout for the page.</typeparam>
+/// <typeparam name="TRootComponent">The IRootComponent that is the layout for the page.</typeparam>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class WithRxRootComponentAttribute<TRootComponent> : Attribute, IWithRxRootComponentAttribute
 where TRootComponent : IRootComponent {
@@ -166,6 +199,9 @@ where TRootComponent : IRootComponent {
     }
 }
 
+/// <summary>
+/// Adds the UseRouter default IRootComponent layout for a page-level component route.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class WithRxRootComponentAttribute() : Attribute, IWithRxRootComponentAttribute {
     public Type GetRootComponentType() {
@@ -173,25 +209,25 @@ public class WithRxRootComponentAttribute() : Attribute, IWithRxRootComponentAtt
     }
 }
 
-/// <summary>
-/// Identifies an endpoint as a route that should return a complete page.
-/// </summary>
-public class WithRxRootComponent() : IEndpointFilter {
+file class WithRxRootComponent() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }
 }
 
+/// <summary>
+/// Skips route handling for the configured route. Useful for things like file downloads.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class WithRxSkipRouteHandlingAttribute : Attribute { }
 
-public class WithRxSkipRouteHandling() : IEndpointFilter {
+file class WithRxSkipRouteHandling() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
     }
 }
 
-public class ErrorHandler<TFallbackRootComponent, TComponent>(ILogger<ErrorHandler<TFallbackRootComponent, TComponent>> logger) : IEndpointFilter
+file sealed class ErrorHandler<TFallbackRootComponent, TComponent>(ILogger<ErrorHandler<TFallbackRootComponent, TComponent>> logger) : IEndpointFilter
 where TFallbackRootComponent : IRootComponent
 where TComponent : IComponent, IComponentModel<ErrorModel> {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {

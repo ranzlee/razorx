@@ -4,7 +4,8 @@ using FluentValidation.Results;
 namespace RxTemplate.Rx;
 
 /// <summary>
-/// The validation context for a model.
+/// The validation context for a model that holds the error collection after the FluentValidation Validator has run. 
+// It can be injected into IRequestHandler delegates, RazorComponents, or wherever needed.
 /// </summary>
 public sealed class ValidationContext {
     public ValidationResult ValidationResult { get; set; } = new();
@@ -17,7 +18,7 @@ public sealed class ValidationContext {
 /// <typeparam name="TModel">Model type</typeparam>
 /// <param name="validationContext">ValidationContext</param>
 /// <param name="logger">ILogger</param>
-public class Validator<TModel>(ValidationContext validationContext, ILogger? logger = default)
+public abstract class Validator<TModel>(ValidationContext validationContext, ILogger? logger = default)
 : AbstractValidator<TModel>, IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         var model = context.Arguments.OfType<TModel>().SingleOrDefault();

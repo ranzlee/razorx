@@ -10,7 +10,6 @@ namespace RxTemplate.Rx;
 /// ASP.NET Minimal APIs have much better support for JSON binding compared to FORM data. On the client, the 
 /// json-enc.js HTMX extension is used to convert request FORM data into JSON. Form data values are always
 /// strings. The custom converters coerce the string values into the correct data types for model binding.
-/// The default JSON converters are used when the request is not from HTMX.
 /// </summary>
 /// <param name="httpContextAccessor">IHttpContextAccessor</param>
 /// <param name="logger">ILogger</param>

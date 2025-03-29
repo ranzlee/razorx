@@ -31,11 +31,23 @@ public static class HxUtilities {
         response.Headers.Append("HX-Retarget", targetSelector);
     }
 
+    /// <summary>
+    /// Adds the HX-Reswap response header.
+    /// </summary>
+    /// <param name="response">HttpResponse</param>
+    /// <param name="strategy">The htmx swap strategy to use.</param>
+    /// <param name="logger">ILogger</param>
     public static void HxReswap(this HttpResponse response, string strategy, ILogger? logger = default) {
         logger?.LogInformation("HX-Reswap {strategy}.", strategy);
         response.Headers.Append("HX-Reswap", strategy);
     }
 
+    /// <summary>
+    /// Adds the HX-Replace-Url response header
+    /// </summary>
+    /// <param name="response">HttpResponse</param>
+    /// <param name="url">The URL to set on the client.</param>
+    /// <param name="logger">ILogger</param>
     public static void HxReplaceUrl(this HttpResponse response, string url, ILogger? logger = default) {
         logger?.LogInformation("HX-Replace-Url {url}.", url);
         response.Headers.Append("HX-Replace-Url", url);

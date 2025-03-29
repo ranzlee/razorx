@@ -3,9 +3,15 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace RxTemplate.Rx;
 
+/// <summary>
+/// Attribute that skips the antiforgery validation for the route.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class WithRxSkipAntiforgeryValidationAttribute : Attribute { }
 
+/// <summary>
+/// Endpoint filter that skips the antiforgery validation.
+/// </summary>
 public class WithRxSkipAntiforgeryValidation() : IEndpointFilter {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         return await next(context);
@@ -14,6 +20,13 @@ public class WithRxSkipAntiforgeryValidation() : IEndpointFilter {
 
 public static class AntiforgeryExtensions {
 
+    /// <summary>
+    /// Skips the antiforgery validation for the configured route. This could be needed for handling a valid cross-origin
+    /// request or JSON API, but other security measures should be implemented. JSON APIs should be implemented in a 
+    /// separate route group from the web application routes.
+    /// </summary>
+    /// <param name="routeBuilder">RouteHandlerBuilder</param>
+    /// <returns>RouteHandlerBuilder</returns>
     public static RouteHandlerBuilder WithRxSkipAntiforgeryValidation(this RouteHandlerBuilder routeBuilder) {
         return routeBuilder
             .AddEndpointFilter<WithRxSkipAntiforgeryValidation>()
