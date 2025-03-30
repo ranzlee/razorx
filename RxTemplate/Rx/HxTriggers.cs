@@ -103,7 +103,7 @@ public record HxRemoveMetadataTrigger(HxMetadataScope Scope, string Key) : IHxTr
 
 /// <summary>
 /// The type of custom trigger. The order from start to finish is
-/// normal (immediate), then after HTMX swaps the target element, then after HTMX settles the DOM.
+/// normal (immediate), then after htmx swaps the target element, then after htmx settles the DOM.
 /// </summary>
 public enum HxCustomTriggerType {
     Normal = 0,
