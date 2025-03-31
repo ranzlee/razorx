@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageType>Template</PackageType>
-    <PackageVersion>1.0.0-alpha</PackageVersion>
+    <PackageVersion>1.0.0-beta</PackageVersion>
     <PackageId>RazorX.Template</PackageId>
     <Title>RazorX Template</Title>
     <Authors>Randy Lee</Authors>

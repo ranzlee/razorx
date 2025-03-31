@@ -1,3 +1,4 @@
+# unix 
 build:
 	rm -rf bin
 	rm -rf obj
@@ -10,6 +11,21 @@ uninstall:
 	dotnet new uninstall RazorX.Template
 
 install:
-	dotnet new install bin/Release/RazorX.Template.1.0.0-alpha.nupkg
+	dotnet new install bin/Release/RazorX.Template.1.0.0-beta.nupkg
 
 reinstall: build uninstall install
+
+# windows
+win-build:
+	rmdir /s/q content
+	mkdir content
+	xcopy ..\RxTemplate content\RxTemplate /E
+	dotnet pack
+
+win-uninstall:
+	dotnet new uninstall RazorX.Template
+
+win-install:
+	dotnet new install bin\Release\RazorX.Template.1.0.0-beta.nupkg
+
+win-reinstall: win-build win-uninstall win-install
