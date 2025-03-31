@@ -75,12 +75,12 @@ public class CrudHandler : IRequestHandler {
 
     public static IResult GetFilter(
         HttpResponse response,
-        string filterProperty,
+        string filterPropertyName,
         ILogger<CrudHandler> logger) {
         // Render the filter form for the requested item property
         var model = new GridFilterModel {
-            FilterProperty = filterProperty,
-            FilterType = filterProperty switch {
+            FilterPropertyName = filterPropertyName,
+            FilterType = filterPropertyName switch {
                 nameof(ItemModel.Id) => typeof(int),
                 nameof(ItemModel.Date) => typeof(DateOnly),
                 nameof(ItemModel.IsVerified) => typeof(bool),
@@ -219,9 +219,9 @@ public class CrudHandler : IRequestHandler {
         HttpResponse response,
         string? demoGridState,
         string? page,
-        string? sortProperty,
+        string? sortPropertyName,
         string? filterId,
-        string? filterProperty,
+        string? filterPropertyName,
         string? filterOperation,
         string? filterValue,
         IHxTriggers hxTriggers,
@@ -233,7 +233,7 @@ public class CrudHandler : IRequestHandler {
             ? new()
             : JsonSerializer.Deserialize<GridState>(HttpUtility.UrlDecode(demoGridState))!;
         // Update the state based on the grid action (sort, page, filter) sent in the request.
-        state.Update(page, sortProperty, filterId, filterProperty, filterOperation, filterValue);
+        state.Update(page, sortPropertyName, filterId, filterPropertyName, filterOperation, filterValue);
         // Get the page data and total count based on the new state
         var model = Service.GetModel(state);
         if (!model.Data.Any() && state.Page > 1) {
@@ -250,7 +250,7 @@ public class CrudHandler : IRequestHandler {
         // You may remove this and everything will continue function as expected, only with a "clean" URL
         response.HxReplaceUrl($"/examples/crud?{nameof(demoGridState)}={HttpUtility.UrlEncode(serializedState)}");
         // Pop toast for filter change
-        if (!string.IsNullOrWhiteSpace(filterProperty)) {
+        if (!string.IsNullOrWhiteSpace(filterPropertyName)) {
             triggerBuilder
                 .Add(new HxToastTrigger("#crud-toast", "Filter added"))
                 .Add(new HxFocusTrigger("#filter-selector"));
@@ -275,10 +275,10 @@ public class CrudHandler : IRequestHandler {
                     .Add(new HxFocusTrigger($"[name=\"{nameof(GridState.Page)}\"][value=\"{page}\"]"));
             }
         }
-        if (!string.IsNullOrWhiteSpace(sortProperty)) {
+        if (!string.IsNullOrWhiteSpace(sortPropertyName)) {
             // Trigger focus on the sort button
             triggerBuilder
-                .Add(new HxFocusTrigger($"[name=\"{nameof(GridState.SortProperty)}\"][value=\"{sortProperty}\"]"));
+                .Add(new HxFocusTrigger($"[name=\"{nameof(GridState.SortPropertyName)}\"][value=\"{sortPropertyName}\"]"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
             // Trigger focus on filter removal

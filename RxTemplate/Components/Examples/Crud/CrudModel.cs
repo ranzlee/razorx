@@ -27,7 +27,7 @@ public class GridFilterModel : IDataSetFilterModel {
     public string RenderFromRoute { get; set; } = GridProperties.RenderFromRoute;
     public string SpinnerId { get; set; } = GridProperties.SpinnerId;
     public Type? FilterType { get; set; }
-    public string FilterProperty { get; set; } = null!;
+    public string FilterPropertyName { get; set; } = null!;
     public bool IsAsync { get; set; }
     public string InitialState { get; set; } = string.Empty;
 }
@@ -48,7 +48,7 @@ public class GridState : IDataSetState {
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 50;
     public int TotalRecords { get; set; } = 0;
-    public string SortProperty { get; set; } = null!;
+    public string SortPropertyName { get; set; } = null!;
     public bool SortedDescending { get; set; } = false;
     public IList<DataSetFilter> Filters { get; set; } = [];
 }

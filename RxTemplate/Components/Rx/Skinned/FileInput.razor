@@ -9,8 +9,8 @@
     CancelButtonClass="btn btn-neutral"
     Id="@(Id)"
     Label="@(Label)"
-    Property="@(Property)"
-    ValidationProperty="@(ValidationProperty)"
+    PropertyName="@(PropertyName)"
+    ValidationPropertyName="@(ValidationPropertyName)"
     AllowMultiple="@(AllowMultiple)"
     Accept="@(Accept)"
     RequestTimeoutMilliseconds="@(RequestTimeoutMilliseconds)"
@@ -18,7 +18,7 @@
     <ValidationContainer>
         <RxFormError 
             FormControlId="@(Id)"
-            Property="@(ValidationProperty)" 
+            PropertyName="@(ValidationPropertyName)" 
             UseOpacityForValidationErrors="@(UseOpacityForValidationErrors)"
             ContainerClass="label" 
             ErrorMessageClass="text-error" />
@@ -28,8 +28,8 @@
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
-    [Parameter, EditorRequired] public string Property { get; set; } = null!;
-    [Parameter] public string? ValidationProperty { get; set; }
+    [Parameter, EditorRequired] public string PropertyName { get; set; } = null!;
+    [Parameter] public string? ValidationPropertyName { get; set; }
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public bool AllowMultiple { get; set; }
     [Parameter] public string Accept { get; set; } = string.Empty;

@@ -6,7 +6,7 @@
             data-validate-on-change="@(AllowValidateOnChange)"
             id="@(Id)-input" 
             type="checkbox" 
-            name="@(Property)" 
+            name="@(PropertyName)" 
             checked="@(IsChecked)"
             class="@($"{ControlClass} {(isInvalid ? InvalidClass : "")}")"
             aria-invalid="@(isInvalid ? "true" : false)"
@@ -20,7 +20,7 @@
     [Inject] public ValidationContext ValidationContext { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
-    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string PropertyName { get; set; } = null!;
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public bool IsChecked { get; set; }
     [Parameter] public bool AllowValidateOnChange { get; set; }
@@ -33,7 +33,7 @@
     private bool isInvalid { get; set; }
     
     protected override void OnParametersSet() {
-        if (ValidationContext.TryGetError(Property, out var _)) {
+        if (ValidationContext.TryGetError(PropertyName, out var _)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {

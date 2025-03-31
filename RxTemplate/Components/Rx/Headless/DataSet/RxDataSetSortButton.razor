@@ -8,9 +8,9 @@
 <button 
     id="@(Id)"
     type="button"
-    name="@nameof(IDataSetState.SortProperty)"
+    name="@nameof(IDataSetState.SortPropertyName)"
     value="@(PropertyName)"
-    aria-label="@($"Sort {DisplayName} {(Model.State.SortProperty != PropertyName || Model.State.SortedDescending ? "ascending" : "descending")}")"
+    aria-label="@($"Sort {DisplayName} {(Model.State.SortPropertyName != PropertyName || Model.State.SortedDescending ? "ascending" : "descending")}")"
     @attributes="@(AdditionalAttributes)"
     hx-indicator="@(string.IsNullOrWhiteSpace(Model.SpinnerId) ? false : $"#{Model.SpinnerId}")"  
     hx-trigger="@(TriggerOnMouseDown ? "mousedown, " : "") click"
@@ -18,7 +18,7 @@
     hx-get="@(Model.RenderFromRoute)" 
     hx-swap="outerHTML transition:true" 
     hx-target="#@(Model.Id)"> 
-    @if (Model.State.SortProperty != PropertyName) {
+    @if (Model.State.SortPropertyName != PropertyName) {
         <div>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M8.354 14.854a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 13.293V2.707L6.354 3.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 2.707v10.586l1.146-1.147a.5.5 0 0 1 .708.708z"/>

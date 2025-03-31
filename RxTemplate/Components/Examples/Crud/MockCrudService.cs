@@ -107,9 +107,9 @@ public class MockCrudService {
         // Select count
         state.TotalRecords = data.Count();
         // Sort data
-        if (!string.IsNullOrWhiteSpace(state.SortProperty)) {
+        if (!string.IsNullOrWhiteSpace(state.SortPropertyName)) {
             data = state.SortedDescending
-                ? state.SortProperty switch {
+                ? state.SortPropertyName switch {
                     nameof(ItemModel.Id) => [.. data.OrderByDescending(x => x.Id)],
                     nameof(ItemModel.Date) => [.. data.OrderByDescending(x => x.Date)],
                     nameof(ItemModel.Summary) => [.. data.OrderByDescending(x => x.Summary)],
@@ -119,7 +119,7 @@ public class MockCrudService {
                     nameof(ItemModel.TemperatureTaken) => [.. data.OrderByDescending(x => x.TemperatureTaken.ToString())],
                     _ => data
                 }
-                : state.SortProperty switch {
+                : state.SortPropertyName switch {
                     nameof(ItemModel.Id) => [.. data.OrderBy(x => x.Id)],
                     nameof(ItemModel.Date) => [.. data.OrderBy(x => x.Date)],
                     nameof(ItemModel.Summary) => [.. data.OrderBy(x => x.Summary)],
@@ -144,7 +144,7 @@ public class MockCrudService {
             return [];
         }
         foreach (var f in state.Filters) {
-            if (f.FilterProperty != nameof(ItemModel.Date)) {
+            if (f.FilterPropertyName != nameof(ItemModel.Date)) {
                 continue;
             }
             if (string.IsNullOrWhiteSpace(f.FilterValue)) {
@@ -172,16 +172,16 @@ public class MockCrudService {
             return [];
         }
         foreach (var f in state.Filters) {
-            if (f.FilterProperty != nameof(ItemModel.TemperatureC)
-            && f.FilterProperty != nameof(ItemModel.TemperatureF)
-            && f.FilterProperty != nameof(ItemModel.Id)) {
+            if (f.FilterPropertyName != nameof(ItemModel.TemperatureC)
+            && f.FilterPropertyName != nameof(ItemModel.TemperatureF)
+            && f.FilterPropertyName != nameof(ItemModel.Id)) {
                 continue;
             }
             if (string.IsNullOrWhiteSpace(f.FilterValue)) {
                 return [];
             }
             var compareInt = Utilities.Converter<int>(f.FilterValue);
-            if (f.FilterProperty == nameof(ItemModel.TemperatureC)) {
+            if (f.FilterPropertyName == nameof(ItemModel.TemperatureC)) {
                 if (f.FilterOperation == FilterOperationType.Equals.ToString()) {
                     data = data.Where(x => x.TemperatureC == compareInt);
                     continue;
@@ -195,7 +195,7 @@ public class MockCrudService {
                     continue;
                 }
             }
-            if (f.FilterProperty == nameof(ItemModel.TemperatureF)) {
+            if (f.FilterPropertyName == nameof(ItemModel.TemperatureF)) {
                 if (f.FilterOperation == FilterOperationType.Equals.ToString()) {
                     data = data.Where(x => x.TemperatureF == compareInt);
                     continue;
@@ -209,7 +209,7 @@ public class MockCrudService {
                     continue;
                 }
             }
-            if (f.FilterProperty == nameof(ItemModel.Id)) {
+            if (f.FilterPropertyName == nameof(ItemModel.Id)) {
                 if (f.FilterOperation == FilterOperationType.Equals.ToString()) {
                     data = data.Where(x => x.Id == compareInt);
                     continue;
@@ -232,7 +232,7 @@ public class MockCrudService {
             return [];
         }
         foreach (var f in state.Filters) {
-            if (f.FilterProperty != nameof(ItemModel.Summary)) {
+            if (f.FilterPropertyName != nameof(ItemModel.Summary)) {
                 continue;
             }
             if (f.FilterOperation == FilterOperationType.Equals.ToString() && string.IsNullOrWhiteSpace(f.FilterValue)) {
@@ -260,7 +260,7 @@ public class MockCrudService {
             return [];
         }
         foreach (var f in state.Filters) {
-            if (f.FilterProperty != nameof(ItemModel.IsVerified)) {
+            if (f.FilterPropertyName != nameof(ItemModel.IsVerified)) {
                 continue;
             }
             var compareIsVerified = f.FilterValue.Equals("Y", StringComparison.InvariantCultureIgnoreCase);
@@ -281,7 +281,7 @@ public class MockCrudService {
             return [];
         }
         foreach (var f in state.Filters) {
-            if (f.FilterProperty != nameof(ItemModel.TemperatureTaken)) {
+            if (f.FilterPropertyName != nameof(ItemModel.TemperatureTaken)) {
                 continue;
             }
             var compareTemperatureTaken = Utilities.Converter<TimeOfDay>(f.FilterValue);

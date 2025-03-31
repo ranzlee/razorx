@@ -4,7 +4,7 @@
         data-id="@(Id)"
         id="@(Id)-input" 
         type="file" 
-        name="@(Property)"
+        name="@(PropertyName)"
         multiple="@(AllowMultiple)"
         accept="@(Accept)"
         aria-invalid="@(isInvalid ? "true" : false)"
@@ -93,12 +93,12 @@
     [Inject] public ValidationContext ValidationContext { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
-    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string PropertyName { get; set; } = null!;
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public bool AllowMultiple { get; set; }
     [Parameter] public string Accept { get; set; } = string.Empty;
     [Parameter] public int RequestTimeoutMilliseconds { get; set; } = 10 * 60 * 1000;
-    [Parameter] public string? ValidationProperty { get; set; }
+    [Parameter] public string? ValidationPropertyName { get; set; }
     [Parameter] public RenderFragment? ValidationContainer { get; set; }
     [Parameter] public string ContainerClass { get; set; } = null!;
     [Parameter] public string InvalidClass { get; set; } = null!;
@@ -110,10 +110,10 @@
     [Parameter] public string CancelButtonClass { get; set; } = null!;
     private bool isInvalid { get; set; }
     protected override void OnParametersSet() {
-        var validationProperty = string.IsNullOrWhiteSpace(ValidationProperty)
-            ? Property
-            : ValidationProperty;
-        if (ValidationContext.TryGetError(validationProperty, out var _)) {
+        var validationPropertyName = string.IsNullOrWhiteSpace(ValidationPropertyName)
+            ? PropertyName
+            : ValidationPropertyName;
+        if (ValidationContext.TryGetError(validationPropertyName, out var _)) {
             isInvalid = true;
         }
         if (string.IsNullOrWhiteSpace(Id)) {

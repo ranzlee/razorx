@@ -13,16 +13,16 @@ public interface IDataSetModel<T> : IDataSet {
 
 public interface IDataSetFilterModel : IDataSet {
     Type? FilterType { get; set; }
-    string FilterProperty { get; set; }
+    string FilterPropertyName { get; set; }
 }
 
-public record DataSetFilter(string FilterId, string FilterProperty, string FilterOperation, string FilterValue);
+public record DataSetFilter(string FilterId, string FilterPropertyName, string FilterOperation, string FilterValue);
 
 public interface IDataSetState {
     int Page { get; set; }
     int PageSize { get; set; }
     int TotalRecords { get; set; }
-    string SortProperty { get; set; }
+    string SortPropertyName { get; set; }
     bool SortedDescending { get; set; }
     IList<DataSetFilter> Filters { get; set; }
 }
@@ -31,9 +31,9 @@ public static class DataSetStateExtensions {
     public static void Update<T>(
         this T dataSetState,
         string? page = null,
-        string? sortProperty = null,
+        string? sortPropertyName = null,
         string? filterId = null,
-        string? filterProperty = null,
+        string? filterPropertyName = null,
         string? filterOperation = null,
         string? filterValue = null) where T : IDataSetState {
         if (!string.IsNullOrWhiteSpace(page)) {
@@ -53,13 +53,13 @@ public static class DataSetStateExtensions {
                 return;
             }
         }
-        if (!string.IsNullOrWhiteSpace(sortProperty)) {
-            if (dataSetState.SortProperty == sortProperty) {
+        if (!string.IsNullOrWhiteSpace(sortPropertyName)) {
+            if (dataSetState.SortPropertyName == sortPropertyName) {
                 dataSetState.SortedDescending = !dataSetState.SortedDescending;
                 dataSetState.AutoCorrect();
                 return;
             }
-            dataSetState.SortProperty = sortProperty;
+            dataSetState.SortPropertyName = sortPropertyName;
             dataSetState.SortedDescending = false;
             dataSetState.AutoCorrect();
             return;
@@ -69,8 +69,8 @@ public static class DataSetStateExtensions {
             dataSetState.AutoCorrect();
             return;
         }
-        if (!string.IsNullOrWhiteSpace(filterProperty)) {
-            dataSetState.Filters.Add(new DataSetFilter(Guid.NewGuid().ToString(), filterProperty, filterOperation ?? "", filterValue ?? ""));
+        if (!string.IsNullOrWhiteSpace(filterPropertyName)) {
+            dataSetState.Filters.Add(new DataSetFilter(Guid.NewGuid().ToString(), filterPropertyName, filterOperation ?? "", filterValue ?? ""));
             dataSetState.AutoCorrect();
             return;
         }
@@ -86,7 +86,7 @@ public static class DataSetStateExtensions {
         if (dataSetState.TotalRecords < 0) {
             dataSetState.TotalRecords = 0;
         }
-        dataSetState.SortProperty ??= string.Empty;
+        dataSetState.SortPropertyName ??= string.Empty;
         dataSetState.Filters ??= [];
     }
 

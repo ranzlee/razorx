@@ -1,6 +1,6 @@
 <RxRadioSet 
     Id="@(Id)"
-    Property="@(Property)" 
+    PropertyName="@(PropertyName)" 
     Value="@(Value)" 
     Legend="@(Label)" 
     AllowValidateOnChange="@(AllowValidateOnChange)"
@@ -17,7 +17,7 @@
     <ValidationContainer>
         <RxFormError 
             FormControlId="@(Id)"
-            Property="@(Property)" 
+            PropertyName="@(PropertyName)" 
             UseOpacityForValidationErrors="@(UseOpacityForValidationErrors)"
             ContainerClass="label" 
             ErrorMessageClass="text-error" />
@@ -30,7 +30,7 @@
         Horizontal
     }
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
-    [Parameter, EditorRequired] public string Property { get; set; } = null!;
+    [Parameter, EditorRequired] public string PropertyName { get; set; } = null!;
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter] public string Id { get; set; } = null!;
     [Parameter] public string Value { get; set; } = null!;

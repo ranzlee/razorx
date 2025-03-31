@@ -238,13 +238,13 @@
         if (filter is null) {
             return string.Empty;
         }
-        var prop = ItemModel.DecodePropertyName(filter.FilterProperty);
+        var prop = ItemModel.DecodePropertyName(filter.FilterPropertyName);
         var op =  filter.FilterOperation.AsEnum<FilterOperationType>()!.GetDescription();
         var val = filter.FilterValue;
-        if (filter.FilterProperty == nameof(ItemModel.Date) && DateOnly.TryParse(val, out var d)) {
+        if (filter.FilterPropertyName == nameof(ItemModel.Date) && DateOnly.TryParse(val, out var d)) {
             val = d.ToString("MM/dd/yyyy");
         }
-        if (filter.FilterProperty == nameof(ItemModel.TemperatureTaken)) {
+        if (filter.FilterPropertyName == nameof(ItemModel.TemperatureTaken)) {
             val = val.AsEnum<TimeOfDay>().GetDescription();
         }
         return $"{prop} {op} {val}";

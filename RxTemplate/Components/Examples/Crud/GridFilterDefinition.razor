@@ -2,10 +2,10 @@
 
 <div id="grid-filter" class="flex max-sm:flex-col sm:items-end gap-x-2 max-sm:gap-y-1">
     @if (Model.FilterType is not null) {
-        <input type="hidden" name="@(nameof(Model.FilterProperty))" value="@(Model.FilterProperty)">
+        <input type="hidden" name="@(nameof(Model.FilterPropertyName))" value="@(Model.FilterPropertyName)">
         <div class="max-w-40">
             <Select
-                Property="@(nameof(DataSetFilter.FilterOperation))" 
+                PropertyName="@(nameof(DataSetFilter.FilterOperation))" 
                 Label="Operation" 
                 Options="@(OperationOptions)">
             </Select>
@@ -13,35 +13,35 @@
         <div class="max-w-56">
             @if (Model.FilterType == typeof(int)) {
                 <Field 
-                    Property="@(nameof(DataSetFilter.FilterValue))" 
+                    PropertyName="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     InputType="number">
                 </Field>
             }
             @if (Model.FilterType == typeof(bool)) {
                 <Select 
-                    Property="@(nameof(DataSetFilter.FilterValue))" 
+                    PropertyName="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     Options="@(YesNoOptions)">
                 </Select>
             }
             @if (Model.FilterType == typeof(DateOnly)) {
                 <Field 
-                    Property="@(nameof(DataSetFilter.FilterValue))" 
+                    PropertyName="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     InputType="date">
                 </Field>
             }
             @if (Model.FilterType == typeof(TimeOfDay)) {
                 <Select 
-                    Property="@(nameof(DataSetFilter.FilterValue))" 
+                    PropertyName="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     EnumType="typeof(TimeOfDay)">
                 </Select>
             }
             @if (Model.FilterType == typeof(string)) {
                 <Field 
-                    Property="@(nameof(DataSetFilter.FilterValue))" 
+                    PropertyName="@(nameof(DataSetFilter.FilterValue))" 
                     Label="Value" 
                     InputType="text"
                     maxlength="65">

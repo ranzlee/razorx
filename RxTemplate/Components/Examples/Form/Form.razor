@@ -13,7 +13,7 @@
                     <div class="max-w-xs">
                         <Field 
                             Id="@(nameof(Model.Name))" 
-                            Property="@(nameof(Model.Name))" 
+                            PropertyName="@(nameof(Model.Name))" 
                             Value="@(Model.Name)" 
                             Label="Name" 
                             InputType="text"
@@ -28,7 +28,7 @@
                     <div class="max-w-xs">
                         <Field 
                             Id="@(nameof(Model.Email))"
-                            Property="@(nameof(Model.Email))" 
+                            PropertyName="@(nameof(Model.Email))" 
                             Value="@(Model.Email)" 
                             Label="Email" 
                             InputType="email"
@@ -45,7 +45,7 @@
                     <div class="max-w-xs">
                         <Field 
                             Id="@(nameof(Model.BirthDate))"
-                            Property="@(nameof(Model.BirthDate))" 
+                            PropertyName="@(nameof(Model.BirthDate))" 
                             Value="@(Model.BirthDate)" 
                             Label="Birth Date" 
                             InputType="date"
@@ -60,7 +60,7 @@
                     <div class="max-w-xs">
                         <Field 
                             Id="@(nameof(Model.AppointmentTime))"
-                            Property="@(nameof(Model.AppointmentTime))" 
+                            PropertyName="@(nameof(Model.AppointmentTime))" 
                             Value="@(Model.AppointmentTime)" 
                             Label="Appointment Time"
                             InputType="datetime-local" 
@@ -77,7 +77,7 @@
                     <div class="max-w-xs">
                         <Range
                             Id="@(nameof(Model.NumberOfDays))"
-                            Property="@(nameof(Model.NumberOfDays))" 
+                            PropertyName="@(nameof(Model.NumberOfDays))" 
                             Value="@(Model.NumberOfDays ?? 0)" 
                             Label="Number of Days"
                             UseOpacityForValidationErrors="@(true)"
@@ -93,7 +93,7 @@
                     <div class="max-w-xs">
                         <Field 
                             Id="@(nameof(Model.Cost))"
-                            Property="@(nameof(Model.Cost))" 
+                            PropertyName="@(nameof(Model.Cost))" 
                             Value="@(Model.Cost)" 
                             Label="Cost" 
                             InputType="number"
@@ -109,7 +109,7 @@
             <div class="flex max-md:flex-col gap-x-4 md:items-center">
                 <RadioSet 
                     Id="@(nameof(Model.Subscription))"
-                    Property="@(nameof(Model.Subscription))" 
+                    PropertyName="@(nameof(Model.Subscription))" 
                     Value="@(Model.Subscription.ToString())" 
                     Label="Subscription Type" 
                     Direction="@(RadioSet.DirectionType.Horizontal)"
@@ -124,7 +124,7 @@
                     <div class="max-w-xs">
                         <Select 
                             Id="@(nameof(Model.ReportingStatus))"
-                            Property="@(nameof(Model.ReportingStatus))" 
+                            PropertyName="@(nameof(Model.ReportingStatus))" 
                             Value="@(Model.ReportingStatus.ToString())" 
                             Label="Reporting Status" 
                             UseOpacityForValidationErrors="@(true)"
@@ -138,7 +138,7 @@
                     <div class="max-w-xs pt-2">
                         <Checkbox 
                             Id="@(nameof(Model.IsPublished))"
-                            Property="@(nameof(Model.IsPublished))" 
+                            PropertyName="@(nameof(Model.IsPublished))" 
                             IsChecked="@(Model.IsPublished)" 
                             Label="Is Published"
                             UseOpacityForValidationErrors="@(true)"
@@ -157,7 +157,7 @@
                         hx-swap="outerHTML transition:true">
                         <AutoComplete 
                             Id="@(nameof(Model.Widget))"
-                            Property="@(nameof(Model.Widget))" 
+                            PropertyName="@(nameof(Model.Widget))" 
                             Value="@(Model.Widget)" 
                             SelectedIdProperty="@(nameof(Model.WidgetId))"
                             SelectedIdValue="@(Model.WidgetId)"
@@ -179,7 +179,7 @@
                 <div class="w-full">
                     <MemoField 
                         Id="@(nameof(Model.Notes))"
-                        Property="@(nameof(Model.Notes))" 
+                        PropertyName="@(nameof(Model.Notes))" 
                         Value="@(Model.Notes)" 
                         Label="Notes" 
                         MaxLength="1000" 

@@ -23,7 +23,7 @@
         <div class="p-5">
             <div class="flex max-w-xs">
                 <Field 
-                    Property="@(nameof(Model.Date))" 
+                    PropertyName="@(nameof(Model.Date))" 
                     Value="@(Model.Date)" 
                     Label="Date" 
                     InputType="datetime-local"  
@@ -32,7 +32,7 @@
             </div>
             <div class="flex max-w-xs">
                 <Field 
-                    Property="@(nameof(Model.TemperatureC))" 
+                    PropertyName="@(nameof(Model.TemperatureC))" 
                     Value="@(Model.TemperatureC)" 
                     Label="Temp. C"
                     InputType="number" 
@@ -41,7 +41,7 @@
             </div>
             <div class="flex max-w-xs">
                 <Field 
-                    Property="@(nameof(Model.Summary))" 
+                    PropertyName="@(nameof(Model.Summary))" 
                     Value="@(Model.Summary)" 
                     Label="Summary" 
                     InputType="text"
@@ -50,14 +50,14 @@
             </div>
             <div class="flex max-w-xs">
                 <Toggle 
-                    Property="@(nameof(Model.IsVerified))" 
+                    PropertyName="@(nameof(Model.IsVerified))" 
                     IsChecked="@(Model.IsVerified)" 
                     Label="Verified">
                 </Toggle>
             </div>
             <div class="flex max-w-xs">
                 <Select 
-                    Property="@(nameof(Model.TemperatureTaken))" 
+                    PropertyName="@(nameof(Model.TemperatureTaken))" 
                     Value="@(Model.TemperatureTaken.ToString())" 
                     Label="Observed" 
                     EnumType="@(typeof(TimeOfDay))">
