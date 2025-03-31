@@ -176,7 +176,7 @@ public class CrudHandler : IRequestHandler {
         triggerBuilder
             .Add(new HxSetMetadataTrigger(gridModel.StateScope, gridModel.StateKey, JsonSerializer.Serialize(state)))
             .Add(new HxCloseModalTrigger("#save-modal"))
-            .Add(new HxToastTrigger("#crud-toast", $"Item ID: {model.Id} was {(id.HasValue ? "updated" : "created")}"))
+            .Add(new HxToastTrigger("#success-toast", $"Item ID: {model.Id} was {(id.HasValue ? "updated" : "created")}"))
             .Build();
         return response.RenderComponent<Grid, GridModel>(gridModel, logger);
     }
@@ -207,7 +207,7 @@ public class CrudHandler : IRequestHandler {
             // Close the modal
             .Add(new HxCloseModalTrigger("#delete-modal"))
             // Pop a toast
-            .Add(new HxToastTrigger("#crud-toast", $"Item ID: {id} was deleted"))
+            .Add(new HxToastTrigger("#success-toast", $"Item ID: {id} was deleted"))
             // Set the state metadata
             .Add(new HxSetMetadataTrigger(model.StateScope, model.StateKey, JsonSerializer.Serialize(state)))
             .Build();
@@ -252,12 +252,12 @@ public class CrudHandler : IRequestHandler {
         // Pop toast for filter change
         if (!string.IsNullOrWhiteSpace(filterPropertyName)) {
             triggerBuilder
-                .Add(new HxToastTrigger("#crud-toast", "Filter added"))
+                .Add(new HxToastTrigger("#success-toast", "Filter added"))
                 .Add(new HxFocusTrigger("#filter-selector"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
             triggerBuilder
-                .Add(new HxToastTrigger("#crud-toast", "Filter removed"));
+                .Add(new HxToastTrigger("#success-toast", "Filter removed"));
         }
         // Grid focus management - this is optional, but provides a good experience for keyboard users
         if (!string.IsNullOrWhiteSpace(page)) {

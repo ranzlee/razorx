@@ -35,6 +35,8 @@
 @* hx-ext json-enc converts request form data into json *@
 <body hx-ext="json-enc">
   <div id="aria-live-region" aria-live="polite" class="sr-only"></div>
+  <Toast Id="success-toast" />
+  <Toast Id="error-toast" IsError="@(true)" />
   <div class="drawer">
     <input id="site-drawer" type="checkbox" class="drawer-toggle" aria-label="menu-toggle-state">
     <div class="drawer-content flex flex-col">

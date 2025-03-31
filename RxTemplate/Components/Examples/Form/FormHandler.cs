@@ -74,7 +74,7 @@ public class FormHandler : IRequestHandler {
         }
         hxTriggers
             .With(response)
-            .Add(new HxToastTrigger("#form-toast", "Form was submitted"))
+            .Add(new HxToastTrigger("#success-toast", "Form was submitted"))
             .Build();
         return response.RenderComponent<FormPage>(logger);
     }

@@ -56,7 +56,7 @@ public class BlobHandler : IRequestHandler {
         hxTriggers
             .With(response)
             .Add(new HxFocusTrigger("#example-blob-link"))
-            .Add(new HxToastTrigger("#blob-toast", "BLOB added"))
+            .Add(new HxToastTrigger("#success-toast", "BLOB added"))
             .Build();
         return response.RenderComponent<Blob, BlobModel>(m, logger);
     }
@@ -79,7 +79,7 @@ public class BlobHandler : IRequestHandler {
         hxTriggers
             .With(response)
             .Add(new HxFocusTrigger($"#example-blobs-input"))
-            .Add(new HxToastTrigger("#blob-toast", $"BLOB{(files.Count > 1 ? "s" : "")} added"))
+            .Add(new HxToastTrigger("#success-toast", $"BLOB{(files.Count > 1 ? "s" : "")} added"))
             .Build();
         return response.RenderComponent<BlobList, IEnumerable<BlobModel>>(m, logger);
     }
@@ -96,7 +96,7 @@ public class BlobHandler : IRequestHandler {
         var triggerBuilder = hxTriggers
             .With(response)
             .Add(new HxCloseModalTrigger("#delete-modal"))
-            .Add(new HxToastTrigger("#blob-toast", "BLOB removed"));
+            .Add(new HxToastTrigger("#success-toast", "BLOB removed"));
         response.HxReswap("outerHTML transition:true");
         if (path == "single") {
             triggerBuilder
