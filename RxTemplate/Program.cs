@@ -100,7 +100,7 @@ app.UseAntiforgery();
 app.UseAntiforgeryCookie();
 
 // Use router
-app.UseRouter<App, ErrorPage>();
+app.UseRxRouter<App, ErrorPage>();
 
 // Let's Go!
 app.Run();

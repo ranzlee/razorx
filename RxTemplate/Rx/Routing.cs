@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http.Extensions;
 namespace RxTemplate.Rx;
 
 file sealed class DefaultRootComponent {
+
+    private DefaultRootComponent() { }
     private static Type RootComponentType = null!;
 
     public static void Set<TRootComponent>() where TRootComponent : IRootComponent {
@@ -31,7 +33,7 @@ public static class RoutingExtensions {
     /// <typeparam name="TErrorPage">The IComponentModel<ErrorModel> component error page.</typeparam>
     /// <param name="app">WebApplication</param>
     /// <param name="routePrefix">ASP.NET Minimal API route group prefix, typically an empty string.</param>
-    public static void UseRouter<TRootComponent, TErrorPage>(this WebApplication app, string routePrefix = "")
+    public static void UseRxRouter<TRootComponent, TErrorPage>(this WebApplication app, string routePrefix = "")
         where TRootComponent : IRootComponent
         where TErrorPage : IComponent, IComponentModel<ErrorModel> {
 
