@@ -9,13 +9,11 @@
   "license": "0BSD",
   "dependencies": {
     "@tailwindcss/cli": "^4.0.16",
-    "htmx-ext-json-enc": "^2.0.2",
-    "htmx.org": "^2.0.4",
-    "idiomorph": "^0.7.3"
-  },
-  "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
     "daisyui": "^5.0.9",
+    "htmx-ext-json-enc": "^2.0.2",
+    "htmx.org": "^2.0.4",
+    "idiomorph": "^0.7.3",
     "tailwindcss": "^4.0.16"
   }
 }
