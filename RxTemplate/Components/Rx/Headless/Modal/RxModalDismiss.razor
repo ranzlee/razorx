@@ -13,7 +13,9 @@
                 console.warn("@($"dialog element with id {ModalId} not found.")");
                 return;
             }
+            modal.style.display = "none";
             modal.close();
+            modal.style.display = "";
         }
     })();
 </script>
