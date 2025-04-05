@@ -215,7 +215,7 @@ public class Todo {
 ```csharp
 @implements IComponentModel<TodoModel>
 
-<div id="@($"todos-item-{Model.Id}")" class="card card-border border-base-300 bg-base-100 w-full mb-2">
+<div id="@($"todos-item-{Model.Id}")" class="card card-border border-base-300 bg-base-200 w-full mb-2">
     <div class="card-body">
         <div class="card-actions justify-between items-center">
             <div>
@@ -351,7 +351,7 @@ public class TodosHandler : IRequestHandler {
 
 **_Run the `dotnet watch` command in the terminal to launch the app. You should now be able to add TODOs to the list._**
 
-### PROBLEM: The form is not reset after saving a TODO - SOLUTION: Send an new form after saving a TODO
+#### PROBLEM: The form is not reset after saving a TODO - SOLUTION: Send an new form after saving a TODO
 
 **_Update the TodosModel with the `//New` code._**
 
@@ -397,7 +397,8 @@ public class Todo {
                 <Checkbox
                     PropertyName="@(nameof(Model.IsComplete))"
                     IsChecked="@(Model.IsComplete)"
-                    aria-label="Complete">
+                    aria-label="Complete"
+                    >
                 </Checkbox>
             </div>
             <div class="flex grow justify-center py-2">
@@ -533,7 +534,7 @@ public class TodosHandler : IRequestHandler {
 
 **_Run the `dotnet watch` command in the terminal to launch the app. The form should reset after adding a TODO._**
 
-### PROBLEM: Empty TODOs can be created - SOLUTION: Add model validation
+#### PROBLEM: Empty TODOs can be created - SOLUTION: Add model validation
 
 **_Create a new `TodosValidator.cs` file in `Components/Todos` and add the following code._**
 
@@ -576,10 +577,11 @@ public class TodosHandler : IRequestHandler {
             .WithRxRootComponent();
 
         router.MapPost("/todos", Post)
+            .AllowAnonymous()//;
             //NEW
-            .WithRxValidation<TodosValidator>()
+            .WithRxValidation<TodosValidator>();
             //END NEW
-            .AllowAnonymous();
+
     }
 
     public static IResult Get(
@@ -629,3 +631,392 @@ public class TodosHandler : IRequestHandler {
 ```
 
 **_Run the `dotnet watch` command in the terminal to launch the app. You should not be able to add invalid TODOs._**
+
+### Add a Complete TODO feature
+
+**_Update the `TodosHandler` with the `//NEW` code._**
+
+```csharp
+using Demo.Rx;
+
+namespace Demo.Components.Todos;
+
+public class TodosHandler : IRequestHandler {
+
+    private static readonly IList<Todo> TodosDbSet = [];
+
+    public void MapRoutes(IEndpointRouteBuilder router) {
+
+        router.MapGet("/todos", Get)
+            .AllowAnonymous()
+            .WithRxRootComponent();
+
+        router.MapPost("/todos", Post)
+            .AllowAnonymous()
+            .WithRxValidation<TodosValidator>();
+
+        //NEW
+        router.MapPatch("/todos/{id}", Patch)
+            .AllowAnonymous();
+        //END NEW
+
+    }
+
+    public static IResult Get(
+        HttpResponse response,
+        ILogger<TodosHandler> logger) {
+        var model = TodosDbSet.Select(x => new TodoModel(
+            false,
+            x.Id,
+            x.Title,
+            x.Description,
+            x.IsComplete,
+            x.Created));
+        return response.RenderComponent<TodosPage, IEnumerable<TodoModel>>(model, logger);
+    }
+
+    public static IResult Post(
+        HttpResponse response,
+        TodoModel model,
+        ValidationContext validationContext,
+        ILogger<TodosHandler> logger) {
+        if (validationContext.Errors.Count != 0) {
+            response.HxRetarget("#todos-form", logger);
+            response.HxReswap("outerHTML", logger);
+            return response.RenderComponent<TodosForm, TodoModel>(model, logger);
+        }
+        var entity = new Todo {
+            Id = Guid.NewGuid().ToString(),
+            Title = model.Title!,
+            Description = model.Description!,
+            Created = DateTime.UtcNow,
+            IsComplete = false
+        };
+        TodosDbSet.Add(entity);
+        model = model with {
+            ResetForm = true,
+            Id = entity.Id,
+            Created = entity.Created
+        };
+        return response.RenderComponent<TodosItem, TodoModel>(model, logger);
+    }
+
+    //NEW
+    public static IResult Patch(
+        HttpResponse response,
+        string id,
+        ILogger<TodosHandler> logger) {
+        var todo = TodosDbSet.Where(x => x.Id == id).SingleOrDefault();
+        if (todo is null) {
+            return TypedResults.NoContent();
+        }
+        todo.IsComplete = !todo.IsComplete;
+        var model = new TodoModel(
+            false,
+            todo.Id,
+            todo.Title,
+            todo.Description,
+            todo.IsComplete,
+            todo.Created);
+        return response.RenderComponent<TodosItem, TodoModel>(model, logger);
+    }
+    //END NEW
+}
+```
+
+**_Update the TodosItem component with the `@* NEW *@` code._**
+
+```csharp
+@implements IComponentModel<TodoModel>
+
+@if (Model.ResetForm) {
+    <TodosForm Model="@(new())" />
+}
+
+<div id="@($"todos-item-{Model.Id}")" class="card card-border border-base-300 bg-base-200 w-full mb-2">
+    <div class="card-body">
+        <div class="card-actions justify-between items-center">
+            <div>
+                <Checkbox
+                    PropertyName="@(nameof(Model.IsComplete))"
+                    IsChecked="@(Model.IsComplete)"
+                    aria-label="Complete"
+                    @* NEW *@
+                    hx-patch="@($"/todos/{Model.Id}")"
+                    hx-target="@($"#todos-item-{Model.Id}")"
+                    hx-swap="outerHTML"
+                    @* END NEW *@
+                    >
+                </Checkbox>
+            </div>
+            <div class="flex grow justify-center py-2">
+                <h2 class="card-title">@(Model.Title)</h2>
+            </div>
+            <div>
+                <button class="btn btn-square btn-sm btn-error">
+                    &#x2715;
+                </button>
+            </div>
+        </div>
+        @* NEW *@
+        <div class="flex justify-center">
+            @if (Model.IsComplete) {
+                <span class="bg-success text-success-content rounded-full px-2 font-semibold">COMPLETED</span>
+            } else {
+                <span>&nbsp;</span>
+            }
+        </div>
+        @* END NEW *@
+        <p class="whitespace-pre">
+            @(Model.Description)
+        </p>
+        <div class="flex justify-end text-xs">
+            <RxUtcToLocal DateInput="@(Model.Created!.Value)" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public TodoModel Model { get; set; } = null!;
+}
+```
+
+**_Run the `dotnet watch` command in the terminal to launch the app. You should be able to mark TODOs as complete._**
+
+### Add a Delete TODO feature
+
+**_Update the `TodosHandler` with the `//NEW` code._**
+
+```csharp
+using Demo.Rx;
+
+namespace Demo.Components.Todos;
+
+public class TodosHandler : IRequestHandler {
+
+    private static readonly IList<Todo> TodosDbSet = [];
+
+    public void MapRoutes(IEndpointRouteBuilder router) {
+
+        router.MapGet("/todos", Get)
+            .AllowAnonymous()
+            .WithRxRootComponent();
+
+        router.MapPost("/todos", Post)
+            .AllowAnonymous()
+            .WithRxValidation<TodosValidator>();
+
+        router.MapPatch("/todos/{id}", Patch)
+            .AllowAnonymous();
+
+        //NEW
+        router.MapDelete("/todos/{id}", Delete)
+            .AllowAnonymous();
+        //END NEW
+    }
+
+    public static IResult Get(
+        HttpResponse response,
+        ILogger<TodosHandler> logger) {
+        var model = TodosDbSet.Select(x => new TodoModel(
+            false,
+            x.Id,
+            x.Title,
+            x.Description,
+            x.IsComplete,
+            x.Created));
+        return response.RenderComponent<TodosPage, IEnumerable<TodoModel>>(model, logger);
+    }
+
+    public static IResult Post(
+        HttpResponse response,
+        TodoModel model,
+        ValidationContext validationContext,
+        ILogger<TodosHandler> logger) {
+        if (validationContext.Errors.Count != 0) {
+            response.HxRetarget("#todos-form", logger);
+            response.HxReswap("outerHTML", logger);
+            return response.RenderComponent<TodosForm, TodoModel>(model, logger);
+        }
+        var entity = new Todo {
+            Id = Guid.NewGuid().ToString(),
+            Title = model.Title!,
+            Description = model.Description!,
+            Created = DateTime.UtcNow,
+            IsComplete = false
+        };
+        TodosDbSet.Add(entity);
+        model = model with {
+            ResetForm = true,
+            Id = entity.Id,
+            Created = entity.Created
+        };
+        return response.RenderComponent<TodosItem, TodoModel>(model, logger);
+    }
+
+    public static IResult Patch(
+        HttpResponse response,
+        string id,
+        ILogger<TodosHandler> logger) {
+        var todo = TodosDbSet.Where(x => x.Id == id).SingleOrDefault();
+        if (todo is null) {
+            return TypedResults.NoContent();
+        }
+        todo.IsComplete = !todo.IsComplete;
+        var model = new TodoModel(
+            false,
+            todo.Id,
+            todo.Title,
+            todo.Description,
+            todo.IsComplete,
+            todo.Created);
+        return response.RenderComponent<TodosItem, TodoModel>(model, logger);
+    }
+
+    //NEW
+    public static IResult Delete(
+        HttpResponse response,
+        string id,
+        IHxTriggers hxTriggers) {
+        var todo = TodosDbSet.Where(x => x.Id == id).SingleOrDefault();
+        if (todo is not null) {
+            TodosDbSet.Remove(todo);
+        }
+        hxTriggers.With(response).Add(new HxCloseModalTrigger("#delete-todo-modal")).Build();
+        response.HxRetarget($"#todos-item-{id}");
+        response.HxReswap("outerHTML");
+        return TypedResults.Ok();
+    }
+    //END NEW
+}
+```
+
+**_Update the TodosPage component with the `@* NEW *@` code._**
+
+```csharp
+@implements IComponentModel<IEnumerable<TodoModel>>
+
+<HeadContent>
+    <title>TODOs</title>
+</HeadContent>
+
+@* NEW *@
+<dialog id="delete-todo-modal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
+        <div class="flex justify-between items-center bg-base-300 p-5 rounded-sm">
+            <div class="text-lg font-bold">
+                Delete <RxModalTextNode ModalId="delete-todo-modal" />?
+            </div>
+        </div>
+        <form method="dialog">
+            <div class="p-5">
+                This is a destructive operation. Are you sure you want to delete <RxModalTextNode ModalId="delete-todo-modal" />?
+            </div>
+            <div class="modal-action">
+                <RxModalDismiss ModalId="delete-todo-modal" autofocus class="btn btn-neutral">
+                    Cancel
+                </RxModalDismiss>
+                <RxModalAction
+                    ModalId="delete-todo-modal"
+                    hx-delete="/todos"
+                    hx-disabled-elt="this"
+                    class="btn btn-error">
+                    Delete
+                </RxModalAction>
+            </div>
+        </form>
+    </div>
+</dialog>
+@* END NEW *@
+
+<div id="todos-page">
+    <div class="flex justify-center">
+        <article class="prose">
+            <div class="flex justify-center">
+                <h2>TODOs</h2>
+            </div>
+        </article>
+    </div>
+    <div class="flex justify-center w-full">
+        <div class="w-2xl">
+            <div class="flex flex-col justify-center w-full">
+                <div id="todos-list">
+                    @foreach (var todo in Model) {
+                        <TodosItem Model="@(todo)" />
+                    }
+                </div>
+                <TodosForm Model="@(new())"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public IEnumerable<TodoModel> Model { get; set; } = null!;
+}
+```
+
+**_Update the TodosItem component with the `@* NEW *@` code._**
+
+```csharp
+@implements IComponentModel<TodoModel>
+
+@if (Model.ResetForm) {
+    <TodosForm Model="@(new())" />
+}
+
+<div id="@($"todos-item-{Model.Id}")" class="card card-border border-base-300 bg-base-200 w-full mb-2">
+    <div class="card-body">
+        <div class="card-actions justify-between items-center">
+            <div>
+                <Checkbox
+                    PropertyName="@(nameof(Model.IsComplete))"
+                    IsChecked="@(Model.IsComplete)"
+                    aria-label="Complete"
+                    hx-patch="@($"/todos/{Model.Id}")"
+                    hx-target="@($"#todos-item-{Model.Id}")"
+                    hx-swap="outerHTML"
+                    >
+                </Checkbox>
+            </div>
+            <div class="flex grow justify-center py-2">
+                <h2 class="card-title">@(Model.Title)</h2>
+            </div>
+            <div>
+                @* NEW *@
+                @*
+                    <button class="btn btn-square btn-sm btn-error">
+                        &#x2715;
+                    </button>
+                *@
+                <RxModalTrigger
+                    ModalId="delete-todo-modal"
+                    RouteValue="@(Model.Id)"
+                    TextNodeValue="@(Model.Title)"
+                    class="btn btn-square btn-sm btn-error"
+                    aria-label="@($"Delete {Model.Title}?")">
+                    &#x2715;
+                </RxModalTrigger>
+                @* END NEW *@
+            </div>
+        </div>
+        <div class="flex justify-center">
+            @if (Model.IsComplete) {
+                <span class="bg-success text-success-content rounded-full px-2 font-semibold">COMPLETED</span>
+            } else {
+                <span>&nbsp;</span>
+            }
+        </div>
+        <p class="whitespace-pre">
+            @(Model.Description)
+        </p>
+        <div class="flex justify-end text-xs">
+            <RxUtcToLocal DateInput="@(Model.Created!.Value)" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public TodoModel Model { get; set; } = null!;
+}
+```
