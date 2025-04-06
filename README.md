@@ -38,20 +38,31 @@ The following covers the basics of creating a new page, adding a model and valid
 
 ### The Demo TODO Feature
 
+1. [Create a Demo application](#create-a-demo-application)
+2. [Create a new page](#create-a-new-page)
+3. [Add a model](#add-a-model)
+4. [Add a Create TODO feature](#add-a-create-todo-feature)
+   - [PROBLEM: The form is not reset after saving a TODO - SOLUTION: Send a new form after saving a TODO](#problem-the-form-is-not-reset-after-saving-a-todo---solution-send-a-new-form-after-saving-a-todo)
+   - [PROBLEM: Empty TODOs can be created - SOLUTION: Add model validation](#problem-empty-todos-can-be-created---solution-add-model-validation)
+5. [Add a Complete TODO feature](#add-a-complete-todo-feature)
+6. [Add a Delete TODO feature](#add-a-delete-todo-feature)
+7. [Add a Update TODO feature](#add-a-update-todo-feature)
+8. [EXTRA CREDIT - Add a Change Validation feature](#extra-credit---add-a-change-validation-feature)
+
 ![Demo TODO Feature](todos-demo.png "The Demo TODO Feature")
 
 ### Create a Demo application
 
-1. Create a new `Demo` folder.
-2. Run the `dotnet new razorx` command in a terminal in the `Demo` folder to spawn a new RazorX application.
-3. Run the `dotnet watch` command in the terminal to launch the app. The browser should launch the app. If not, open a browser and go to `https://localhost:44376/`.
-4. Once you verify the app runs, go ahead and shutdown the server using `Ctrl-C` in the terminal.
+- Create a new `Demo` folder.
+- Run the `dotnet new razorx` command in a terminal in the `Demo` folder to spawn a new RazorX application.
+- Run the `dotnet watch` command in the terminal to launch the app. The browser should launch the app. If not, open a browser and go to `https://localhost:44376/`.
+- Once you verify the app runs, go ahead and shutdown the server using `Ctrl-C` in the terminal.
 
 ### Create a new page
 
-1. Create a new `Todos` folder under `Components`.
-2. Create a new `TodosPage.razor` file.
-3. Create a new `TodosHandler.cs` file.
+- Create a new `Todos` folder under `Components`.
+- Create a new `TodosPage.razor` file.
+- Create a new `TodosHandler.cs` file.
 
 **_Add the following code to the `TodosPage.razor` file._**
 
@@ -379,7 +390,7 @@ public class TodosHandler : IRequestHandler {
 
 **_Run the `dotnet watch` command in the terminal to launch the app (or `Ctrl-R` to rebuild if it is running). You should now be able to add TODOs to the list._**
 
-#### PROBLEM: The form is not reset after saving a TODO - SOLUTION: Send an new form after saving a TODO
+#### PROBLEM: The form is not reset after saving a TODO - SOLUTION: Send a new form after saving a TODO
 
 **_Update the TodosModel with the `//New` code._**
 
