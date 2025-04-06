@@ -33,25 +33,15 @@
         <p>
             <a target="_blank" href="https://tailwindcss.com/">Tailwind CSS</a> is the core 
             CSS framework and design system, and <a target="_blank" href="https://daisyui.com/">daisyUI</a> is the 
-            sematic CSS library. RazorX does not directly depend on Tailwind CSS or daisyUI, with the exception
-            of the skinned components. The built-in daisyUI themes are included in the Tailwind CSS config file 
-            <strong>{Project}/tailwind.config.js</strong>. You may also modify existing themes or roll your own custom themes if you prefer.
-        </p>
-        <p>    
-            <strong>{Project}/app.css</strong> contains the Tailwind CSS 
+            sematic CSS library. <strong>{Project}/app.css</strong> contains the Tailwind CSS 
             imports and base styles required for component behavior. This is the input file for the Tailwind CSS 
             build process that creates the <strong>{Project}/wwwroot/css/app.css</strong> output file.
         </p>
         <p>
-            <span class="bg-warning text-warning-content px-2 rounded-sm font-bold">Important:</span> You must open a terminal in <strong>{Project}</strong> and
-            run <strong>npm run build-css</strong> anytime you use new (first use) Tailwind CSS or daisyUI classes. This is because Tailwind CSS 
-            tree-shakes unused classes when building the output file.
-        </p>
-        <p>
             Take a look at the <a href="/examples">examples</a> to see
             what is possible with a Hypermedia Event-Driven Application. Once you no longer need the examples
-            as reference, just delete the <strong>{Project}/Router/Examples.cs</strong> file and <strong>{Project}/Components/Examples</strong>
-            folder. 
+            as reference, just delete and <strong>{Project}/Components/Examples</strong>
+            folder and remove the nav links. 
         </p>
         <p>
             Happy coding!
