@@ -36,7 +36,7 @@ The following diagram describes the flow of a request. The basic concept is to f
 
 The following covers the basics of creating a new page, adding a model and validation, and making it reactive with htmx. After working through this, I recommend checking out the included examples. The template includes many components which work well with the htmx hypermedia approach and have client-side JavaScript behaviors for an enhanced experience.
 
-### The Demo TODO Feature
+### The Demo TODO List Tutorial
 
 1. [Create a Demo application](#create-a-demo-application)
 2. [Create a new page](#create-a-new-page)
