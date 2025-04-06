@@ -77,6 +77,14 @@ var razorx = (function () {
         }
         ele.children.item(0).innerText = obj.Message;
         document.body.prepend(ele);
+        var currentToasts = document.querySelectorAll('[data-toast="on"]');
+        if (currentToasts.length > 0) {
+          currentToasts.forEach((t) => {
+            t.setAttribute("data-toast", "off");
+            t.style.display = "none";
+          });
+        }
+        ele.setAttribute("data-toast", "on");
         var transitionClass = ele.getAttribute("data-transition-class") ?? "";
         var beginTransitionAfter =
           ele.getAttribute("data-begin-transition-after") ?? "3500";
