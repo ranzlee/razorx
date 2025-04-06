@@ -32,11 +32,9 @@ The following diagram describes the flow of a request. The basic concept is to f
 
 ![RazorX Request-Response Cycle](razorx-request-response.png "RazorX Request-Response Cycle")
 
-## How To
+## How To - The Demo TODO List Tutorial
 
 The following covers the basics of creating a new page, adding a model and validation, and making it reactive with htmx. After working through this, I recommend checking out the included examples. The template includes many components which work well with the htmx hypermedia approach and have client-side JavaScript behaviors for an enhanced experience.
-
-### The Demo TODO List Tutorial
 
 1. [Create a Demo application](#create-a-demo-application)
 2. [Create a new page](#create-a-new-page)
@@ -49,7 +47,13 @@ The following covers the basics of creating a new page, adding a model and valid
 7. [Add a Update TODO feature](#add-a-update-todo-feature)
 8. [EXTRA CREDIT - Add a Change Validation feature](#extra-credit---add-a-change-validation-feature)
 
-![Demo TODO Feature](todos-demo.png "The Demo TODO Feature")
+### Rendering
+
+![Demo TODO Rendering](todos-demo.png "The Demo TODO Rendering")
+
+### Component Anatomy
+
+![Demo TODO Component Anatomy](todos-anatomy.png "The Demo TODO Component Anatomy")
 
 ### Create a Demo application
 
