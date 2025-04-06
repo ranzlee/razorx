@@ -16,7 +16,7 @@ public class FormHandler : IRequestHandler {
         router.MapPost("/examples/form/widget/{id}", PostWidget)
             .AllowAnonymous();
 
-        router.MapPatch("/examples/form/validate", ValidateForm)
+        router.MapPost("/examples/form/validate", ValidateForm)
             .WithRxValidation<FormValidator>()
             .AllowAnonymous();
 

@@ -8,11 +8,12 @@
                     return;
                 }
                 var dataId = evt.srcElement.getAttribute("data-id");
-                htmx.ajax('PATCH', '@(ValidationRoute)', {
+                var source = document.getElementById('@($"{Id}")');
+                htmx.ajax('POST', '@(ValidationPostRoute)', {
                     select: `#${dataId}`,
                     target: `#${dataId}`,
                     swap: 'morph:{ignoreActiveValue:true}',
-                    source: evt.srcElement.form
+                    source: source
                 }).then(() => {
                     var evt = new Event('validationChange');
                     var ele = document.getElementById(dataId);
@@ -37,7 +38,7 @@
 @code {
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
-    [Parameter, EditorRequired] public string ValidationRoute { get; set; } = null!;
+    [Parameter, EditorRequired] public string ValidationPostRoute { get; set; } = null!;
     [Parameter] public bool IsDisabled { get; set; }
     [Parameter] public int DebounceMilliseconds { get; set; } = 600;
     [Parameter] public RenderFragment? ChildContent { get; set; }

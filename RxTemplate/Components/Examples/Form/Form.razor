@@ -1,11 +1,11 @@
 @implements IComponentModel<FormModel>
 
-<RxChangeValidator 
-    Id="form-change-validator" 
-    ValidationRoute="/examples/form/validate"
-    IsDisabled="@(false)" 
-    class="flex justify-center">
-    <form id="input-form" action="" hx-post="/examples/form/submit" hx-target="#form-page" hx-swap="outerHTML" novalidate> 
+<form id="input-form" action="" hx-post="/examples/form/submit" hx-target="#form-page" hx-swap="outerHTML" novalidate> 
+    <RxChangeValidator 
+        Id="form-change-validator" 
+        ValidationPostRoute="/examples/form/validate"
+        IsDisabled="@(false)" 
+        class="flex justify-center">
         <div class="flex flex-col w-full gap-y-3">
             <div class="flex max-md:flex-col gap-x-4">
                 <div class="w-80">
@@ -189,16 +189,15 @@
                     </MemoField>
                 </div>
             </div>
+            <div class="mt-3">
+                <!-- Submit Button -->
+                <button id="form-submit" type="submit" class="btn btn-primary">
+                    Submit
+                </button>
+            </div>
         </div>
-        <div class="mt-3">
-            <!-- Submit Button -->
-            <button id="form-submit" type="submit" class="btn btn-primary">
-                Submit
-            </button>
-        </div>
-    </form>    
-</RxChangeValidator>
-
+    </RxChangeValidator>
+</form>    
 
 @code {
     [Parameter] public FormModel Model { get; set; } = new();
