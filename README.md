@@ -1551,3 +1551,251 @@ public class TodosHandler : IRequestHandler {
     //END NEW
 }
 ```
+
+**_Run the `dotnet watch` command in the terminal to launch the app (or `Ctrl-R` to rebuild if it is running). You should be able to update the TODO._**
+
+### EXTRA CREDIT - Add a Change Validation feature
+
+**_Update the TodosForm component with the `@* NEW *@` code._**
+
+```csharp
+@implements IComponentModel<TodoModel>
+
+@* NEW *@
+<RxChangeValidator
+    Id="todos-validator"
+    ValidationPostRoute="/todos/validate"
+    IsDisabled="@(false)">
+    <input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)">
+@* END NEW *@
+    <div>
+        <!-- Title Field -->
+        <Field
+            Id="@($"{nameof(Model.Title)}{Model.Id}")"
+            PropertyName="@(nameof(Model.Title))"
+            Value="@(Model.Title)"
+            Label="Title"
+            InputType="text"
+            UseOpacityForValidationErrors="@(true)"
+            @* NEW *@
+            AllowValidateOnChange="@(true)"
+            @* END NEW *@
+            maxlength="80"
+            placeholder="e.g., Learn the RazorX meta-framework!">
+        </Field>
+    </div>
+    <div>
+        <!-- Description Memo Field -->
+        <MemoField
+            Id="@($"{nameof(Model.Description)}{Model.Id}")"
+            PropertyName="@(nameof(Model.Description))"
+            Value="@(Model.Description)"
+            Label="Description"
+            MaxLength="500"
+            UseOpacityForValidationErrors="@(true)"
+            @* NEW *@
+            AllowValidateOnChange="@(true)"
+            @* END NEW *@
+            placeholder="e.g., This includes reading the htmx documentation and checking out Tailwind and daisyUI.">
+        </MemoField>
+    </div>
+@* NEW *@
+</RxChangeValidator>
+@* END NEW *@
+
+@code {
+    [Parameter] public TodoModel Model { get; set; } = null!;
+}
+```
+
+**_Update the `TodosHandler` with the `//NEW` code._**
+
+```csharp
+using Demo.Rx;
+
+namespace Demo.Components.Todos;
+
+public class TodosHandler : IRequestHandler {
+
+    public void MapRoutes(IEndpointRouteBuilder router) {
+
+        router.MapGet("/todos", Get)
+            .AllowAnonymous()
+            .WithRxRootComponent();
+
+        router.MapPost("/todos", Post)
+            .AllowAnonymous()
+            .WithRxValidation<TodosValidator>();
+
+        router.MapPatch("/todos/{id}", Patch)
+            .AllowAnonymous();
+
+        router.MapDelete("/todos/{id}", Delete)
+            .AllowAnonymous();
+
+        router.MapGet("/todos/{id}", GetUpdateModal)
+            .AllowAnonymous();
+
+        router.MapPut("/todos/{id}", Put)
+            .AllowAnonymous()
+            .WithRxValidation<TodosValidator>();
+
+        //NEW
+        router.MapPost("/todos/validate", Validate)
+            .AllowAnonymous()
+            .WithRxValidation<TodosValidator>();
+        //END NEW
+    }
+
+    public static IResult Get(
+        HttpResponse response) {
+        var model = FakeDbContext.Todos.Select(x => new TodoModel(
+            false,
+            x.Id,
+            x.Title,
+            x.Description,
+            x.IsComplete,
+            x.LastUpdated));
+        return response.RenderComponent<TodosPage, IEnumerable<TodoModel>>(model);
+    }
+
+    public static IResult Post(
+        HttpResponse response,
+        IHxTriggers hxTriggers,
+        TodoModel model,
+        ValidationContext validationContext) {
+        if (validationContext.Errors.Count != 0) {
+            response.HxRetarget("#todos-new");
+            response.HxReswap("outerHTML");
+            return response.RenderComponent<TodosNew, TodoModel>(model);
+        }
+        var todo = new Todo {
+            Id = Guid.NewGuid().ToString(),
+            Title = model.Title!,
+            Description = model.Description!,
+            LastUpdated = DateTime.UtcNow,
+            IsComplete = false
+        };
+        FakeDbContext.Todos.Add(todo);
+        model = model with {
+            ResetForm = true,
+            Id = todo.Id,
+            LastUpdated = todo.LastUpdated
+        };
+        hxTriggers
+            .With(response)
+            .Add(new HxToastTrigger("#success-toast", $"New TODO created."))
+            .Add(new HxFocusTrigger($"#{nameof(todo.Title)}-input"))
+            .Build();
+        return response.RenderComponent<TodosItem, TodoModel>(model);
+    }
+
+    public static IResult Patch(
+        HttpResponse response,
+        IHxTriggers hxTriggers,
+        string id) {
+        var todo = FakeDbContext.Todos.Where(x => x.Id == id).SingleOrDefault();
+        if (todo is null) {
+            return TypedResults.NoContent();
+        }
+        todo.IsComplete = !todo.IsComplete;
+        var model = new TodoModel(
+            false,
+            todo.Id,
+            todo.Title,
+            todo.Description,
+            todo.IsComplete,
+            todo.LastUpdated);
+        hxTriggers
+            .With(response)
+            .Add(new HxToastTrigger("#success-toast", $"Updated TODO to {(todo.IsComplete ? "completed" : "not completed")}."))
+            .Add(new HxFocusTrigger($"#todos-item-completed-{todo.Id}"))
+            .Build();
+        return response.RenderComponent<TodosItem, TodoModel>(model);
+    }
+
+    public static IResult Delete(
+        HttpResponse response,
+        IHxTriggers hxTriggers,
+        string id) {
+        var todo = FakeDbContext.Todos.Where(x => x.Id == id).SingleOrDefault();
+        if (todo is not null) {
+            FakeDbContext.Todos.Remove(todo);
+        }
+        hxTriggers
+            .With(response)
+            .Add(new HxCloseModalTrigger("#delete-todo-modal"))
+            .Add(new HxToastTrigger("#success-toast", $"TODO deleted."))
+            .Add(new HxFocusTrigger($"#{nameof(todo.Title)}-input"))
+            .Build();
+        response.HxRetarget($"#todos-item-{id}");
+        response.HxReswap("outerHTML");
+        return TypedResults.Ok();
+    }
+
+    public static IResult GetUpdateModal(
+        HttpResponse response,
+        string id) {
+        var todo = FakeDbContext.Todos.Where(x => x.Id == id).SingleOrDefault();
+        if (todo is null) {
+            return TypedResults.NotFound();
+        }
+        var model = new TodoModel(
+            false,
+            todo.Id,
+            todo.Title,
+            todo.Description,
+            todo.IsComplete,
+            todo.LastUpdated);
+        return response.RenderComponent<TodosUpdateModal, TodoModel>(model);
+    }
+
+    public static IResult Put(
+        HttpResponse response,
+        IHxTriggers hxTriggers,
+        ValidationContext validationContext,
+        string id,
+        TodoModel model) {
+        if (validationContext.Errors.Count != 0) {
+            response.HxRetarget("#todo-update-modal-content");
+            response.HxReswap("outerHTML");
+            return response.RenderComponent<TodosUpdateModal, TodoModel>(model);
+        }
+        var todo = FakeDbContext.Todos.Where(x => x.Id == id).SingleOrDefault();
+        if (todo is null) {
+            return TypedResults.NotFound();
+        }
+        todo.Title = model.Title!;
+        todo.Description = model.Description!;
+        todo.LastUpdated = DateTime.UtcNow;
+        model = new TodoModel(
+            false,
+            todo.Id,
+            todo.Title,
+            todo.Description,
+            todo.IsComplete,
+            todo.LastUpdated);
+        hxTriggers
+            .With(response)
+            .Add(new HxCloseModalTrigger("#update-todo-modal"))
+            .Add(new HxToastTrigger("#success-toast", $"TODO updated."))
+            .Add(new HxFocusTrigger($"#todos-item-edit-{todo.Id}"))
+            .Build();
+        response.HxRetarget($"#todos-item-{id}");
+        response.HxReswap("outerHTML");
+        return response.RenderComponent<TodosItem, TodoModel>(model);
+    }
+
+    //NEW
+    public static IResult Validate(
+        HttpResponse response,
+        TodoModel model) {
+        return response.RenderComponent<TodosForm, TodoModel>(model);
+    }
+    //END NEW
+}
+```
+
+**_Run the `dotnet watch` command in the terminal to launch the app (or `Ctrl-R` to rebuild if it is running). TODO form validation errors will display in real-time, as appropriate._**
+
+**_Congratulations! You have successfully completed the tutorial - Happy Coding!!!_**
