@@ -94,6 +94,10 @@ The following covers the basics of creating a new page, adding a model and valid
 
 **_Add the following code to the `TodosHandler.cs` file._**
 
+- All pages have an associated `IRequestHandler`. This interface has one method, `MapRoutes`, which maps the endpoints to delegates.
+- Endpoint filters may be applied to provide route-specific behavior. The filters are executed in the order they are applied, so behaviors like authorization should be defined first.
+- The `WithRxRootComponent` filter indicates that the `RazorComponentResult` should be embedded in the layout `IRootComponent`. The `UseRxRouter` call in `Program.cs` specifies a default root component, `Components/Layout/App.razor`, but an override layout may be specified with `WithRxRootComponent<T>` where T is an `IRootComponent`.
+
 ```csharp
 using Demo.Rx;
 
@@ -160,6 +164,9 @@ public class TodosHandler : IRequestHandler {
 
 **_Create a new `TodosDbContext.cs` file in `Components/Todos` and add the following code._**
 
+- When developing an application, you will most likely use `EntityFramework` for persistence.
+- The below code is a fake implementation for demonstration purposes only, and it is up to you to bring your on EF implementation.
+
 ```csharp
 namespace Demo.Components.Todos;
 
@@ -185,6 +192,10 @@ public class Todo {
 
 **_Create a new `TodosModel.cs` file in `Components/Todos` and add the following code._**
 
+- This is the model for our TODO feature. While it may begin with a shape that is nearly identical to the entity, the entity should not be substituted as the model. In almost all cases, the model shape will diverge from the entity.
+- The model properties should be nullable if the property will be bound to an input element that the user may leave blank, even if this will be caught as a validation error. Think of a required `<input type="number" name="Quantity" />` that will be deserialized into a `Quantity` property. The user may choose to leave the input element blank, which will be deserialized as null. The validator would add a validation error for this condition, and the user would see the error and correct it. The `required` element attribute may be used to apply upfront validation, but browser validation implementations vary and are limited, so I prefer to use server validation only to keep everything consistent.
+- This example uses a `record` type for immutability, but `class` and `struct` may also be used for models if preferred.
+
 ```csharp
 namespace Demo.Components.Todos;
 
@@ -201,6 +212,15 @@ public record TodoModel
 ### Add a Create TODO feature
 
 **_Create a new `TodosForm.razor` file in `Components/Todos` and add the following code._**
+
+- This component represents an HTML fragment for the TODO input elements that serialize to the model's `Title` and `Description` properties.
+- This fragment will be used in the `TodosNew` and `TodosUpdateModal` components, which is why it is a separate component.
+- Any component that binds to a model must implement the `IComponentModel<T>` interface, where T is the type of model.
+- RazorX component `Id` parameters map to HTML Element `id` attributes and must be unique. If an `Id` is not set, RazorX will generate a unique value for the element. However, in many cases the `Id` will need to be a known value for htmx `hx-target` attributes or JavaScript `getElementById` operations. In these cases, the `Id` must be computed and assigned.
+- The `TodosForm` component uses the RazorX `Field` component for the `Title` property binding and the `MemoField` component for the `Description` property binding.
+- All RazorX components will use the assigned `{Id}-input` format for the underlying HTML input element `id`.
+- The `PropertyName` parameter is what binds the component to the model's property. The `PropertyName` translates to the HTML input element's `name` attribute, which is the key used for the key-value pair on form submission. For easier refactoring, it is recommended to use the `nameof` expression to set the `PropertyName` instead of a hard-coded string.
+- `Components/Rx` contains many pre-built components to accelerate development. They are separated into `Headless` and `Skinned`. `Headless` components implement structure and behavior, and `Skinned` components wrap associated `Headless` components with CSS styling.
 
 ```csharp
 @implements IComponentModel<TodoModel>
@@ -238,6 +258,13 @@ public record TodoModel
 
 **_Create a new `TodosNew.razor` file in `Components/Todos` and add the following code._**
 
+- This component represents the fragment that contains the form for creating new TODOs.
+- It embeds the `TodosForm` component from above as a child component and passes the model parameter down.
+- The HTML form element's `hx-` attributes define the htmx behaviors for the form.
+- The `hx-post` tells htmx to issue a POST request to the `/todos` endpoint on form submission.
+- The `hx-target` is the element that will be targeted in the response. In this case, the `#` means use the `id` to identify the element. CSS selector syntax is used by htmx for element identification.
+- The `hx-swap` defines the swap strategy htmx should use to place the response in the targeted element. Most often this will be `innerHTML` (the default) or `outerHTML` to replace the entire element. In this case, the `beforeend` strategy is used to tell htmx to append the new TODO to the end of the list contained in the `<div id="todos-list">` element.
+
 ```csharp
 @implements IComponentModel<TodoModel>
 
@@ -258,6 +285,9 @@ public record TodoModel
 ```
 
 **_Create a new `TodosItem.razor` file in `Components/Todos` and add the following code._**
+
+- This component represents a TODO list item.
+- It uses the `RxUtcToLocal` component to convert a UTC date from the server to the local timezone of the client. It is recommended to always persist date-time values as UTC since they may then be converted to whatever timezone is most appropriate.
 
 ```csharp
 @implements IComponentModel<TodoModel>
@@ -288,6 +318,9 @@ public record TodoModel
 ```
 
 **_Update the TodosPage Component with the `@* New *@` Component Fragments_**
+
+- Declaring a model for the page component is done by implementing `IComponentModel`. In this case, a list of TODOs is used since the page will display all the TODOs, as well as provide a way to create a new TODO.
+- The `TodosNew` component is passed a new `TodoModel` since this will be an empty form.
 
 ```csharp
 @* NEW *@
@@ -330,6 +363,12 @@ public record TodoModel
 ```
 
 **_Update the TodosHandler with the `//New` component fragments for creating TODOs_**
+
+- The delegate `Get` is updated to query the fake DbContext and project list of `TodoModel`s.
+- A new POST route and delegate is added to the handler. The model is bound to the delegate. RazorX uses an htmx extension that coverts form key-value pairs (the htmx default) into JSON. RazorX includes custom JSON converters for deserializing this JSON into model objects.
+- The delegate updates the model's `Id` and `LastUpdated` properties before binding it to the component in the response.
+- The `IHxTriggers` builder is injected into the POST delegate. `HxTriggers` are used to set response headers that htmx will dispatch events on. Depending on the type of trigger, the event may be dispatched immediately on receiving the response, after htmx processes the swap, or after the DOM is settled. For example, setting focus to an element should wait until the DOM is settled. In this specific case, the success toast is popped and the `Title` input element is focused.
+- The handlers for the `IHxTriggers` dispatched events are located in the `wwwroot/js/razorx.js` file, but no customization should be needed for any implementations in this file. `IHxTriggers` is capable of dispatching custom events, and in this case the developer is responsible for implementing the JavaScript handlers.
 
 ```csharp
 using Demo.Rx;
@@ -398,6 +437,8 @@ public class TodosHandler : IRequestHandler {
 
 **_Update the TodosModel with the `//New` code._**
 
+- The model is now further deviating from the EF entity. In this case, we're adding a `ResetForm` flag to indicate that the form should be reset after successfully creating a new TODO.
+
 ```csharp
 namespace Demo.Components.Todos;
 
@@ -415,6 +456,9 @@ public record TodoModel
 ```
 
 **_Update the TodosItem component with the `@* NEW *@` code._**
+
+- The `TodosItem` component is returned after a successful POST call to add a new TODO.
+- The model's `ResetForm` flag is evaluated to see if a new `TodosNew` component should be included in the response.
 
 ```csharp
 @implements IComponentModel<TodoModel>
@@ -452,6 +496,9 @@ public record TodoModel
 
 **_Update the TodosNew component with the `@* NEW *@` code._**
 
+- The `hx-swap-oob="true"` attribute is added to the `TodosNew` component's main container div. This tells htmx that this content may exist as an additional fragment in a response, and when it does to swap the content in the DOM.
+- The default swap strategy for oob (out of band) swaps is `outerHTML`, but a different strategy may be specified in place of `true`. The typical swap strategy for oob swaps will be `outerHTML`.
+
 ```csharp
 @implements IComponentModel<TodoModel>
 
@@ -475,6 +522,9 @@ public record TodoModel
 ```
 
 **_Update the `TodosHandler` with the `//NEW` code._**
+
+- Update the `Get` delegate with the `ResetForm` flag set to false.
+- Update the `Post` delegate with the `ResetForm` flag set to true. This will include the `TodosNew` component in the `TodosItem` response and htmx will replace the existing form with a new one, effectively clearing the prior inputs.
 
 ```csharp
 using Demo.Rx;
@@ -542,6 +592,12 @@ public class TodosHandler : IRequestHandler {
 
 **_Create a new `TodosValidator.cs` file in `Components/Todos` and add the following code._**
 
+- Validators are extended from FluentValidation's `AbstractValidator`.
+- Errors are collected in a request-scoped `ValidationContext` object.
+- The `ValidationContext` may be injected anywhere it is needed, including the `IRequestHandler` delegates and `RazorComponents`.
+- The model must be deserialized from the request's JSON payload before validation. This is why model properties should be nullable if the user may choose to not provide a value, even if the property is required.
+- In this case, the model's `Title` and `Description` properties are validated for required value and max length.
+
 ```csharp
 using FluentValidation;
 using Demo.Rx;
@@ -568,6 +624,13 @@ public class TodosValidator : Validator<TodoModel> {
 ```
 
 **_Update the `TodosHandler` with the `//NEW` code._**
+
+- Adding the `WithRxValidation<T>` filter where T is a `Validator` will trigger validation.
+- Validation occurs before the `IRequestHandler` delegate is invoked.
+- The `ValidationContext` is injected into the `Post` delegate.
+- If the `ValidationContext` contains errors, the `Post` delegate responds with the `TodosNew` component instead of the `TodosItem` component.
+- All RazorX components inject the `ValidationContext` and have built-in validation error display styling.
+- The response extension methods `HxRetarget` and `HxReswap` are used to set response headers for htmx. These headers will override the original `hx-target` and `hx-swap` attributes for the request. They may also be used if the `hx-target` or `hx-swap` was not specified to begin with.
 
 ```csharp
 using Demo.Rx;
@@ -642,6 +705,11 @@ public class TodosHandler : IRequestHandler {
 
 **_Update the TodosItem component with the `@* NEW *@` code._**
 
+- A RazorX `Checkbox` component is added to allow the user to mark the TODO as complete. It is bound to the model's `IsComplete` property.
+- The `hx-patch`, `hx-target`, and `hx-swap` attributes are added directly to the `Checkbox`. The `hx-trigger` attribute is not used, but may be added if needed. Sensible defaults are used by htmx when attributes are omitted. In this case, the trigger is the `onchange` event.
+- When the `Checkbox` is checked, htmx will send a PATCH request to the endpoint, including the `Id` of the TODO item.
+- The response will replace the entire TODO item, and a "COMPLETED" badge will be displayed if the TODO item is marked as completed.
+
 ```csharp
 @implements IComponentModel<TodoModel>
 
@@ -698,6 +766,10 @@ public class TodosHandler : IRequestHandler {
 ```
 
 **_Update the `TodosHandler` with the `//NEW` code._**
+
+- Add the `IRequestHandler` endpoint and delegate mapping for the PATCH request. This includes the `{id}` route segment for the TODO `Id`.
+- The `Patch` delegate reads the todo entity from the fake DbContext, updates the `IsComplete` property, and projects a new todo model for binding to the `TodosItem` component in the response.
+- If the todo entity is not found, a `TypedResults.NoContent` (204) response is returned. HTTP response codes are evaluated for specific meaning by htmx. 204 tells htmx to not process the response. In this case, using a `TypedResults.NotFound` (404) might be a better option. Using this code would invoke htmx error processing, as does any code >= 400. RazorX will redirect a user to an error page when htmx signals an error. For a situation like this, the 404 would force the user to return to the TODO page and the removed item would no longer be on the list. Of course, developers may choose to handle concurrency situations more elaborately. `The Kitchen Sync` example does this by pre-fetching an item before an update operation is processed and displays a message to the user that their data is stale. My general recommendation is to return a 404 so the user is required to navigate to the fresh page to continue.
 
 ```csharp
 using Demo.Rx;
@@ -799,6 +871,12 @@ public class TodosHandler : IRequestHandler {
 
 **_Update the TodosItem component with the `@* NEW *@` code._**
 
+- Add a `RxModalTrigger` component to display a modal confirmation dialog.
+- `RxModalTrigger`s are HTML button elements.
+- The `ModalId` is the `id` attribute value of the `dialog` element.
+- The `RouteValue` is the value to append to the `hx-` request route.
+- The `TextNodeValue` is any item-specific text that needs to be displayed in the dialog.
+
 ```csharp
 @implements IComponentModel<TodoModel>
 
@@ -861,6 +939,13 @@ public class TodosHandler : IRequestHandler {
 ```
 
 **_Update the TodosPage component with the `@* NEW *@` code._**
+
+- Add the HTML `dialog` element to the page and assign it the `id` specified in the `RxModalTrigger`'s `ModalId`.
+- In this case, the `RxModalTextNode` is used as the modal's title.
+- The `RxModalDismiss` component is a button that will close the modal.
+- The `RxModalAction` component is a button that can issue an `hx-` request. In this case, the request is a DELETE to the `/todos` endpoint. The `RouteValue` set on the `RxModalTrigger` will be appended to the endpoint, so the final endpoint is `DELETE: todos/{id}`.
+- The `hx-disabled-elt` attribute will disable the button while the request is in-flight.
+- The `RxModalAction` component will not close the modal when clicked. This is important because the server may need to return validation errors to the modal in some cases.
 
 ```csharp
 @implements IComponentModel<IEnumerable<TodoModel>>
@@ -926,6 +1011,12 @@ public class TodosHandler : IRequestHandler {
 ```
 
 **_Update the `TodosHandler` with the `//NEW` code._**
+
+- Add the `IRequestHandler` endpoint and delegate mapping for the DELETE request. This includes the `{id}` route segment for the TODO `Id`.
+- The `Delete` delegate will remove the TODO from the fake DbContext, if it exists. We don't care if it has previously been deleted by a different user since the action is DELETE.
+- The `HxCloseModalTrigger` is added to the response to signal the close of the modal.
+- The `HxRetarget` and `HxReswap` extension methods are used to specify the `outerHTML` of the TODO item being deleted. These attributes could have been applied to the `RxModalAction` component instead.
+- The response is `TypedResults.Ok` (200). When a 200 is returned for a DELETE, htmx will remove the targeted element using the specified swap strategy.
 
 ```csharp
 using Demo.Rx;

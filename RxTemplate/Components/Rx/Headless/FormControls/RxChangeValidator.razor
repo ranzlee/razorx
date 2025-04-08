@@ -8,7 +8,7 @@
                     return;
                 }
                 var dataId = evt.srcElement.getAttribute("data-id");
-                var source = document.getElementById('@($"{Id}")');
+                var source = document.getElementById('@(Id)');
                 htmx.ajax('POST', '@(ValidationPostRoute)', {
                     select: `#${dataId}`,
                     target: `#${dataId}`,
