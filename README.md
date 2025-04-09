@@ -941,7 +941,7 @@ public class TodosHandler : IRequestHandler {
 **_Update the TodosPage component with the `@* NEW *@` code._**
 
 - Add the HTML `dialog` element to the page and assign it the `id` specified in the `RxModalTrigger`'s `ModalId`.
-- In this case, the `RxModalTextNode` is used as the modal's title.
+- The `RxModalTextNode` is used as the modal's title.
 - The `RxModalDismiss` component is a button that will close the modal.
 - The `RxModalAction` component is a button that can issue an `hx-` request. In this case, the request is a DELETE to the `/todos` endpoint. The `RouteValue` set on the `RxModalTrigger` will be appended to the endpoint, so the final endpoint is `DELETE: todos/{id}`.
 - The `hx-disabled-elt` attribute will disable the button while the request is in-flight.
@@ -1140,6 +1140,12 @@ public class TodosHandler : IRequestHandler {
 
 **_Update the TodosItem component with the `@* NEW *@` code._**
 
+- Add a `RxModalTrigger` component to display a modal edit dialog.
+- `RxModalTrigger`s are HTML button elements.
+- The `ModalId` is the `id` attribute value of the `dialog` element.
+- The `RouteValue` is the value to append to the `hx-` request route.
+- The `TextNodeValue` is any item-specific text that needs to be displayed in the dialog.
+
 ```csharp
 @implements IComponentModel<TodoModel>
 
@@ -1211,6 +1217,12 @@ public class TodosHandler : IRequestHandler {
 ```
 
 **_Update the TodosPage component with the `@* NEW *@` code._**
+
+- Add the HTML `dialog` element to the page and assign it the `id` specified in the `RxModalTrigger`'s `ModalId`.
+- The `RxModalTextNode` is used as the modal's title.
+- The `RxModalAsyncContent` component enables the modal content to be asynchronously rendered from the server.
+- The `RenderFromRoute` is the GET endpoint.
+- When the `RxModalTrigger` triggers the opening of the modal, the `RenderFromRoute` endpoint will have the `RouteValue` appended and request will be sent.
 
 ```csharp
 @implements IComponentModel<IEnumerable<TodoModel>>
@@ -1295,6 +1307,10 @@ public class TodosHandler : IRequestHandler {
 
 **_Create a new `TodosUpdateModal.razor` file in `Components/Todos` and add the following code._**
 
+- This component is the content that will be swapped in place of the `RxModalAsyncContent`.
+- The `Id` of the `RxModalAsyncContent` component and the async content component's container element `id` attribute must be the same value.
+- This component will embed the existing `TodosForm` component and will bind the model to the input elements.
+
 ```csharp
 @implements IComponentModel<TodoModel>
 
@@ -1313,6 +1329,10 @@ public class TodosHandler : IRequestHandler {
 ```
 
 **_Update the `TodosHandler` with the `//NEW` code._**
+
+- Add the `IRequestHandler` endpoint and delegate mapping for the GET `GetUpdateModal` request. This includes the `{id}` route segment for the TODO `Id`.
+- The `GetUpdateModal` delegate will read the TODO from the fake DbContext. If the TODO is not found because it has been deleted by a different user, the `TypedResults.NotFound` is returned. This will signal htmx to throw an error, and RazorX will redirect to the error page which will force the user to navigate to a fresh TODOs page.
+- The projected model is bound to the `TodosUpdateModal` component and returned in the response.
 
 ```csharp
 using Demo.Rx;
