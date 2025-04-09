@@ -1308,7 +1308,7 @@ public class TodosHandler : IRequestHandler {
 **_Create a new `TodosUpdateModal.razor` file in `Components/Todos` and add the following code._**
 
 - This component is the content that will be swapped in place of the `RxModalAsyncContent`.
-- The `Id` of the `RxModalAsyncContent` component and the async content component's container element `id` attribute must be the same value.
+- The `Id` of the `RxModalAsyncContent` component and the content component's container element `id` attribute must be the same value.
 - This component will embed the existing `TodosForm` component and will bind the model to the input elements.
 
 ```csharp
