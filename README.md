@@ -959,7 +959,7 @@ public class TodosHandler : IRequestHandler {
     <div class="modal-box">
         <div class="flex justify-between items-center bg-base-300 p-5 rounded-sm">
             <div class="text-lg font-bold">
-                <RxModalTextNode ModalId="delete-todo-modal" />
+                <RxModalTextNode />
             </div>
         </div>
         <form method="dialog">
@@ -967,11 +967,10 @@ public class TodosHandler : IRequestHandler {
                 This is a destructive operation. Are you sure?
             </div>
             <div class="modal-action">
-                <RxModalDismiss ModalId="delete-todo-modal" autofocus class="btn btn-neutral">
+                <RxModalDismiss autofocus class="btn btn-neutral">
                     Cancel
                 </RxModalDismiss>
                 <RxModalAction
-                    ModalId="delete-todo-modal"
                     hx-delete="/todos"
                     hx-disabled-elt="this"
                     class="btn btn-error">
@@ -1235,7 +1234,7 @@ public class TodosHandler : IRequestHandler {
     <div class="modal-box">
         <div class="flex justify-between items-center bg-base-300 p-5 rounded-sm">
             <div class="text-lg font-bold">
-                <RxModalTextNode ModalId="delete-todo-modal" />
+                <RxModalTextNode />
             </div>
         </div>
         <form method="dialog">
@@ -1243,11 +1242,10 @@ public class TodosHandler : IRequestHandler {
                 This is a destructive operation. Are you sure?
             </div>
             <div class="modal-action">
-                <RxModalDismiss ModalId="delete-todo-modal" autofocus class="btn btn-neutral">
+                <RxModalDismiss autofocus class="btn btn-neutral">
                     Cancel
                 </RxModalDismiss>
                 <RxModalAction
-                    ModalId="delete-todo-modal"
                     hx-delete="/todos"
                     hx-disabled-elt="this"
                     class="btn btn-error">
@@ -1263,13 +1261,12 @@ public class TodosHandler : IRequestHandler {
     <div class="modal-box">
         <div class="flex justify-between items-center bg-base-300 p-5 rounded-sm">
             <div class="text-lg font-bold">
-                <RxModalTextNode ModalId="update-todo-modal" />
+                <RxModalTextNode />
             </div>
         </div>
         <form method="dialog">
             <RxModalAsyncContent
                 Id="todo-update-modal-content"
-                ModalId="update-todo-modal"
                 RenderFromRoute="/todos">
                 <FallbackContent />
             </RxModalAsyncContent>
@@ -1317,7 +1314,7 @@ public class TodosHandler : IRequestHandler {
 <div id="todo-update-modal-content">
     <TodosForm Model="@(Model)" />
     <div class="modal-action">
-        <RxModalDismiss ModalId="update-todo-modal" autofocus class="btn btn-neutral">
+        <RxModalDismiss autofocus class="btn btn-neutral">
             Cancel
         </RxModalDismiss>
     </div>
@@ -1483,12 +1480,11 @@ public class TodosHandler : IRequestHandler {
 <div id="todo-update-modal-content">
     <TodosForm Model="@(Model)" />
     <div class="modal-action">
-        <RxModalDismiss ModalId="update-todo-modal" autofocus class="btn btn-neutral">
+        <RxModalDismiss autofocus class="btn btn-neutral">
             Cancel
         </RxModalDismiss>
         @* NEW *@
         <RxModalAction
-            ModalId="update-todo-modal"
             hx-put="@($"/todos/{Model.Id}")"
             hx-disabled-elt="this"
             class="btn btn-primary">

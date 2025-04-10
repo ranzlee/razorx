@@ -14,21 +14,20 @@
             <div class="modal-box">
                 <div class="flex justify-between items-center bg-base-300 p-5 rounded-sm">
                     <div class="text-lg font-bold">
-                        <RxModalTextNode ModalId="delete-modal" />
+                        <RxModalTextNode />
                     </div>
                     <Spinner Id="delete-grid-item" />
                 </div>
                 <form method="dialog">
                     <RxModalAsyncContent
-                        Id="delete-modal-form"
-                        ModalId="delete-modal" 
+                        Id="delete-modal-form" 
                         RenderFromRoute="/examples/crud/delete-modal">
                         <FallbackContent>
                             <div class="h-[186px]">
                                 <Spinner AlwaysVisible="@(true)" />    
                             </div>
                             <div class="modal-action">
-                                <RxModalDismiss Id="delete-modal-dismiss-action" ModalId="delete-modal" class="btn btn-neutral" autofocus>
+                                <RxModalDismiss Id="delete-modal-dismiss-action" class="btn btn-neutral" autofocus>
                                     Cancel
                                 </RxModalDismiss>
                             </div>
@@ -46,21 +45,20 @@
             <div class="modal-box">
                 <div class="flex justify-between items-center bg-base-300 p-5 rounded-sm">
                     <div class="text-lg font-bold">
-                        <RxModalTextNode ModalId="save-modal" />
+                        <RxModalTextNode />
                     </div>
                     <Spinner Id="save-grid-item" />
                 </div>
                 <form method="dialog">
                     <RxModalAsyncContent
-                        Id="save-modal-form"
-                        ModalId="save-modal" 
+                        Id="save-modal-form" 
                         RenderFromRoute="/examples/crud/save-modal">
                         <FallbackContent>
                             <div class="h-[420px]">
                                 <Spinner AlwaysVisible="@(true)" />    
                             </div>
                             <div class="modal-action">
-                                <RxModalDismiss ModalId="save-modal" class="btn btn-neutral" autofocus>
+                                <RxModalDismiss class="btn btn-neutral" autofocus>
                                     Cancel
                                 </RxModalDismiss>
                             </div>

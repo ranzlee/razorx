@@ -1,18 +1,17 @@
 <span id="@(Id)" @attributes="@(AdditionalAttributes)"></span>
 <script>
     (function() {
-        var modal = document.getElementById("@(ModalId)");
+        var textNode = document.getElementById('@(Id)');
+        var modal = textNode.closest('dialog');
         if (modal === null) {
-            console.warn("@($"dialog element with id {ModalId} not found.")");
+            console.warn(`dialog element not found for text node ${textNode.id}.`);
             return;
         }
         modal.addEventListener("opened", function(evt) {
-            var node = document.getElementById("@(Id)");
-            node.innerText = evt.detail?.textNodeValue ?? "";
+            textNode.innerText = evt.detail?.textNodeValue ?? "";
         });
         modal.addEventListener("close", function() {
-            var node = document.getElementById("@(Id)");
-            node.innerText = '';
+            textNode.innerText = '';
         });
     })();
 </script>
@@ -20,7 +19,6 @@
 @code {
     [Parameter] public string Id { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
-    [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
     protected override void OnParametersSet() {
         if (string.IsNullOrWhiteSpace(Id)) {
             Id = Utilities.GenerateElementId();

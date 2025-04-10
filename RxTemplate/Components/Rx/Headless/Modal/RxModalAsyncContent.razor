@@ -4,28 +4,28 @@
 <div id="@(Id)"></div>
 <script>
     (function() {
-        var modal = document.getElementById("@(ModalId)");
+        var container = document.getElementById('@(Id)');
+        var modal = container.closest('dialog');
         if (modal === null) {
-            console.warn("@($"dialog element with id {ModalId} not found.")");
+            console.warn(`dialog element not found for async content ${container.id}.`);
             return;
         }
         modal.addEventListener("opened", function(evt) {
             var content = document.getElementById("@(Id)-template")?.content?.cloneNode(true) ?? [];
-            document.getElementById("@(Id)")?.prepend(content);
+            document.getElementById('@(Id)')?.prepend(content);
             htmx.ajax('GET', `@(RenderFromRoute.Trim().TrimEnd('/'))/${evt.detail?.routeValue ?? ''}`, { 
                 target: '#@(Id)', 
                 swap: 'outerHTML transition:true' 
             });
         });
         modal.addEventListener("close", function() {
-            document.getElementById("@(Id)")?.replaceChildren([]);
+            document.getElementById('@(Id)')?.replaceChildren([]);
         });
     })();
 </script>
 
 @code {
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
-    [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
     [Parameter, EditorRequired] public string RenderFromRoute { get; set; } = null!;
     [Parameter] public RenderFragment? FallbackContent { get; set; }
 }

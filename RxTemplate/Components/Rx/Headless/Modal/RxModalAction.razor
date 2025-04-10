@@ -23,18 +23,18 @@
             route.value = attr;
             return true;
         });
-        var modal = document.getElementById("@(ModalId)");
+        var modal = action.closest('dialog');
         if (modal === null) {
-            console.warn("@($"dialog element with id {ModalId} not found.")");
+            console.warn(`dialog element not found for modal action ${action.id}.`);
             return;
         }
         modal.addEventListener("opened", function(evt) {
             if (method.value === '') {
-                console.warn(`hx-[method] not provided for modal ${modal.id} action.`);
+                console.warn(`hx-[method] not provided for modal action.`);
                 return;
             }
             if (route.value === '') {
-                console.warn(`${method.value} route not provided for modal ${modal.id} action.`);
+                console.warn(`${method.value} route not provided for modal action.`);
                 return;
             }
             var routeValue = evt.detail?.routeValue ?? "";
@@ -47,7 +47,6 @@
 @code {
     [Parameter] public string Id { get; set; } = null!;
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? AdditionalAttributes { get; set; }
-    [Parameter, EditorRequired] public string ModalId { get; set; } = null!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     protected override void OnParametersSet() {
         if (string.IsNullOrWhiteSpace(Id)) {

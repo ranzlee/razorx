@@ -30,8 +30,10 @@ services.AddCascadingAuthenticationState();
 services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 
 // Add response compression - remove if using server level compression (e.g., nginx)
-if (!builder.Environment.IsDevelopment()) {
-    services.AddResponseCompression(options => {
+if (!builder.Environment.IsDevelopment())
+{
+    services.AddResponseCompression(options =>
+    {
         options.EnableForHttps = true;
         options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat([
             "application/javascript",
@@ -69,9 +71,22 @@ services.AddBlobProvider();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment()) {
+if (!app.Environment.IsDevelopment())
+{
     // Use the default exception handler
-    app.UseExceptionHandler();
+    app.UseExceptionHandler(handler =>
+    {
+        handler.Run(context =>
+        {
+            // The razorx.js error handler will handle async error redirects to /error
+            if (!context.Request.IsHxRequest())
+            {
+                // Page requests will redirect to /error
+                context.Response.Redirect("/error?code=500");
+            }
+            return Task.CompletedTask;
+        });
+    });
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
     // Use compression - applied early for static file compression
@@ -82,8 +97,10 @@ if (!app.Environment.IsDevelopment()) {
 app.UseHttpsRedirection();
 
 // Use static files served from wwwroot - applied early for short-circuiting the request pipeline
-app.UseStaticFiles(new StaticFileOptions {
-    OnPrepareResponse = ctx => {
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
         // 7 day freshness
         ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=604800");
     }
