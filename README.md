@@ -1474,6 +1474,9 @@ public class TodosHandler : IRequestHandler {
 
 **_Update the TodosUpdateModal component with the `@* NEW *@` code._**
 
+- Add the `RxModalAction` component that will send the PUT request.
+- The model's `Id` property is included as a route parameter. This is necessary because the `TodosForm` only has the `Title` and `Description` properties. If a hidden input for the `Id` was added to the form, the route parameter would be optional. My personal opinion is that having the `Id` as route parameter is better for visibility of intent.
+
 ```csharp
 @implements IComponentModel<TodoModel>
 
@@ -1501,6 +1504,14 @@ public class TodosHandler : IRequestHandler {
 ```
 
 **_Update the `TodosHandler` with the `//NEW` code._**
+
+- Add the `IRequestHandler` endpoint and delegate mapping for the PUT request. This includes the `{id}` route segment for the TODO `Id`.
+- The `WithRxValidation` filter is added to the route since the model must be validated for correctness as part of the update process.
+- The `ValidationContext` is injected into the `Put` delegate.
+- If the `ValidationContext` contains errors, the `Put` delegate responds with the `TodosUpdateModal` component.
+- The `Put` delegate will read the TODO from the fake DbContext. If the TODO is not found because it has been deleted by a different user, the `TypedResults.NotFound` is returned. This will signal htmx to throw an error, and RazorX will redirect to the error page which will force the user to navigate to a fresh TODOs page.
+- The response extension methods `HxRetarget` and `HxReswap` are used to set response headers for htmx. These headers will override the original `hx-target` and `hx-swap` attributes for the request. They may also be used if the `hx-target` or `hx-swap` was not specified to begin with. In this case, the `RxModalAction` did not specify either the `hx-target` or `hx-swap`, although it could have.
+- The projected model is bound to the `TodosItem` component and returned in the response.
 
 ```csharp
 using Demo.Rx;
@@ -1684,6 +1695,12 @@ public class TodosHandler : IRequestHandler {
 
 **_Update the TodosForm component with the `@* NEW *@` code._**
 
+- The `TodosForm` component only displays validation errors after a submit. Using the `RxChangeValidator` will enable the user to get real-time validation feedback as they edit the form.
+- The `RxChangeValidator` requires form elements to have stable `id` values across requests, so you must ensure the `id` attribute values are computed safely and consistently.
+- The `ValidationPostRoute` is the POST endpoint for validating the model.
+- The `<input type="hidden" name="@(nameof(Model.Id))" value="@(Model.Id)">` is necessary for serialization of the modal across requests. Prior to this we passed the `Id` as a route parameter, but the `RxChangeValidator` requires all necessary information about the model to be in the request body.
+- RazorX components do not participate in change validation by default, so it must be opted into by setting `AllowValidateOnChange` to `true`.
+
 ```csharp
 @implements IComponentModel<TodoModel>
 
@@ -1735,6 +1752,10 @@ public class TodosHandler : IRequestHandler {
 ```
 
 **_Update the `TodosHandler` with the `//NEW` code._**
+
+- Add the `IRequestHandler` endpoint and `Validate` delegate mapping for the POST request.
+- The `WithRxValidation` filter is added to the route.
+- The `Validate` delegate only needs to return the `TodosForm` component because the `TodosValidator` validated the model before the delegate was invoked.
 
 ```csharp
 using Demo.Rx;
