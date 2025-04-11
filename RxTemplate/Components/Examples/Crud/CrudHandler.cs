@@ -161,7 +161,7 @@ public class CrudHandler : IRequestHandler {
         var triggerBuilder = hxTriggers
             .With(response)
             .Add((id ?? 0) > 0
-                ? new HxFocusTrigger($"#edit-btn-{id}", true)
+                ? new HxFocusTrigger($"#edit-btn-{id}")
                 : new HxFocusTrigger($"#new-btn"));
         // POST, PUT, and PATCH send metadata state as a request header instead of a parameter like GET and DELETE
         // htmx uses proper REST and HTTP semantics
@@ -253,7 +253,7 @@ public class CrudHandler : IRequestHandler {
         if (!string.IsNullOrWhiteSpace(filterPropertyName)) {
             triggerBuilder
                 .Add(new HxToastTrigger("#success-toast", "Filter added"))
-                .Add(new HxFocusTrigger("#filter-selector"));
+                .Add(new HxFocusTrigger("#filter-selector-select"));
         }
         if (!string.IsNullOrWhiteSpace(filterId)) {
             triggerBuilder
@@ -284,7 +284,7 @@ public class CrudHandler : IRequestHandler {
             // Trigger focus on filter removal
             triggerBuilder
                 .Add(state.Filters.Count == 0
-                    ? new HxFocusTrigger("#filter-selector")
+                    ? new HxFocusTrigger("#filter-selector-select")
                     : new HxFocusTrigger($"[name=\"{nameof(DataSetFilter.FilterId)}\"][value=\"{state.Filters[0].FilterId}\"]"));
         }
         // Build triggers

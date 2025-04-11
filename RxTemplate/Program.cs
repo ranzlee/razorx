@@ -8,6 +8,7 @@ using RxTemplate.Components.Error;
 using RxTemplate.Components.Layout;
 using RxTemplate.Components.Rx;
 using RxTemplate.Rx;
+using RxTemplate.Api;
 
 // Asset fingerprinting and pre-compression is part of .NET 9 with the new MapStaticAssets middleware, however 
 // this middleware is not working with Minimal APIs and RazorComponentResults. 
@@ -30,10 +31,8 @@ services.AddCascadingAuthenticationState();
 services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 
 // Add response compression - remove if using server level compression (e.g., nginx)
-if (!builder.Environment.IsDevelopment())
-{
-    services.AddResponseCompression(options =>
-    {
+if (!builder.Environment.IsDevelopment()) {
+    services.AddResponseCompression(options => {
         options.EnableForHttps = true;
         options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat([
             "application/javascript",
@@ -71,16 +70,12 @@ services.AddBlobProvider();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
+if (!app.Environment.IsDevelopment()) {
     // Use the default exception handler
-    app.UseExceptionHandler(handler =>
-    {
-        handler.Run(context =>
-        {
+    app.UseExceptionHandler(handler => {
+        handler.Run(context => {
             // The razorx.js error handler will handle async error redirects to /error
-            if (!context.Request.IsHxRequest())
-            {
+            if (!context.Request.IsHxRequest()) {
                 // Page requests will redirect to /error
                 context.Response.Redirect("/error?code=500");
             }
@@ -97,10 +92,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Use static files served from wwwroot - applied early for short-circuiting the request pipeline
-app.UseStaticFiles(new StaticFileOptions
-{
-    OnPrepareResponse = ctx =>
-    {
+app.UseStaticFiles(new StaticFileOptions {
+    OnPrepareResponse = ctx => {
         // 7 day freshness
         ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=604800");
     }
@@ -116,8 +109,11 @@ app.UseAntiforgery();
 // Use cookie for antiforgery token - this is custom middleware to support using cookies to transport the antiforgery token
 app.UseAntiforgeryCookie();
 
-// Use router
+// Use App router
 app.UseRxRouter<App, ErrorPage>();
+
+// Use API router
+app.UseApiRouter();
 
 // Let's Go!
 app.Run();

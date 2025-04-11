@@ -76,7 +76,7 @@ public static class RoutingExtensions {
     where TFallbackRootComponent : IRootComponent
     where TComponent : IComponent, IComponentModel<ErrorModel> {
         routeBuilder.MapFallback(static (context) => {
-            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
             return Task.CompletedTask;
         });
         return routeBuilder.AddEndpointFilter<ErrorHandler<TFallbackRootComponent, TComponent>>();
