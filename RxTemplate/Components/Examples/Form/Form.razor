@@ -1,4 +1,4 @@
-@implements IComponentModel<FormModel>
+@implements IComponentModelWithSlots<FormModel>
 
 <form id="input-form" action="" hx-post="/examples/form/submit" hx-target="#form-page" hx-swap="outerHTML" novalidate> 
     <RxChangeValidator 
@@ -11,31 +11,35 @@
                 <div class="w-80">
                     <!-- Name Field -->
                     <div class="max-w-xs">
-                        <Field 
-                            Id="@(nameof(Model.Name))" 
-                            PropertyName="@(nameof(Model.Name))" 
-                            Value="@(Model.Name)" 
-                            Label="Name" 
-                            InputType="text"
-                            UseOpacityForValidationErrors="@(true)"
-                            AllowValidateOnChange="@(true)"
-                            placeholder="e.g. John Doe">
-                        </Field>
+                        <RxSlot Id="@(nameof(Model.Name))" RenderIf="@(SlotIdToRender)">
+                            <Field 
+                                Id="@(nameof(Model.Name))" 
+                                PropertyName="@(nameof(Model.Name))" 
+                                Value="@(Model.Name)" 
+                                Label="Name" 
+                                InputType="text"
+                                UseOpacityForValidationErrors="@(true)"
+                                AllowValidateOnChange="@(true)"
+                                placeholder="e.g. John Doe">
+                            </Field>
+                        </RxSlot>
                     </div>
                 </div>
                 <div class="w-80">
                     <!-- Email Field -->
                     <div class="max-w-xs">
-                        <Field 
-                            Id="@(nameof(Model.Email))"
-                            PropertyName="@(nameof(Model.Email))" 
-                            Value="@(Model.Email)" 
-                            Label="Email" 
-                            InputType="email"
-                            UseOpacityForValidationErrors="@(true)"
-                            AllowValidateOnChange="@(true)"
-                            placeholder="e.g. john.doe@email.com">
-                        </Field>
+                        <RxSlot Id="@(nameof(Model.Email))" RenderIf="@(SlotIdToRender)">
+                            <Field 
+                                Id="@(nameof(Model.Email))"
+                                PropertyName="@(nameof(Model.Email))" 
+                                Value="@(Model.Email)" 
+                                Label="Email" 
+                                InputType="email"
+                                UseOpacityForValidationErrors="@(true)"
+                                AllowValidateOnChange="@(true)"
+                                placeholder="e.g. john.doe@email.com">
+                            </Field>
+                        </RxSlot>
                     </div>
                 </div>
             </div>
@@ -43,31 +47,35 @@
                 <div class="w-80">
                     <!-- Birth Date Field -->
                     <div class="max-w-xs">
-                        <Field 
-                            Id="@(nameof(Model.BirthDate))"
-                            PropertyName="@(nameof(Model.BirthDate))" 
-                            Value="@(Model.BirthDate)" 
-                            Label="Birth Date" 
-                            InputType="date"
-                            UseOpacityForValidationErrors="@(true)"
-                            AllowValidateOnChange="@(true)"
-                            placeholder="e.g. 01/01/1970">
-                        </Field>
+                        <RxSlot Id="@(nameof(Model.BirthDate))" RenderIf="@(SlotIdToRender)">
+                            <Field 
+                                Id="@(nameof(Model.BirthDate))"
+                                PropertyName="@(nameof(Model.BirthDate))" 
+                                Value="@(Model.BirthDate)" 
+                                Label="Birth Date" 
+                                InputType="date"
+                                UseOpacityForValidationErrors="@(true)"
+                                AllowValidateOnChange="@(true)"
+                                placeholder="e.g. 01/01/1970">
+                            </Field>
+                        </RxSlot>
                     </div>
                 </div>
                 <div class="w-80">
                     <!-- Appointment Time Field -->
                     <div class="max-w-xs">
-                        <Field 
-                            Id="@(nameof(Model.AppointmentTime))"
-                            PropertyName="@(nameof(Model.AppointmentTime))" 
-                            Value="@(Model.AppointmentTime)" 
-                            Label="Appointment Time"
-                            InputType="datetime-local" 
-                            UseOpacityForValidationErrors="@(true)"
-                            AllowValidateOnChange="@(true)"
-                            placeholder="e.g. 01/01/2026, 03:00 PM">
-                        </Field>
+                        <RxSlot Id="@(nameof(Model.AppointmentTime))" RenderIf="@(SlotIdToRender)">
+                            <Field 
+                                Id="@(nameof(Model.AppointmentTime))"
+                                PropertyName="@(nameof(Model.AppointmentTime))" 
+                                Value="@(Model.AppointmentTime)" 
+                                Label="Appointment Time"
+                                InputType="datetime-local" 
+                                UseOpacityForValidationErrors="@(true)"
+                                AllowValidateOnChange="@(true)"
+                                placeholder="e.g. 01/01/2026, 03:00 PM">
+                            </Field>
+                        </RxSlot>
                     </div>
                 </div>
             </div>
@@ -75,118 +83,132 @@
                 <div class="w-80">
                     <!-- Number of Days Field -->
                     <div class="max-w-xs">
-                        <Range
-                            Id="@(nameof(Model.NumberOfDays))"
-                            PropertyName="@(nameof(Model.NumberOfDays))" 
-                            Value="@(Model.NumberOfDays ?? 0)" 
-                            Label="Number of Days"
-                            UseOpacityForValidationErrors="@(true)"
-                            AllowValidateOnChange="@(true)"
-                            min="0"
-                            max="10"
-                            step="1">
-                        </Range>
+                        <RxSlot Id="@(nameof(Model.NumberOfDays))" RenderIf="@(SlotIdToRender)">
+                            <Range
+                                Id="@(nameof(Model.NumberOfDays))"
+                                PropertyName="@(nameof(Model.NumberOfDays))" 
+                                Value="@(Model.NumberOfDays ?? 0)" 
+                                Label="Number of Days"
+                                UseOpacityForValidationErrors="@(true)"
+                                AllowValidateOnChange="@(true)"
+                                min="0"
+                                max="10"
+                                step="1">
+                            </Range>
+                        </RxSlot>
                     </div>
                 </div>
                 <div class="w-80">
                     <!-- Cost Field -->
                     <div class="max-w-xs">
-                        <Field 
-                            Id="@(nameof(Model.Cost))"
-                            PropertyName="@(nameof(Model.Cost))" 
-                            Value="@(Model.Cost)" 
-                            Label="Cost" 
-                            InputType="number"
-                            UseOpacityForValidationErrors="@(true)"
-                            AllowValidateOnChange="@(true)"
-                            placeholder="e.g. 60.00" 
-                            min="0" 
-                            step="10">
-                        </Field>
+                        <RxSlot Id="@(nameof(Model.Cost))" RenderIf="@(SlotIdToRender)">
+                            <Field 
+                                Id="@(nameof(Model.Cost))"
+                                PropertyName="@(nameof(Model.Cost))" 
+                                Value="@(Model.Cost)" 
+                                Label="Cost" 
+                                InputType="number"
+                                UseOpacityForValidationErrors="@(true)"
+                                AllowValidateOnChange="@(true)"
+                                placeholder="e.g. 60.00" 
+                                min="0" 
+                                step="10">
+                            </Field>
+                        </RxSlot>
                     </div>
                 </div>
             </div>
             <div class="flex max-md:flex-col gap-x-4 md:items-center">
-                <RadioSet 
-                    Id="@(nameof(Model.Subscription))"
-                    PropertyName="@(nameof(Model.Subscription))" 
-                    Value="@(Model.Subscription.ToString())" 
-                    Label="Subscription Type" 
-                    Direction="@(RadioSet.DirectionType.Horizontal)"
-                    UseOpacityForValidationErrors="@(true)"
-                    AllowValidateOnChange="@(true)" 
-                    EnumType="@(typeof(SubscriptionType))">
-                </RadioSet>
+                <RxSlot Id="@(nameof(Model.Subscription))" RenderIf="@(SlotIdToRender)">
+                    <RadioSet 
+                        Id="@(nameof(Model.Subscription))"
+                        PropertyName="@(nameof(Model.Subscription))" 
+                        Value="@(Model.Subscription.ToString())" 
+                        Label="Subscription Type" 
+                        Direction="@(RadioSet.DirectionType.Horizontal)"
+                        UseOpacityForValidationErrors="@(true)"
+                        AllowValidateOnChange="@(true)" 
+                        EnumType="@(typeof(SubscriptionType))">
+                    </RadioSet>
+                </RxSlot>
             </div>
             <div class="flex max-md:flex-col gap-x-4 md:items-center">
                 <div class="w-80">
                     <!-- Reporting Status Select -->
                     <div class="max-w-xs">
-                        <Select 
-                            Id="@(nameof(Model.ReportingStatus))"
-                            PropertyName="@(nameof(Model.ReportingStatus))" 
-                            Value="@(Model.ReportingStatus.ToString())" 
-                            Label="Reporting Status" 
-                            UseOpacityForValidationErrors="@(true)"
-                            AllowValidateOnChange="@(true)"
-                            EnumType="@(typeof(ReportingStatusType))">
-                        </Select>
+                        <RxSlot Id="@(nameof(Model.ReportingStatus))" RenderIf="@(SlotIdToRender)">
+                            <Select 
+                                Id="@(nameof(Model.ReportingStatus))"
+                                PropertyName="@(nameof(Model.ReportingStatus))" 
+                                Value="@(Model.ReportingStatus.ToString())" 
+                                Label="Reporting Status" 
+                                UseOpacityForValidationErrors="@(true)"
+                                AllowValidateOnChange="@(true)"
+                                EnumType="@(typeof(ReportingStatusType))">
+                            </Select>
+                        </RxSlot>
                     </div>
                 </div>
                 <div class="w-80">
                     <!--  Is Published Toggle -->
                     <div class="max-w-xs pt-2">
-                        <Checkbox 
-                            Id="@(nameof(Model.IsPublished))"
-                            PropertyName="@(nameof(Model.IsPublished))" 
-                            IsChecked="@(Model.IsPublished)" 
-                            Label="Is Published"
-                            UseOpacityForValidationErrors="@(true)"
-                            AllowValidateOnChange="@(true)">
-                        </Checkbox>
+                        <RxSlot Id="@(nameof(Model.IsPublished))" RenderIf="@(SlotIdToRender)">
+                            <Checkbox 
+                                Id="@(nameof(Model.IsPublished))"
+                                PropertyName="@(nameof(Model.IsPublished))" 
+                                IsChecked="@(Model.IsPublished)" 
+                                Label="Is Published"
+                                UseOpacityForValidationErrors="@(true)"
+                                AllowValidateOnChange="@(true)">
+                            </Checkbox>
+                        </RxSlot>
                     </div>
                 </div>
             </div>
             <div class="flex max-w-[650px]">
                 <!-- Widget AutoComplete Field -->
                 <div class="w-full">
-                    <RxAutoCompleteOnSelected 
-                        AutoCompleteId="@(nameof(Model.Widget))"
-                        hx-post="/examples/form/widget"
-                        hx-target="@($"#{nameof(Model.Widget)}")"
-                        hx-swap="outerHTML transition:true">
-                        <AutoComplete 
-                            Id="@(nameof(Model.Widget))"
-                            PropertyName="@(nameof(Model.Widget))" 
-                            Value="@(Model.Widget)" 
-                            SelectedIdProperty="@(nameof(Model.WidgetId))"
-                            SelectedIdValue="@(Model.WidgetId)"
-                            DelayMilliseconds="@(500)"
-                            MinimumLengthToTrigger="@(4)"
-                            ListMaxPixelHeight="@(250)"
-                            GetListFromRoute="/examples/form/widgets"
-                            Label="Select Widget (e.g., CNT, INV, RFQ, PO)"
-                            PatternMatchClass="text-secondary" 
-                            AllowValidateOnChange="@(true)"
-                            UseOpacityForValidationErrors="@(true)"
-                            placeholder="CNT-0, INV-0, RFQ-0, or PO-11 (minimum 4 characters required)">
-                        </AutoComplete>
-                    </RxAutoCompleteOnSelected>
+                    <RxSlot Id="@(nameof(Model.Widget))" RenderIf="@(SlotIdToRender)">
+                        <RxAutoCompleteOnSelected 
+                            AutoCompleteId="@(nameof(Model.Widget))"
+                            hx-post="/examples/form/widget"
+                            hx-target="@($"#{nameof(Model.Widget)}")"
+                            hx-swap="outerHTML transition:true">
+                            <AutoComplete 
+                                Id="@(nameof(Model.Widget))"
+                                PropertyName="@(nameof(Model.Widget))" 
+                                Value="@(Model.Widget)" 
+                                SelectedIdProperty="@(nameof(Model.WidgetId))"
+                                SelectedIdValue="@(Model.WidgetId)"
+                                DelayMilliseconds="@(500)"
+                                MinimumLengthToTrigger="@(4)"
+                                ListMaxPixelHeight="@(250)"
+                                GetListFromRoute="/examples/form/widgets"
+                                Label="Select Widget (e.g., CNT, INV, RFQ, PO)"
+                                PatternMatchClass="text-secondary" 
+                                AllowValidateOnChange="@(true)"
+                                UseOpacityForValidationErrors="@(true)"
+                                placeholder="CNT-0, INV-0, RFQ-0, or PO-11 (minimum 4 characters required)">
+                            </AutoComplete>
+                        </RxAutoCompleteOnSelected>
+                    </RxSlot>
                 </div>
             </div>
             <div class="flex max-w-[650px]">
                 <!-- Notes Memo Field -->
                 <div class="w-full">
-                    <MemoField 
-                        Id="@(nameof(Model.Notes))"
-                        PropertyName="@(nameof(Model.Notes))" 
-                        Value="@(Model.Notes)" 
-                        Label="Notes" 
-                        MaxLength="1000" 
-                        AllowValidateOnChange="@(true)"
-                        UseOpacityForValidationErrors="@(true)"
-                        placeholder="Enter notes">
-                    </MemoField>
+                    <RxSlot Id="@(nameof(Model.Notes))" RenderIf="@(SlotIdToRender)">
+                        <MemoField 
+                            Id="@(nameof(Model.Notes))"
+                            PropertyName="@(nameof(Model.Notes))" 
+                            Value="@(Model.Notes)" 
+                            Label="Notes" 
+                            MaxLength="1000" 
+                            AllowValidateOnChange="@(true)"
+                            UseOpacityForValidationErrors="@(true)"
+                            placeholder="Enter notes">
+                        </MemoField>
+                    </RxSlot>
                 </div>
             </div>
             <div class="mt-3">
@@ -200,5 +222,6 @@
 </form>    
 
 @code {
+    [Parameter] public string SlotIdToRender { get; set; } = null!;
     [Parameter] public FormModel Model { get; set; } = new();
 }

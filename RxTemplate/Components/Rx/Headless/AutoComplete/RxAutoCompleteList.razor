@@ -48,7 +48,7 @@
                     item.onclick = function() {
                         var selected = document.getElementById(`${componentId}-autocomplete-selected-id`);
                         selected.value = '@(item.Id)';
-                        var input = document.getElementById(`${componentId}-autocomplete-input`);
+                        var input = document.getElementById(`${componentId}-input`);
                         input.value = '@(item.DisplayValue)';
                         input.focus();
                         var onSelectedEvt = new Event(`${componentId}-autocomplete-on-selected`, { bubbles: true });
@@ -79,7 +79,7 @@
             : '250px';
         itemList.classList.value = listClassList;
         itemList.style.display = "block";
-        var input = document.getElementById(`${componentId}-autocomplete-input`);
+        var input = document.getElementById(`${componentId}-input`);
         input.setAttribute("aria-expanded", "true");
         var list = document.getElementById(`${componentId}-autocomplete-list`);
         var liSelected;

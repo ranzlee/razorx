@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Primitives;
+
 namespace RxTemplate.Rx;
 
 public static class HxUtilities {
@@ -18,6 +20,18 @@ public static class HxUtilities {
     /// <returns>True if the header exists.</returns>
     public static bool IsHxBoosted(this HttpRequest request) {
         return request.Headers.ContainsKey("hx-boosted");
+    }
+
+    /// <summary>
+    /// Gets the HX-Target send in the request
+    /// </summary>
+    /// <param name="request">HttpRequest</param>
+    /// <returns>The value of the HX-Target header, if it exists, else an empty string.</returns>
+    public static string HxTarget(this HttpRequest request) {
+        if (!request.Headers.TryGetValue("hx-target", out StringValues value)) {
+            return string.Empty;
+        }
+        return value.ToString();
     }
 
     /// <summary>
