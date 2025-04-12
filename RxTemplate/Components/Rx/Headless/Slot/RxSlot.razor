@@ -1,0 +1,9 @@
+@if (string.IsNullOrWhiteSpace(RenderIf) || RenderIf == Id) {
+    @(ChildContent)
+}
+
+@code {
+    [Parameter, EditorRequired] public string Id { get; set; } = null!;
+    [Parameter] public string? RenderIf { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

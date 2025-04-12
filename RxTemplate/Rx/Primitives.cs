@@ -26,6 +26,20 @@ public interface IComponentModel<TModel> {
 }
 
 /// <summary>
+/// Interface for a component that contains one or more slotted fragments of content
+/// </summary>
+public interface IComponentWithSlots {
+    string SlotIdToRender { get; set; }
+}
+
+/// <summary>
+/// Interface for a component that binds to a model and contains one or more slotted fragments of content
+/// </summary>
+/// <typeparam name="TModel">The model to bind to the component.</typeparam>
+public interface IComponentModelWithSlots<TModel> : IComponentWithSlots, IComponentModel<TModel> { }
+
+
+/// <summary>
 /// Interface for a component that initially renders a placeholder and 
 /// lazy loads content rendered with a load-triggered hx-get request. 
 /// </summary>
@@ -43,6 +57,4 @@ public interface IAsyncComponent {
 /// 400-499 for client and 500+ for server
 /// </summary>
 /// <param name="StatusCode">HTTP status code</param>
-public record ErrorModel(HttpStatusCode StatusCode) {
-    public HttpStatusCode StatusCode { get; init; } = StatusCode;
-}
+public record ErrorModel(HttpStatusCode StatusCode) { }
