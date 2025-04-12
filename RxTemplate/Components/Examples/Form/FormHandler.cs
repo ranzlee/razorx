@@ -47,10 +47,11 @@ public class FormHandler : IRequestHandler {
     }
 
     public static IResult ValidateForm(
+        HttpRequest request,
         HttpResponse response,
         FormModel model,
         ILogger<FormHandler> logger) {
-        return response.RenderComponent<Form, FormModel>(model, logger);
+        return response.RenderComponent<Form, FormModel>(model, request.HxTarget(), logger);
     }
 
     public static IResult SubmitForm(
@@ -69,7 +70,7 @@ public class FormHandler : IRequestHandler {
                 .Add(new HxFocusTrigger("#form-submit"))
                 .Build();
             // re-render the form with validation errors
-            response.HxRetarget("#form-change-validator", logger);
+            response.HxRetarget("#input-form", logger);
             return response.RenderComponent<Form, FormModel>(model, logger);
         }
         hxTriggers

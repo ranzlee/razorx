@@ -1,11 +1,11 @@
 <div id="@(Id)" class="@(ContainerClass)">
-    <label class="@(LabelContainerClass)" for="@(Id)-autocomplete-input">
+    <label class="@(LabelContainerClass)" for="@(Id)-input">
         <span class="@(LabelClass)">@(Label)</span>
         <Spinner Id="@($"{Id}-autocomplete-indicator")" Transition="@(TransitionType.Opacity)" />
     </label>
     <div id="@(Id)-autocomplete-input-container">
         <input
-            id="@(Id)-autocomplete-input"
+            id="@(Id)-input"
             name="@(PropertyName)" 
             value="@(Value)" 
             type="search"
@@ -24,7 +24,7 @@
             aria-controls="@(Id)-autocomplete-list-items"
             @attributes=@(AdditionalAttributes)>
         <input 
-            data-id="@(Id)-autocomplete-input-container" 
+            data-id="@(Id)" 
             data-validate-on-change="@(AllowValidateOnChange)"
             id="@(Id)-autocomplete-selected-id" 
             type="hidden" 
@@ -32,17 +32,38 @@
             value="@(SelectedIdValue)">
         <script>
             (function(){
-                var input = document.getElementById('@(Id)-autocomplete-input');
+                var input = document.getElementById('@(Id)-input');
                 input.addEventListener('htmx:beforeRequest', (evt) => {
                     var selected = document.getElementById('@(Id)-autocomplete-selected-id');
                     var validateEvt = new Event('input', { bubbles: true });
                     if ((selected.value ?? '') !== '') {
                         selected.value = '';
+                        //** crazy synchronization ahead **
+                        //when the previous selected value is changed, we must
+                        //cancel the get list request, dispatch validation,
+                        //and on afterValidation re-issue the original request to 
+                        //get the list
+                        if (!selected.hasAttribute("data-validate-on-change")) {
+                            return;
+                        }
+                        evt.preventDefault();
+                        var component = document.getElementById("@(Id)");
+                        var afterValidationHandler = function (evt) {
+                            evt.stopPropagation();
+                            component.removeEventListener("validationChange", afterValidationHandler);
+                            var source = document.getElementById('@(Id)-input');
+                            htmx.ajax('GET', '@(GetListFromRoute)', {
+                                target: '#@(Id)-autocomplete-list',
+                                swap: 'innerHTML transition:true settle:0ms',
+                                source: source
+                            });
+                        }
+                        component.addEventListener("validationChange", afterValidationHandler);
                         selected.dispatchEvent(validateEvt);
                     }
                     if ((evt.target.value?.length ?? 0) < @(MinimumLengthToTrigger)) {
-                        document.getElementById('@(Id)-autocomplete-list').replaceChildren([]);
                         evt.preventDefault();
+                        document.getElementById('@(Id)-autocomplete-list').replaceChildren([]);
                     }
                 });
             })()

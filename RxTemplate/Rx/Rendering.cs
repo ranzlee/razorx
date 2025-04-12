@@ -38,6 +38,41 @@ public static class RazorComponentRenderer {
     /// Renders a RazorComponent response.
     /// </summary>
     /// <typeparam name="TComponent">RazorComponent type to render</typeparam>
+    /// <typeparam name="TModel">Model type to bind</typeparam>
+    /// <param name="response">HttpResponse</param>
+    /// <param name="model">Model instance</param>
+    /// <param name="slotIdToRender">The Id of the RxSlot to include in rendering, or empty string for all slots</param>
+    /// <param name="logger">ILogger</param>
+    /// <returns>RazorComponentResult</returns>
+    public static RazorComponentResult RenderComponent<TComponent, TModel>(this HttpResponse response, TModel model, string slotIdToRender = "", ILogger<IRequestHandler>? logger = default)
+    where TComponent : IComponent, IComponentModelWithSlots<TModel> {
+        var root = response.HttpContext.GetRootComponent();
+        if (root is not null) {
+            var parameters = new Dictionary<string, object?> {
+                { nameof(IRootComponent.MainContent), typeof(TComponent) },
+                { nameof(IRootComponent.MainContentParameters), new Dictionary<string, object?> {
+                    { nameof(IComponentModelWithSlots<TModel>.Model), model },
+                    { nameof(IComponentModelWithSlots<TModel>.SlotIdToRender), slotIdToRender ?? string.Empty }
+                }},
+            };
+            logger?.LogInformation("Rendering page - Root component: {root} - Content component: {content} - Model: {model} - SlotIdToRender: {slot}",
+                root,
+                typeof(TComponent),
+                typeof(TModel),
+                slotIdToRender ?? string.Empty);
+            return new RazorComponentResult(root, parameters);
+        }
+        logger?.LogInformation("Rendering partial - Content component: {content} - Model: {model} - SlotIdToRender: {slot}",
+                typeof(TComponent),
+                typeof(TModel),
+                slotIdToRender ?? string.Empty);
+        return new RazorComponentResult<TComponent>(new { Model = model, SlotIdToRender = slotIdToRender });
+    }
+
+    /// <summary>
+    /// Renders a RazorComponent response.
+    /// </summary>
+    /// <typeparam name="TComponent">RazorComponent type to render</typeparam>
     /// <param name="response">HttpResponse</param>
     /// <param name="logger">ILogger</param>
     /// <returns>RazorComponentResult</returns>
