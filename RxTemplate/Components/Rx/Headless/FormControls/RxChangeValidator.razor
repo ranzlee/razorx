@@ -29,7 +29,13 @@
                     }, @(DebounceMilliseconds));
                 }
             }
-            document.getElementById("@(Id)").oninput = @(IsDisabled ? "null" : "debounce()"); 
+            var passThroughEventWhenDisabled = function(evt) {
+                //even if change validation is disabled, components may depend on the validationChange event
+                var dataId = evt.srcElement.getAttribute("data-id");
+                var ele = document.getElementById(dataId);
+                ele?.dispatchEvent(new Event('validationChange'));
+            }
+            document.getElementById("@(Id)").oninput = @(IsDisabled ? "passThroughEventWhenDisabled" : "debounce()"); 
         })()
     </script>
 </div>

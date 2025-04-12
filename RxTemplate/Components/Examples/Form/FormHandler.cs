@@ -70,7 +70,7 @@ public class FormHandler : IRequestHandler {
                 .Add(new HxFocusTrigger("#form-submit"))
                 .Build();
             // re-render the form with validation errors
-            response.HxRetarget("#form-change-validator", logger);
+            response.HxRetarget("#input-form", logger);
             return response.RenderComponent<Form, FormModel>(model, logger);
         }
         hxTriggers

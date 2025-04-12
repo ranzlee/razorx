@@ -168,7 +168,7 @@
             <div class="flex max-w-[650px]">
                 <!-- Widget AutoComplete Field -->
                 <div class="w-full">
-                    <RxSlot Id="@($"{nameof(Model.Widget)}-autocomplete-input-container")" RenderIf="@(SlotIdToRender)">
+                    <RxSlot Id="@(nameof(Model.Widget))" RenderIf="@(SlotIdToRender)">
                         <RxAutoCompleteOnSelected 
                             AutoCompleteId="@(nameof(Model.Widget))"
                             hx-post="/examples/form/widget"
