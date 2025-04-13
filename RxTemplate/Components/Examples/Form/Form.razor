@@ -1,6 +1,6 @@
 @implements IComponentModelWithSlots<FormModel>
 
-<form id="input-form" action="" hx-post="/examples/form/submit" hx-target="#form-page" hx-swap="outerHTML" novalidate> 
+<form id="input-form" hx-post="/examples/form/submit" hx-target="#form-page" hx-swap="outerHTML" novalidate> 
     <RxChangeValidator 
         Id="form-change-validator" 
         ValidationPostRoute="/examples/form/validate"
@@ -178,7 +178,7 @@
                                 Id="@(nameof(Model.Widget))"
                                 PropertyName="@(nameof(Model.Widget))" 
                                 Value="@(Model.Widget)" 
-                                SelectedIdProperty="@(nameof(Model.WidgetId))"
+                                SelectedIdPropertyName="@(nameof(Model.WidgetId))"
                                 SelectedIdValue="@(Model.WidgetId)"
                                 DelayMilliseconds="@(500)"
                                 MinimumLengthToTrigger="@(4)"

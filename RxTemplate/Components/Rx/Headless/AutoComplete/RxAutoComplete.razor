@@ -28,7 +28,7 @@
             data-validate-on-change="@(AllowValidateOnChange)"
             id="@(Id)-autocomplete-selected-id" 
             type="hidden" 
-            name="@(SelectedIdProperty)" 
+            name="@(SelectedIdPropertyName)" 
             value="@(SelectedIdValue)">
         <script>
             (function(){
@@ -83,7 +83,7 @@
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter, EditorRequired] public string Label { get; set; } = null!;
     [Parameter, EditorRequired] public string PropertyName { get; set; } = null!;
-    [Parameter, EditorRequired] public string SelectedIdProperty { get; set; } = null!;
+    [Parameter, EditorRequired] public string SelectedIdPropertyName { get; set; } = null!;
     [Parameter, EditorRequired] public string GetListFromRoute { get; set; } = null!;
     [Parameter] public string? Value { get; set; }
     [Parameter] public string? SelectedIdValue { get; set; }
