@@ -228,7 +228,7 @@
     private bool CanEdit;
     [Parameter] public GridModel Model { get; set; } = new GridModel() { IsAsync = true };
     
-    protected override void OnInitialized() {
+    protected override void OnParametersSet() {
         if (HttpContextAccessor.HttpContext!.User.IsInRole("Admin")) {
             CanEdit = true;
         }
