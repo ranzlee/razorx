@@ -121,11 +121,16 @@
         <!-- Footer -->
         <div class="flex bg-neutral text-neutral-content">
           <footer class="flex flex-col p-10 w-full">
-            <div class="flex justify-center text-sm pl-4 pb-2">
+            <div class="flex justify-center text-sm px-4 pb-2">
               <em class="text-small">A Hypermedia Event-Driven Application</em>
             </div>
-            <div class="flex justify-center text-xs pl-4 pb-2">
-              © @DateTime.Now.Year - RxTemplate
+            <div class="flex justify-between text-xs px-4 pb-2">
+              <div>
+                © @(DateTime.Now.Year) - RxTemplate
+              </div>
+              <div>
+                Version @(Utilities.GetSemVer())
+              </div>
             </div>
           </footer>
         </div>
