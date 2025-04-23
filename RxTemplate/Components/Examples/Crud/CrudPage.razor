@@ -131,16 +131,16 @@
 
 
 @code {
-    private readonly Dictionary<string, string> Options = [];
+    private readonly List<KeyValuePair<string, string>> Options = [];
     [Parameter] public GridModel Model { get; set; } = null!;
     protected override void OnParametersSet() {
-        Options.Add("Select...", string.Empty);
-        Options.Add("ID", nameof(ItemModel.Id));
-        Options.Add("Date", nameof(ItemModel.Date));
-        Options.Add("Temp. C", nameof(ItemModel.TemperatureC));
-        Options.Add("Temp. F", nameof(ItemModel.TemperatureF));
-        Options.Add("Summary", nameof(ItemModel.Summary));
-        Options.Add("Verified", nameof(ItemModel.IsVerified));
-        Options.Add("Observed", nameof(ItemModel.TemperatureTaken));
+        Options.Add(new("Select...", string.Empty));
+        Options.Add(new("ID", nameof(ItemModel.Id)));
+        Options.Add(new("Date", nameof(ItemModel.Date)));
+        Options.Add(new("Temp. C", nameof(ItemModel.TemperatureC)));
+        Options.Add(new("Temp. F", nameof(ItemModel.TemperatureF)));
+        Options.Add(new("Summary", nameof(ItemModel.Summary)));
+        Options.Add(new("Verified", nameof(ItemModel.IsVerified)));
+        Options.Add(new("Observed", nameof(ItemModel.TemperatureTaken)));
     }
 }

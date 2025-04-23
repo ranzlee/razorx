@@ -29,7 +29,7 @@
     [Parameter] public string Value { get; set; } = null!;
     [Parameter] public bool AllowValidateOnChange { get; set; }
     [Parameter] public Type? EnumType { get; set; }
-    [Parameter] public Dictionary<string, string> Options { get; set; } = [];
+    [Parameter] public IEnumerable<KeyValuePair<string, string>> Options { get; set; } = [];
     [Parameter] public bool UseOpacityForValidationErrors { get; set; }
 
     protected override void OnParametersSet() {

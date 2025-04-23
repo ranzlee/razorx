@@ -64,27 +64,27 @@
 
 @code {
     [Parameter] public GridFilterModel Model { get; set; } = new();
-    private readonly Dictionary<string, string> OperationOptions = [];
-    private readonly Dictionary<string, string> YesNoOptions = [];
+    private readonly List<KeyValuePair<string, string>> OperationOptions = [];
+    private readonly List<KeyValuePair<string, string>> YesNoOptions = [];
 
     protected override void OnParametersSet() {
 
-        YesNoOptions.Add("Y", "Y");
-        YesNoOptions.Add("N", "N");
+        YesNoOptions.Add(new("Y", "Y"));
+        YesNoOptions.Add(new("N", "N"));
 
-        OperationOptions.Add("Equals", FilterOperationType.Equals.ToString());
+        OperationOptions.Add(new("Equals", FilterOperationType.Equals.ToString()));
         if (Model.FilterType == typeof(string)) {
-            OperationOptions.Add("Starts With", FilterOperationType.StartsWith.ToString());
-            OperationOptions.Add("Contains", FilterOperationType.Contains.ToString());
+            OperationOptions.Add(new("Starts With", FilterOperationType.StartsWith.ToString()));
+            OperationOptions.Add(new("Contains", FilterOperationType.Contains.ToString()));
         }
         if (Model.FilterType == typeof(int)
         || Model.FilterType == typeof(DateOnly)) {
-            OperationOptions.Add("Less Than", FilterOperationType.LessThan.ToString());
-            OperationOptions.Add("Greater Than", FilterOperationType.GreaterThan.ToString());
+            OperationOptions.Add(new("Less Than", FilterOperationType.LessThan.ToString()));
+            OperationOptions.Add(new("Greater Than", FilterOperationType.GreaterThan.ToString()));
         }
         if (Model.FilterType == typeof(bool)
         || Model.FilterType == typeof(TimeOfDay)) {
-            OperationOptions.Add("Not Equals", FilterOperationType.NotEquals.ToString());
+            OperationOptions.Add(new("Not Equals", FilterOperationType.NotEquals.ToString()));
         }
     }
 }
