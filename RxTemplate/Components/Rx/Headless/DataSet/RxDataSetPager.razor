@@ -38,34 +38,6 @@
                     class="@(RangeClass)">
             </div>
         </div>
-        <script>
-            (function() {
-                var pageSelector = document.getElementById("@($"{Model.Id}-page-selector")");
-                var pageSelectorTooltip = document.getElementById("@($"{Model.Id}-page-selector-tooltip")");
-                var pageLabel = document.getElementById("@($"{Model.Id}-page-label")");
-                function setLabel() {
-                    pageLabel.innerText = `Page ${pageSelector.value} of @(Model.State.GetTotalPages())`;
-                }
-                function calcHoverValue(evt) {
-                    var w = pageSelector.clientWidth;
-                    var x = evt.offsetX;
-                    var percents = x / w;
-                    var max = parseInt(pageSelector.max);
-                    var current = Math.floor(percents * max + 1);
-                    if (current < 1) {
-                        current = 1;
-                    }
-                    var totalPages = @(Model.State.GetTotalPages()); 
-                    if (current > totalPages) {
-                        current = totalPages;
-                    }
-                    pageSelectorTooltip.setAttribute("data-tip", current.toString()); 
-                }
-                pageSelector.oninput = setLabel;
-                pageSelector.onmousemove = calcHoverValue;
-                setLabel();
-            })()
-        </script>
         <button id="@($"{Model.Id}-page-next")" 
             type="button" 
             name="@nameof(IDataSetState.Page)"
@@ -82,6 +54,32 @@
     </div>
     <div id="@($"{Model.Id}-page-label")" class="@(LabelClass)"></div>
     <script>
+        (function() {
+            var pageSelector = document.getElementById("@($"{Model.Id}-page-selector")");
+            var pageSelectorTooltip = document.getElementById("@($"{Model.Id}-page-selector-tooltip")");
+            var pageLabel = document.getElementById("@($"{Model.Id}-page-label")");
+            function setLabel() {
+                pageLabel.innerText = `Page ${pageSelector.value} of @(Model.State.GetTotalPages())`;
+            }
+            function calcHoverValue(evt) {
+                var w = pageSelector.clientWidth;
+                var x = evt.offsetX;
+                var percents = x / w;
+                var max = parseInt(pageSelector.max);
+                var current = Math.floor(percents * max + 1);
+                if (current < 1) {
+                    current = 1;
+                }
+                var totalPages = @(Model.State.GetTotalPages()); 
+                if (current > totalPages) {
+                    current = totalPages;
+                }
+                pageSelectorTooltip.setAttribute("data-tip", current.toString()); 
+            }
+            pageSelector.oninput = setLabel;
+            pageSelector.onmousemove = calcHoverValue;
+            setLabel();
+        })()
         razorx.metadata.addToRequest(
             @(Convert.ToInt32(Model.StateScope)), 
             "@(Model.StateKey)",
