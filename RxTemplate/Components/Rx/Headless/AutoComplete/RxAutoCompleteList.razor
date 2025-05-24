@@ -135,6 +135,8 @@
                 setListItem(liSelected.nextSibling);
             }
             if (evt.key === 'Escape' || evt.code === 'Escape' || evt.keyCode === 27) {
+                evt.preventDefault();
+                evt.stopPropagation();
                 input.focus();
                 input.setAttribute("aria-expanded", "false");
                 list.replaceChildren([]);
