@@ -66,4 +66,15 @@ public static class HxUtilities {
         logger?.LogInformation("HX-Replace-Url {url}.", url);
         response.Headers.Append("HX-Replace-Url", url);
     }
+
+    /// <summary>
+    /// Adds the HX-Redirect response header
+    /// </summary>
+    /// <param name="response">HttpResponse</param>
+    /// <param name="url">The URL to issue a client redirect to.</param>
+    /// <param name="logger">ILogger</param>
+    public static void HxRedirect(this HttpResponse response, string url, ILogger? logger = default) {
+        logger?.LogInformation("HX-Redirect {url}.", url);
+        response.Headers.Append("HX-Redirect", url);
+    }
 }
